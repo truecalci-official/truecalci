@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueCalci — Precision Global, Household & Engineering Calculator Suite</title>
+  <meta name="description" content="Precision minimalist calculator suite for US, Europe, and India: US Mortgage (PITI & PMI), European VAT & Sales Tax, Tip Splitter, 401(k) Compound Wealth, Income Tax (Budget 2025-26), SIP, 991 Scientific Calci, and 64-bit Programmer tools.">
+  
+  <link rel="canonical" href="http://localhost:4000/">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Context">
+
+  <!-- Google Search Console Ownership Verification -->
+  <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_TOKEN">
+
+  <!-- Open Graph & Social Cards -->
+  <meta property="og:title" content="TrueCalci — Precision Global & Multi-Regional Calculator Suite">
+  <meta property="og:description" content="All-in-one precision calculator suite engineered for US, European, and Indian users: US Mortgage PITI, VAT, Tip Splitter, Income Tax, SIP, and 991 Scientific Calci.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:4000/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Modern Typography: Inter + Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/ad-layout.css">
+  <link rel="stylesheet" href="css/casio-calci.css">
+  <link rel="stylesheet" href="css/financial.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <!-- Schema.org Structured Data for Google, Bing & AI Search Engines -->
+  <script type="application/ld+json">
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "TrueCalci",
+      "url": "http://localhost:4000",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "All",
+      "description": "High-precision computational workstation for personal finance, mortgage, tax, investments, and engineering mathematics.",
+      "browserRequirements": "Requires JavaScript. Requires HTML5.",
+      "softwareVersion": "2.0.0",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "US Mortgage PITI with automated PMI calculation",
+        "European VAT and Sales Tax dual-mode calculator",
+        "Tip Splitter with itemized guest shares",
+        "Compound Wealth and 401(k) retirement simulator",
+        "Indian Income Tax Budget 2025-26 (New vs Old Regime)",
+        "Mutual Fund SIP and Step-Up investment simulator",
+        "Engineering Student Scientific Calci 991 standard V.P.A.M.",
+        "64-Bit Programmer Calculator with interactive bitboard"
+      ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TrueCalci",
+      "url": "http://localhost:4000",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "http://localhost:4000/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How is US Mortgage PITI calculated?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Mortgage PITI combines Principal & Interest (P&I amortized via standard annuity formula), Monthly Property Taxes, Homeowners Hazard Insurance, and Private Mortgage Insurance (PMI) if the down payment is less than 20%."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does European VAT calculation work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "To add VAT: Gross = Net × (1 + Rate / 100). To remove VAT from a gross price: Net = Gross / (1 + Rate / 100). VAT Amount = Gross - Net."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the tax-free limit under India's New Tax Regime Budget 2025-26?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Under the New Tax Regime (Budget 2025-26), salaried taxpayers receive a ₹75,000 standard deduction and Section 87A tax rebate up to ₹60,000, making taxable income up to ₹12.75 Lakhs effectively tax-free."
+          }
+        }
+      ]
+    }
+  ]
+  </script>
+</head>
+<body>
+
+  <!-- Top Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <!-- Mobile Menu Hamburger Button -->
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Calculator Menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          <span>Calculators</span>
+        </button>
+
+        <a href="index.html" class="brand-area">
+          <div class="brand-icon">⚡</div>
+          <div>
+            <span class="brand-title">TrueCalci</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Global Omnibar Search -->
+      <div class="header-search-container">
+        <div class="header-search-box">
+          <span class="header-search-icon">🔍</span>
+          <input type="text" id="global-search-input" class="header-search-input" placeholder="Search calculators, formulas, or tools... (Press '/' to focus)" autocomplete="off">
+          <div class="header-search-dropdown" id="header-search-dropdown"></div>
+        </div>
+      </div>
+
+      <!-- Quick Utility Actions -->
+      <div class="header-actions">
+        <!-- Region & Currency Selector -->
+        <div class="region-switcher" id="region-switcher" title="Select Your Region & Currency">
+          <button class="region-btn" data-region="global" title="United States & Global ($ USD)">🌐 Global</button>
+          <button class="region-btn" data-region="europe" title="Europe (€ EUR / £ GBP)">🇪🇺 Europe</button>
+          <button class="region-btn active" data-region="india" title="India (₹ INR)">🇮🇳 India</button>
+        </div>
+
+        <!-- Theme Palette Switcher: Obsidian Lumina / Cyber Slate / Alabaster -->
+        <div class="theme-palette-picker" id="theme-palette-picker" title="Toggle Aesthetic Theme Palette">
+          <button class="palette-pill-btn active" data-theme="dark" title="Obsidian Lumina (Cosmic Indigo Glow)">🌌 Obsidian</button>
+          <button class="palette-pill-btn" data-theme="cyber" title="Cyber Slate (Neon Precision)">⚡ Cyber</button>
+          <button class="palette-pill-btn" data-theme="light" title="Alabaster Precision (Porcelain Light)">🏛️ Alabaster</button>
+        </div>
+
+        <a href="engineering-formulas.html" class="icon-btn" title="Engineering Formulas Portal" style="text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </a>
+        <button class="icon-btn" id="info-btn" title="Calculator Guide & Slabs">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+        </button>
+        <button class="icon-btn" id="sound-toggle-btn" title="Toggle Tactile Sound">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Live Financial Markets & Bullion Rates Ticker Strip -->
+  <div class="live-rates-ticker-bar" id="live-rates-ticker">
+    <div class="ticker-inner">
+      <div class="ticker-status">
+        <span class="pulse-dot"></span>
+        <span class="ticker-status-text">LIVE RATES</span>
+      </div>
+      <div class="ticker-items" id="ticker-items">
+        <div class="ticker-item">
+          <span class="ticker-name">GOLD 24K (10g):</span>
+          <span class="ticker-price" id="rate-gold-24k">₹74,580</span>
+          <span class="ticker-change up">+0.48% ▲</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item ticker-clickable" data-tool="gold" title="Click to calculate jewellery in Gold Calc">
+          <span class="ticker-name">GOLD 22K (10g):</span>
+          <span class="ticker-price" id="rate-gold22">₹66,410</span>
+          <span class="ticker-change up">+0.38% ▲</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-name">SILVER (1kg):</span>
+          <span class="ticker-price" id="rate-silver">₹84,200</span>
+          <span class="ticker-change up">+0.75% ▲</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-name">NIFTY 50:</span>
+          <span class="ticker-price" id="rate-nifty">25,235.90</span>
+          <span class="ticker-change up">+0.42% ▲</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-name">SENSEX:</span>
+          <span class="ticker-price" id="rate-sensex">82,560.15</span>
+          <span class="ticker-change up">+0.39% ▲</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-name">USD/INR:</span>
+          <span class="ticker-price" id="rate-usdinr">₹83.92</span>
+          <span class="ticker-change down">-0.05% ▼</span>
+        </div>
+        <div class="ticker-divider"></div>
+        <div class="ticker-item">
+          <span class="ticker-name">10Y G-SEC:</span>
+          <span class="ticker-price" id="rate-gsec">6.84%</span>
+          <span class="ticker-change down">-0.02% ▼</span>
+        </div>
+      </div>
+      <div class="ticker-time">
+        <span>Global & National Spot</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Backdrop Overlay -->
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+  <!-- 3-Column Layout: Left Sidebar Nav + Center Workspace + Right Ad Column -->
+  <div class="app-layout-grid">
+    
+    <!-- Left Navigation Sidebar (Desktop Sticky / Mobile Slide Drawer) -->
+    <aside class="app-sidebar-nav" id="app-sidebar-nav" aria-label="Calculator Categories">
+      <!-- Mobile Drawer Header -->
+      <div class="sidebar-header-mobile">
+        <span class="sidebar-header-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          All Calculators
+        </span>
+        <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close Drawer">&times;</button>
+      </div>
+
+      <!-- Section 0: Global & US Essentials -->
+      <div class="nav-section">
+        <span class="nav-section-title">Global & US Essentials (🌐)</span>
+        <button class="sidebar-link" data-tool="mortgage">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Mortgage (PITI & PMI)</span>
+          </div>
+          <span class="sidebar-tag" style="background:#dbeafe; color:#1e40af;">US / Global</span>
+        </button>
+        <button class="sidebar-link" data-tool="vat">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>VAT & Sales Tax</span>
+          </div>
+          <span class="sidebar-tag" style="background:#fef3c7; color:#92400e;">EU / UK / US</span>
+        </button>
+        <button class="sidebar-link" data-tool="tip">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span>Tip & Bill Splitter</span>
+          </div>
+          <span class="sidebar-tag">Dining</span>
+        </button>
+        <button class="sidebar-link" data-tool="compound">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>Compound Wealth / 401(k)</span>
+          </div>
+          <span class="sidebar-tag" style="background:#dcfce7; color:#166534;">Growth</span>
+        </button>
+      </div>
+
+      <!-- Section 1: Indian Tax & Statutory -->
+      <div class="nav-section">
+        <span class="nav-section-title">India Tax & Finance (🇮🇳)</span>
+        <button class="sidebar-link active" data-tool="tax">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M9 21v-7"/><path d="M15 21v-7"/><path d="M2 10h20"/><path d="m12 2 10 8H2z"/></svg>
+            <span>Income Tax (Budget 25)</span>
+          </div>
+          <span class="sidebar-tag">₹0 &lt; 12.75L</span>
+        </button>
+        <button class="sidebar-link" data-tool="gst">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+            <span>GST Calculator</span>
+          </div>
+          <span class="sidebar-tag" style="background:#f1f5f9; color:var(--text-muted);">CGST/SGST</span>
+        </button>
+      </div>
+
+      <!-- Section 2: Wealth & Savings -->
+      <div class="nav-section">
+        <span class="nav-section-title">Wealth & Savings (निवेश)</span>
+        <button class="sidebar-link" data-tool="sip">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7 7 4-4 7 7"/><path d="M14 7h7v7"/></svg>
+            <span>SIP & Step-Up</span>
+          </div>
+          <span class="sidebar-tag">Annuity</span>
+        </button>
+        <button class="sidebar-link" data-tool="fd">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="14" r="2"/></svg>
+            <span>Fixed Deposit (FD)</span>
+          </div>
+        </button>
+        <button class="sidebar-link" data-tool="gold">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 18 3 22 9 12 22 2 9 6 3"/><path d="m2 9 10-6 10 6"/><path d="m12 22 4-13-4-6-4 6 4 13z"/></svg>
+            <span>Gold & Jewellery</span>
+          </div>
+          <span class="sidebar-tag">3% GST</span>
+        </button>
+      </div>
+
+      <!-- Section 3: Government Small Savings -->
+      <div class="nav-section">
+        <span class="nav-section-title">Govt Schemes (बचत)</span>
+        <button class="sidebar-link" data-tool="ppf">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            <span>PPF Calculator</span>
+          </div>
+          <span class="sidebar-tag">7.1% EEE</span>
+        </button>
+        <button class="sidebar-link" data-tool="ssy">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <span>Sukanya Samriddhi</span>
+          </div>
+          <span class="sidebar-tag">8.2%</span>
+        </button>
+      </div>
+
+      <!-- Section 4: Loans & Property -->
+      <div class="nav-section">
+        <span class="nav-section-title">Loans & Property (ऋण)</span>
+        <button class="sidebar-link" data-tool="home_loan">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home Loan / EMI</span>
+          </div>
+          <span class="sidebar-tag">Prepay</span>
+        </button>
+        <button class="sidebar-link" data-tool="land">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+            <span>Land Units (Gaj/Bigha)</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Section 5: Engineering & Utilities -->
+      <div class="nav-section">
+        <span class="nav-section-title">Engineering & Tools (उपकरण)</span>
+        <button class="sidebar-link" data-tool="calci_991">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+            <span>Scientific Calci 991</span>
+          </div>
+          <span class="sidebar-tag" style="background:#eff6ff; color:var(--accent-primary);">V.P.A.M.</span>
+        </button>
+        <button class="sidebar-link" data-tool="basic">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+            <span>Desktop Arithmetic</span>
+          </div>
+        </button>
+        <button class="sidebar-link" data-tool="programmer">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <span>Programmer (64-Bit)</span>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Center: Main Calculator Engine Workspace -->
+    <main class="calculator-main-workspace" id="calculator-workspace">
+      <!-- Injected dynamically by app coordinator -->
+    </main>
+
+    <!-- Right: Workstation Column (Companion Dock + Dedicated IAB Ad Below) -->
+    <aside class="workstation-right-dock" id="workstation-right-dock" aria-label="Workstation Companion and Sponsor">
+      <!-- 1. Workstation Companion Dock -->
+      <div class="companion-dock" id="companion-dock">
+        <div class="dock-header">
+          <span class="dock-title">⚡ Companion</span>
+          <button class="dock-toggle-btn" id="dock-toggle-btn" title="Collapse or Expand Companion Panel">⇥</button>
+        </div>
+
+        <div class="dock-tabs" id="dock-tabs">
+          <button class="dock-tab-btn active" data-tab="tape">📜 Tape</button>
+          <button class="dock-tab-btn" data-tab="scratch">✏️ Notes</button>
+        </div>
+
+        <!-- Dock Panes -->
+        <div class="dock-content">
+          <!-- 1. Calculation Tape Pane -->
+          <div class="dock-pane active" id="dock-pane-tape">
+            <div id="tape-list">
+              <div class="history-empty-msg">
+                <span style="font-size: 1.25rem;">📊</span>
+                <span>Your calculation log will appear here in real time.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Scratchpad Pane -->
+          <div class="dock-pane" id="dock-pane-scratch">
+            <textarea class="scratchpad-textarea" id="companion-scratchpad" placeholder="Quick numbers, percentage notes, or scratch math..."></textarea>
+            <span class="scratchpad-help">Autosaved locally in your browser.</span>
+          </div>
+        </div>
+
+        <!-- Vertical Icon Rail for Collapsed Mode -->
+        <div class="dock-collapsed-rail">
+          <button class="dock-rail-icon-btn" id="dock-rail-expand-btn" title="Expand Companion Dock">⇤</button>
+          <button class="dock-rail-icon-btn" title="Calculation Tape">📜</button>
+          <button class="dock-rail-icon-btn" title="Quick Notes">✏️</button>
+        </div>
+      </div>
+
+      <!-- 2. Dedicated Advertisement Directly Below the Companion Dock -->
+      <div class="sidebar-ad-container" id="sidebar-ad-container">
+        <div class="ad-slot-wrapper">
+          <div class="ad-compliance-header">
+            <span class="ad-label">ADVERTISEMENT</span>
+            <span class="ad-specs-tag">IAB 300×250</span>
+          </div>
+          <div class="ad-slot-300x250" id="ad-slot-sidebar-300x250">
+            <div class="partner-graphic">
+              <span class="partner-icon">⚡</span>
+              <div class="partner-title">Precision Compute Engine</div>
+              <div class="partner-sub">High-speed financial algorithms, tax analytics & engineering simulation.</div>
+              <span class="partner-cta-pill">Partner Showcase</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Responsive Leaderboard Ad Slot (728x90 Desktop / 320x50 Mobile) -->
+  <div class="ad-leaderboard-container">
+    <div class="ad-slot-wrapper" style="padding: 0.5rem 1rem;">
+      <span class="ad-label">Advertisement</span>
+      <div class="ad-slot-728x90" id="ad-slot-leaderboard">
+        <span>⚡ <strong>Partner Showcase:</strong> 728×90 Leaderboard banner slot with smart responsive fallback for mobile screens.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEBI Regulatory Compliance & Indian Tax Disclaimer Banner -->
+  <footer class="regulatory-disclaimer">
+    <div class="disclaimer-header">
+      <span>⚖️</span>
+      <span>Regulatory & Educational Disclaimer (SEBI / Income Tax Compliance)</span>
+    </div>
+    <p>
+      Calculations, return rates, and projections shown on OmniCalc are strictly for illustrative and educational purposes.
+      Mutual fund and market investments are subject to market risks; past performance is not indicative of future returns.
+      Income Tax calculations reflect Union Budget 2025-26 proposals and are subject to final legislative gazette notifications.
+      This platform does not provide legal, taxation, or investment advisory services. Users are strongly advised to consult a SEBI-registered investment advisor or a certified Chartered Accountant (CA) before executing financial transactions.
+    </p>
+    <div style="margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--border-color); display:flex; gap:1.25rem; flex-wrap:wrap; font-size:0.75rem; font-weight:600;">
+      <a href="terms.html" style="color:var(--accent-primary); text-decoration:none;">⚖️ Terms of Service</a>
+      <a href="privacy.html" style="color:var(--accent-primary); text-decoration:none;">🔒 Privacy Policy</a>
+      <a href="engineering-formulas.html" style="color:var(--accent-primary); text-decoration:none;">📐 Engineering Formulas</a>
+      <a href="llms.txt" style="color:var(--text-muted); text-decoration:none;">🤖 llms.txt (AI Scrapers)</a>
+      <span style="color:var(--text-muted); margin-left:auto;">© 2026 OmniCalc India.</span>
+    </div>
+  </footer>
+
+  <!-- Educational Knowledge Hub & Formula Drawer Overlay -->
+  <div class="knowledge-drawer-overlay" id="knowledge-drawer-overlay">
+    <div class="knowledge-drawer">
+      <div class="drawer-header">
+        <h3 class="drawer-title" id="drawer-title">Calculator Knowledge Hub</h3>
+        <button class="drawer-close-btn" id="drawer-close-btn">&times;</button>
+      </div>
+      <div class="drawer-content" id="drawer-content">
+        <!-- Injected dynamically based on active tool -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Bootstrap -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

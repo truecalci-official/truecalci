@@ -1,0 +1,501 @@
+/* ==========================================================================
+   ENGINEERING STUDENT SCIENTIFIC CALCI 991 (V.P.A.M. PRECISION)
+   Modeled after the standard non-programmable Indian college examination calculator
+   ========================================================================== */
+
+.casio-chassis-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1.25rem;
+  width: 100%;
+}
+
+.calci-suite-wrapper {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+  width: 100%;
+  max-width: 1000px;
+}
+
+@media (max-width: 960px) {
+  .calci-suite-wrapper {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+/* AI & Prompt Companion Panel */
+.calci-ai-companion {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.ai-companion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.85rem;
+}
+
+.ai-companion-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.ai-companion-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.view-all-formulas-link {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-decoration: none;
+  background: var(--accent-light);
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent-border);
+  transition: all 0.15s ease;
+}
+
+.view-all-formulas-link:hover {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
+.ai-input-bar-wrap {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.calci-ai-input {
+  flex: 1;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.calci-ai-input:focus {
+  border-color: var(--accent-primary);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.calci-ai-btn {
+  background: var(--accent-primary);
+  color: #ffffff;
+  border: none;
+  padding: 0 1.25rem;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.calci-ai-btn:hover {
+  background: var(--accent-hover);
+}
+
+.ai-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.ai-prompt-chip {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.65rem;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.ai-prompt-chip:hover {
+  background: var(--accent-light);
+  color: var(--accent-primary);
+  border-color: var(--accent-border);
+}
+
+/* AI Solution Card */
+.ai-solution-card {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--emerald-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.ai-card-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ai-card-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--emerald-primary);
+}
+
+.ai-card-status {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.ai-card-result {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.ai-card-explanation {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.casio-chassis {
+  width: 100%;
+  max-width: 350px;
+  background: linear-gradient(175deg, #2b303c 0%, #1e222b 50%, #171a21 100%);
+  border-radius: 18px 18px 24px 24px;
+  padding: 0.9rem;
+  box-shadow: 
+    0 15px 30px -8px rgba(0, 0, 0, 0.5),
+    0 0 0 2px #3e4453,
+    inset 0 2px 3px rgba(255, 255, 255, 0.15),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  user-select: none;
+  border: 1px solid #14171d;
+}
+
+/* Calci Header Branding & Solar Cell */
+.casio-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0.2rem;
+}
+
+.casio-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.casio-logo {
+  font-family: var(--font-sans);
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: #e2e8f0;
+  line-height: 1;
+}
+
+.casio-model {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  margin-top: 1px;
+}
+
+.casio-svpam {
+  font-size: 0.52rem;
+  font-weight: 800;
+  color: #60a5fa;
+  letter-spacing: 0.08em;
+}
+
+.casio-solar-panel {
+  width: 68px;
+  height: 18px;
+  background: linear-gradient(180deg, #3d2217 0%, #2a140b 100%);
+  border-radius: 3px;
+  border: 1px solid #1a0b05;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.8);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  padding: 2px;
+}
+
+.casio-solar-cell {
+  background: #4a2d1f;
+  border-radius: 1px;
+}
+
+/* 2-Line LCD Screen */
+.casio-screen-bezel {
+  background: #11141a;
+  padding: 6px;
+  border-radius: 7px;
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.casio-lcd {
+  background-color: #8c9e84; /* Authentic greenish retro LCD hue */
+  color: #1a2217;
+  border-radius: 4px;
+  padding: 5px 8px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  min-height: 60px;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Status Flag Indicators */
+.casio-status-bar {
+  display: flex;
+  gap: 6px;
+  font-size: 0.52rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: rgba(26, 34, 23, 0.25);
+  border-bottom: 1px solid rgba(26, 34, 23, 0.15);
+  padding-bottom: 1px;
+}
+
+.casio-flag.active {
+  color: #1a2217;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.4);
+}
+
+/* Upper Line: Dot Matrix Expression */
+.casio-expr-line {
+  font-size: 0.88rem;
+  min-height: 1.25rem;
+  white-space: nowrap;
+  overflow-x: auto;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  scrollbar-width: none;
+}
+.casio-expr-line::-webkit-scrollbar { display: none; }
+
+.casio-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1rem;
+  background-color: #1a2217;
+  animation: casio-blink 1s infinite;
+  margin-left: 1px;
+}
+
+@keyframes casio-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* Lower Line: 10+2 Mantissa & Exponent */
+.casio-result-line {
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-align: right;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+/* Keypad Section */
+.casio-keypad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+/* Top Function Row (SHIFT, ALPHA, REPLAY D-PAD, MODE, ON) */
+.casio-top-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr 1fr 1fr;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Replay 4-Way D-Pad */
+.casio-dpad {
+  width: 72px;
+  height: 72px;
+  background: radial-gradient(circle, #e2e8f0 0%, #94a3b8 70%, #64748b 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.4),
+    inset 0 2px 3px rgba(255, 255, 255, 0.8),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.4);
+  position: relative;
+  margin: 0 auto;
+  border: 1px solid #475569;
+}
+
+.casio-dpad-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: #475569;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.5rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  pointer-events: none;
+  letter-spacing: -0.05em;
+}
+
+.dpad-btn {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #1e293b;
+  font-size: 0.75rem;
+  display: grid;
+  place-items: center;
+  transition: transform 0.05s ease;
+}
+.dpad-btn:active { transform: scale(0.9); }
+.dpad-up { top: 3px; left: 50%; transform: translateX(-50%); width: 26px; height: 18px; }
+.dpad-down { bottom: 3px; left: 50%; transform: translateX(-50%); width: 26px; height: 18px; }
+.dpad-left { left: 3px; top: 50%; transform: translateY(-50%); width: 18px; height: 26px; }
+.dpad-right { right: 3px; top: 50%; transform: translateY(-50%); width: 18px; height: 26px; }
+
+/* Casio Key Rows */
+.casio-key-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 5px;
+}
+
+.casio-key-row-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
+}
+
+/* Individual Key Button with Dual Legends */
+.casio-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+/* Upper legends */
+.casio-legends {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 2px;
+  font-size: 0.52rem;
+  font-weight: 800;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+
+.legend-shift { color: #facc15; } /* Yellow */
+.legend-alpha { color: #f87171; } /* Red */
+
+/* The Key Button */
+.casio-key {
+  width: 100%;
+  height: 28px;
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+  color: #f8fafc;
+  border: 1px solid #111827;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 
+    0 3px 0 #111827,
+    0 4px 4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  display: grid;
+  place-items: center;
+  transition: all 0.08s var(--ease-spring);
+  user-select: none;
+}
+
+.casio-key:hover {
+  filter: brightness(1.18);
+}
+
+.casio-key:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 1px 0 #111827,
+    0 2px 2px rgba(0, 0, 0, 0.4),
+    inset 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* Special Casio Keys */
+.key-shift {
+  background: linear-gradient(180deg, #ca8a04 0%, #a16207 100%);
+  color: #fef08a;
+}
+.key-alpha {
+  background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+  color: #fecaca;
+}
+.key-del {
+  background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+  color: #ffedd5;
+}
+.key-ac {
+  background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+  color: #ffedd5;
+}
+.key-num {
+  background: linear-gradient(180deg, #4b5563 0%, #374151 100%);
+  font-size: 0.9rem;
+}
+.key-equal {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+}

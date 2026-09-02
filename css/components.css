@@ -1,0 +1,347 @@
+/* ==========================================================================
+   SHARED UI COMPONENTS: BASIC CALC, PROGRAMMER, KNOWLEDGE HUB DRAWER
+   ========================================================================== */
+
+/* 1. Basic Commercial Desktop Calculator */
+.basic-calc-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+.basic-calc-chassis {
+  width: 100%;
+  max-width: 360px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.basic-display-box {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-height: 85px;
+  justify-content: space-between;
+}
+
+.basic-history-line {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-height: 1.2rem;
+}
+
+.basic-memory-flag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--accent-primary);
+  align-self: flex-start;
+}
+
+.basic-main-line {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+  word-break: break-all;
+}
+
+.basic-keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.basic-btn {
+  height: 52px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 1.15rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: all var(--transition-fast);
+  user-select: none;
+  position: relative;
+}
+
+.basic-btn:hover {
+  background-color: var(--bg-subtle);
+  border-color: var(--border-hover);
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.08);
+}
+
+.basic-btn:active {
+  transform: translateY(1px) scale(0.96);
+  box-shadow: none;
+}
+
+.basic-btn.op-btn {
+  background-color: var(--accent-light);
+  color: var(--accent-primary);
+  border-color: var(--accent-border);
+  font-weight: 700;
+}
+
+.basic-btn.op-btn:hover {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px -2px var(--accent-glow);
+}
+
+.basic-btn.equal-btn {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, #4338ca 100%);
+  color: #ffffff;
+  border-color: var(--accent-primary);
+  font-weight: 800;
+  box-shadow: 0 4px 12px -2px var(--accent-glow);
+}
+
+.basic-btn.equal-btn:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent-primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px -2px var(--accent-glow);
+}
+
+.basic-btn.clear-btn {
+  color: #ef4444;
+}
+
+.basic-btn.clear-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* 2. Programmer 64-Bit Bitboard & Hex/Dec/Oct/Bin */
+.programmer-container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.prog-display-panel {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.prog-base-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.prog-base-label {
+  width: 45px;
+  font-weight: 800;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.prog-base-val {
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-all;
+  flex: 1;
+}
+
+/* 64-Bit Interactive Bitboard */
+.bitboard-wrapper {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bitboard-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+.bitboard-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 4px;
+}
+
+@media (max-width: 768px) {
+  .bitboard-grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
+}
+
+.bit-cell {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  height: 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+  position: relative;
+}
+
+.bit-cell:hover {
+  border-color: var(--accent-primary);
+  transform: scale(1.15);
+  box-shadow: 0 0 10px var(--accent-light);
+  z-index: 2;
+}
+
+.bit-cell.bit-1 {
+  background-color: var(--accent-light);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  font-weight: 800;
+  box-shadow: 0 0 8px -2px var(--accent-glow);
+}
+
+.bit-val {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.bit-index {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  line-height: 1;
+  margin-top: 2px;
+}
+
+/* 3. Educational Knowledge Hub & Formula Drawer */
+.knowledge-drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: none;
+  justify-content: flex-end;
+}
+
+.knowledge-drawer-overlay.open {
+  display: flex;
+}
+
+.knowledge-drawer {
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  background-color: var(--bg-surface);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 0 25px rgba(0, 0, 0, 0.15);
+  animation: slideInRight 0.25s ease-out;
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.drawer-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.drawer-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.35rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+}
+.drawer-close-btn:hover { color: var(--text-primary); }
+
+.drawer-content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-primary);
+}
+
+.info-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.formula-card {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.formula-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
