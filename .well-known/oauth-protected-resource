@@ -1,0 +1,14 @@
+{
+  "resource": "https://truecalci.com",
+  "authorization_servers": [
+    "https://truecalci.com"
+  ],
+  "scopes_supported": [
+    "tools:read",
+    "tools:execute"
+  ],
+  "bearer_methods_supported": [
+    "header"
+  ],
+  "resource_documentation": "https://truecalci.com/auth.md"
+}

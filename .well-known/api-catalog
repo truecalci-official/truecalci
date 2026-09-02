@@ -1,0 +1,29 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://truecalci.com/api/v1/",
+      "service-desc": [
+        {
+          "href": "https://truecalci.com/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://truecalci.com/llms.txt",
+          "type": "text/markdown"
+        },
+        {
+          "href": "https://truecalci.com/llms-full.txt",
+          "type": "text/markdown"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://truecalci.com/api/health",
+          "type": "application/json"
+        }
+      ]
+    }
+  ]
+}

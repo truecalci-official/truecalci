@@ -1,0 +1,61 @@
+{
+  "$schema": "https://a2a-protocol.org/latest/schema/agent-card.json",
+  "name": "TrueCalci Computational Agent",
+  "version": "1.0.0",
+  "description": "High-precision computational agent for quantitative finance, structural engineering, kinematics physics, and multi-regional taxation.",
+  "provider": {
+    "name": "TrueCalci",
+    "url": "https://truecalci.com"
+  },
+  "supportedInterfaces": [
+    {
+      "url": "https://truecalci.com/api/v1/mcp",
+      "protocol": "mcp",
+      "version": "2024-11-05"
+    },
+    {
+      "url": "https://truecalci.com/openapi.json",
+      "protocol": "openapi",
+      "version": "3.1.0"
+    }
+  ],
+  "capabilities": [
+    "quantitative-finance",
+    "structural-engineering",
+    "applied-physics",
+    "multi-regional-taxation",
+    "statistical-regression"
+  ],
+  "skills": [
+    {
+      "id": "truecalci_mortgage_piti",
+      "name": "US Mortgage PITI & PMI Amortization",
+      "description": "Calculates monthly principal, interest, taxes, insurance, and automated PMI with full amortization schedule."
+    },
+    {
+      "id": "truecalci_black_scholes",
+      "name": "Black-Scholes Options Pricing & Complete Greeks",
+      "description": "Computes closed-form analytical Black-Scholes-Merton option prices and Greeks (Delta, Gamma, Vega, Theta, Rho)."
+    },
+    {
+      "id": "truecalci_beam_bending",
+      "name": "Euler-Bernoulli Beam Deflection & Stress",
+      "description": "Calculates center deflection, maximum bending moment, and fiber stress for simply supported beams."
+    },
+    {
+      "id": "truecalci_projectile_motion",
+      "name": "2D Kinematics Ballistic Projectiles",
+      "description": "Calculates total flight time, maximum horizontal range, and apogee height for 2D ballistic projectile motion."
+    },
+    {
+      "id": "truecalci_linear_regression",
+      "name": "Ordinary Least Squares (OLS) Linear Regression",
+      "description": "Fits linear model y = mx + b, calculating slope, intercept, Pearson r, and R-squared."
+    },
+    {
+      "id": "truecalci_indian_income_tax",
+      "name": "Indian Income Tax Engine (Budget 2025-26)",
+      "description": "Computes statutory New Tax Regime slabs with standard deduction, Section 87A rebate, and HNI surcharges."
+    }
+  ]
+}

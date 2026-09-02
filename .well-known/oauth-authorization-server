@@ -1,0 +1,33 @@
+{
+  "issuer": "https://truecalci.com",
+  "authorization_endpoint": "https://truecalci.com/oauth/authorize",
+  "token_endpoint": "https://truecalci.com/oauth/token",
+  "jwks_uri": "https://truecalci.com/.well-known/jwks.json",
+  "registration_endpoint": "https://truecalci.com/oauth/register",
+  "scopes_supported": [
+    "openid",
+    "profile",
+    "email",
+    "tools:read",
+    "tools:execute"
+  ],
+  "response_types_supported": [
+    "token",
+    "code"
+  ],
+  "response_modes_supported": [
+    "query",
+    "fragment"
+  ],
+  "grant_types_supported": [
+    "client_credentials",
+    "authorization_code",
+    "urn:ietf:params:oauth:grant-type:token-exchange"
+  ],
+  "token_endpoint_auth_methods_supported": [
+    "client_secret_basic",
+    "client_secret_post",
+    "none"
+  ],
+  "service_documentation": "https://truecalci.com/auth.md"
+}

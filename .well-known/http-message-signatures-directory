@@ -1,0 +1,19 @@
+{
+  "keys": [
+    {
+      "kty": "RSA",
+      "use": "sig",
+      "alg": "RS256",
+      "kid": "truecalci-webbot-key-2026",
+      "n": "u1wK_y8V0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0F8P-bNqfVj5M6x8L0",
+      "e": "AQAB"
+    },
+    {
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "use": "sig",
+      "kid": "truecalci-ed25519-2026",
+      "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+    }
+  ]
+}

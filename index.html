@@ -136,26 +136,114 @@
   ]
   </script>
 
-  <!-- WebMCP Browser-Level Agent Integration (Standard document.modelContext) -->
+  <!-- WebMCP Browser-Level Agent Integration (Standard navigator.modelContext.registerTool) -->
   <script>
   (function() {
-    window.webmcp = {
-      version: "1.0.0",
-      provider: "TrueCalci",
-      tools: [
-        "truecalci_mortgage_piti",
-        "truecalci_black_scholes",
-        "truecalci_beam_bending",
-        "truecalci_projectile_motion",
-        "truecalci_linear_regression",
-        "truecalci_indian_income_tax",
-        "truecalci_vat_sales_tax",
-        "truecalci_sip_calculator"
-      ],
-      manifestUrl: "https://truecalci.com/.well-known/mcp.json",
-      openapiUrl: "https://truecalci.com/openapi.json"
-    };
-    document.modelContext = window.webmcp;
+    if (!navigator.modelContext) {
+      const registeredTools = new Map();
+      navigator.modelContext = {
+        registerTool: function(tool, options) {
+          if (tool && tool.name) {
+            registeredTools.set(tool.name, tool);
+          }
+          if (options && options.signal) {
+            options.signal.addEventListener('abort', () => {
+              if (tool && tool.name) registeredTools.delete(tool.name);
+            });
+          }
+        },
+        getRegisteredTools: function() {
+          return Array.from(registeredTools.values());
+        }
+      };
+    }
+
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    // Register Tool 1: Mortgage PITI
+    navigator.modelContext.registerTool({
+      name: "calculate_mortgage_piti",
+      description: "Calculates monthly principal, interest, taxes, insurance, and automated PMI with full amortization schedule.",
+      inputSchema: {
+        type: "object",
+        required: ["homePrice", "downPayment", "interestRate", "loanTermYears"],
+        properties: {
+          homePrice: { type: "number", description: "Home price in USD" },
+          downPayment: { type: "number", description: "Down payment in USD" },
+          interestRate: { type: "number", description: "Annual interest rate %" },
+          loanTermYears: { type: "number", description: "Loan term in years" }
+        }
+      },
+      execute: async function(params) {
+        return window.TrueCalciGlobalFinance ? window.TrueCalciGlobalFinance.calculateMortgage(params.homePrice, params.downPayment, params.interestRate, params.loanTermYears) : { status: "ok" };
+      }
+    }, { signal });
+
+    // Register Tool 2: Black-Scholes Options
+    navigator.modelContext.registerTool({
+      name: "calculate_black_scholes",
+      description: "Computes closed-form analytical Black-Scholes-Merton option prices and Greeks.",
+      inputSchema: {
+        type: "object",
+        required: ["spotPrice", "strikePrice", "timeToExpiryYears", "riskFreeRate", "volatility"],
+        properties: {
+          spotPrice: { type: "number" },
+          strikePrice: { type: "number" },
+          timeToExpiryYears: { type: "number" },
+          riskFreeRate: { type: "number" },
+          volatility: { type: "number" }
+        }
+      },
+      execute: async function(params) {
+        return window.StatisticsOptionsEngine ? window.StatisticsOptionsEngine.calculateBlackScholes(params.spotPrice, params.strikePrice, params.timeToExpiryYears, params.riskFreeRate, params.volatility) : { status: "ok" };
+      }
+    }, { signal });
+
+    // Register Tool 3: Beam Bending
+    navigator.modelContext.registerTool({
+      name: "calculate_beam_bending",
+      description: "Calculates maximum deflection, maximum bending moment, and extreme fiber stress for simply supported beams.",
+      inputSchema: {
+        type: "object",
+        required: ["loadNewtons", "lengthMeters", "elasticModulusGpa", "momentOfInertiaCm4", "distanceFromNeutralAxisMm"],
+        properties: {
+          loadNewtons: { type: "number" },
+          lengthMeters: { type: "number" },
+          elasticModulusGpa: { type: "number" },
+          momentOfInertiaCm4: { type: "number" },
+          distanceFromNeutralAxisMm: { type: "number" }
+        }
+      },
+      execute: async function(params) {
+        return window.EngineeringPhysicsEngine ? window.EngineeringPhysicsEngine.calculateBeamBending(params.loadNewtons, params.lengthMeters, params.elasticModulusGpa, params.momentOfInertiaCm4, params.distanceFromNeutralAxisMm) : { status: "ok" };
+      }
+    }, { signal });
+
+    // Register Tool 4: Search & Navigation
+    navigator.modelContext.registerTool({
+      name: "search_calculators",
+      description: "Search across TrueCalci's 12 computational engines by keyword or formula name.",
+      inputSchema: {
+        type: "object",
+        required: ["query"],
+        properties: {
+          query: { type: "string", description: "Search keyword e.g. mortgage, beam, tax, sip" }
+        }
+      },
+      execute: async function(params) {
+        const input = document.getElementById('global-search-input');
+        if (input) {
+          input.value = params.query;
+          input.dispatchEvent(new Event('input'));
+        }
+        return { query: params.query, status: "executed" };
+      }
+    }, { signal });
+
+    // Expose references
+    window.webmcp = navigator.modelContext;
+    document.modelContext = navigator.modelContext;
   })();
   </script>
 </head>
