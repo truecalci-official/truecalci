@@ -13,7 +13,11 @@
   "servers": [
     {
       "url": "https://truecalci.com",
-      "description": "Production Cloudflare Global Edge"
+      "description": "Global Primary Edge (Cloudflare Anycast)"
+    },
+    {
+      "url": "https://truecalci.in",
+      "description": "Indian Regional Edge (Redirected / Geo-Routed)"
     }
   ],
   "paths": {

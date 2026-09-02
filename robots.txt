@@ -42,6 +42,7 @@ Allow: /
 
 # Canonical Sitemaps and LLM Knowledge References
 Sitemap: https://truecalci.com/sitemap.xml
+Sitemap: https://truecalci.in/sitemap.xml
 LLM-Reference: https://truecalci.com/llms.txt
 LLM-Full-Reference: https://truecalci.com/llms-full.txt
 OpenAPI-Catalog: https://truecalci.com/openapi.json

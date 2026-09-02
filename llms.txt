@@ -1,5 +1,6 @@
 # TrueCalci — Precision Global, Household, Engineering & Quantitative Computational Suite
-> Production Host: https://truecalci.com
+> Primary Host: https://truecalci.com
+> Indian Regional Host: https://truecalci.in (HTTP 301 Permanent Redirect)
 > Canonical Documentation: https://truecalci.com/llms.txt
 > Unabridged Technical Knowledge: https://truecalci.com/llms-full.txt
 > OpenAPI 3.1 Catalog: https://truecalci.com/openapi.json

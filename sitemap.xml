@@ -4,10 +4,12 @@
   Submit this file to Google Search Console (e.g. https://search.google.com/search-console)
   Replace 'https://truecalci.com' with your live production URL (e.g. 'https://omnicalc.in')
 -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Core Web Application -->
   <url>
     <loc>https://truecalci.com/</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://truecalci.com/" />
+    <xhtml:link rel="alternate" hreflang="en-IN" href="https://truecalci.in/" />
     <lastmod>2026-09-02</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
