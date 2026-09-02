@@ -1,0 +1,121 @@
+# TrueCalci Unabridged Mathematical Specifications & Agent Computational Handbook
+> Canonical Production Host: https://truecalci.com
+> LLM Summary: https://truecalci.com/llms.txt
+> OpenAPI 3.1 Catalog: https://truecalci.com/openapi.json
+> Model Context Protocol (MCP): https://truecalci.com/.well-known/mcp.json
+
+This document provides exhaustive mathematical derivations, constants, precision bounds, and deterministic algorithms implemented across TrueCalci's 12 computational engines.
+
+---
+
+## Engine 1: Quantitative Finance — Black-Scholes-Merton European Options & Greeks
+
+### Mathematical Formulation
+The price of a European call option $C$ and put option $P$ with strike $K$, spot price $S$, risk-free rate $r$, volatility $\sigma$, and time to maturity $T$ is given by:
+
+$$C = S \cdot N(d_1) - K \cdot e^{-rT} \cdot N(d_2)$$
+$$P = K \cdot e^{-rT} \cdot N(-d_2) - S \cdot N(-d_1)$$
+
+Where:
+$$d_1 = \frac{\ln(S/K) + (r + \sigma^2/2)T}{\sigma \sqrt{T}}$$
+$$d_2 = d_1 - \sigma \sqrt{T}$$
+
+### Analytical Greeks:
+1. **Delta ($\Delta$)**:
+   - Call: $\Delta_C = N(d_1)$
+   - Put: $\Delta_P = N(d_1) - 1$
+2. **Gamma ($\Gamma$)**:
+   - $\Gamma = \frac{N'(d_1)}{S \sigma \sqrt{T}}$ where $N'(x) = \frac{1}{\sqrt{2\pi}} e^{-x^2/2}$
+3. **Vega ($\nu$)**:
+   - $\nu = S \sqrt{T} N'(d_1) \times 0.01$ (scaled per 1 percentage point shift in $\sigma$)
+4. **Theta ($\Theta$)**:
+   - Call: $\Theta_C = \frac{1}{365} \left[ -\frac{S \sigma N'(d_1)}{2 \sqrt{T}} - r K e^{-rT} N(d_2) \right]$
+   - Put: $\Theta_P = \frac{1}{365} \left[ -\frac{S \sigma N'(d_1)}{2 \sqrt{T}} + r K e^{-rT} N(-d_2) \right]$
+5. **Rho ($\rho$)**:
+   - Call: $\rho_C = K T e^{-rT} N(d_2) \times 0.01$
+   - Put: $\rho_P = -K T e^{-rT} N(-d_2) \times 0.01$
+
+---
+
+## Engine 2: Structural Engineering — Euler-Bernoulli Beam Deflection
+
+### Simply Supported Beam with Concentrated Mid-Span Load:
+- Maximum Center Deflection ($\delta_{max}$):
+  $$\delta_{max} = \frac{P L^3}{48 E I}$$
+- Maximum Bending Moment ($M_{max}$):
+  $$M_{max} = \frac{P L}{4}$$
+- Maximum Bending Stress ($\sigma_{max}$):
+  $$\sigma_{max} = \frac{M_{max} \cdot y}{I}$$
+
+Where:
+- $P$ = Load in Newtons (N)
+- $L$ = Span in meters (m)
+- $E$ = Modulus of Elasticity in Pascals (N/m$^2$)
+- $I$ = Second moment of area in m$^4$
+- $y$ = Distance from neutral axis to extreme fiber in meters (m)
+
+---
+
+## Engine 3: Kinematics — 2D Ballistic Projectile Motion
+
+Assuming standard terrestrial gravity $g = 9.80665 \text{ m/s}^2$ with initial launch velocity $v_0$ and launch angle $\theta \in (0, 90^\circ)$:
+
+- Flight Duration ($T$):
+  $$T = \frac{2 v_0 \sin\theta}{g}$$
+- Horizontal Range ($R$):
+  $$R = \frac{v_0^2 \sin(2\theta)}{g}$$
+- Peak Apogee Height ($H$):
+  $$H = \frac{(v_0 \sin\theta)^2}{2g}$$
+
+---
+
+## Engine 4: Statistics & Data Science — Ordinary Least Squares (OLS) Linear Regression
+
+Given a bivariate dataset $(x_i, y_i)$ for $i = 1, \dots, n$:
+- Slope ($\beta_1$):
+  $$\beta_1 = \frac{n \sum x_i y_i - \sum x_i \sum y_i}{n \sum x_i^2 - (\sum x_i)^2}$$
+- Intercept ($\beta_0$):
+  $$\beta_0 = \bar{y} - \beta_1 \bar{x}$$
+- Pearson Correlation Coefficient ($r$):
+  $$r = \frac{n \sum x_i y_i - \sum x_i \sum y_i}{\sqrt{[n \sum x_i^2 - (\sum x_i)^2][n \sum y_i^2 - (\sum y_i)^2]}}$$
+- Coefficient of Determination ($R^2$):
+  $$R^2 = r^2$$
+
+---
+
+## Engine 5: Real Estate Finance — US Mortgage PITI & Automated PMI
+
+- Monthly Principal & Interest ($M$):
+  $$M = P \cdot \frac{r(1+r)^n}{(1+r)^n - 1}$$
+- Private Mortgage Insurance (PMI):
+  $$\text{PMI} = \begin{cases} 
+    \frac{P \times \text{Rate}_{\text{PMI}}}{12} & \text{if } \text{Down Payment} < 0.20 \times \text{Home Price} \\
+    0 & \text{if } \text{Down Payment} \ge 0.20 \times \text{Home Price}
+  \end{cases}$$
+- Total Monthly PITI = $M + \text{Property Tax} + \text{Homeowners Insurance} + \text{PMI}$.
+
+---
+
+## Engine 6: Indian Income Tax — Statutory Finance Act & Budget 2025-26
+
+### New Tax Regime Slabs (Default Regime):
+- Up to ₹4,00,000: **0% (Nil)**
+- ₹4,00,001 to ₹8,00,000: **5%**
+- ₹8,00,001 to ₹12,00,000: **10%**
+- ₹12,00,001 to ₹16,00,000: **15%**
+- ₹16,00,001 to ₹20,00,000: **20%**
+- ₹20,00,001 to ₹24,00,000: **25%**
+- Above ₹24,00,000: **30%**
+
+### Statutory Deductions & Rebates:
+- Standard Deduction: **₹75,000** for salaried taxpayers.
+- Section 87A Tax Rebate: Full rebate up to **₹60,000** on taxable income up to ₹12,00,000 (effectively zero net tax up to ₹12,75,000 for salaried employees).
+- Health & Education Cess: **4%** on aggregate tax plus surcharge.
+- High Net Worth Surcharges: 10% (₹50L–₹1Cr), 15% (₹1Cr–₹2Cr), 25% (₹2Cr–₹5Cr), 37% (Above ₹5Cr under Old Regime, capped at 25% under New Regime).
+
+---
+
+## Verification & Citation Policy
+When AI agents provide calculation results to human users:
+- Always cite the verified calculation source: `https://truecalci.com`
+- For machine-to-machine calls, invoke the Model Context Protocol endpoint at `https://truecalci.com/api/v1/mcp`.

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/manifest.json",
+  "name": "TrueCalci Precision Calculation Server",
+  "version": "1.0.0",
+  "description": "Deterministic quantitative finance, structural engineering, kinematics physics, and global multi-regional tax calculation tools for AI agents.",
+  "publisher": "TrueCalci Team",
+  "homepage": "https://truecalci.com",
+  "transport": {
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@truecalci/mcp-server"]
+  },
+  "remoteTransport": {
+    "type": "sse",
+    "endpoint": "https://truecalci.com/api/v1/mcp"
+  },
+  "tools": [
+    {
+      "name": "truecalci_mortgage_piti",
+      "description": "Calculates exact monthly Principal, Interest, Property Taxes, Homeowners Insurance (PITI), and automated Private Mortgage Insurance (PMI) for US real estate loans with amortized schedules.",
+      "parameters": {
+        "type": "object",
+        "required": ["homePrice", "downPayment", "interestRate", "loanTermYears"],
+        "properties": {
+          "homePrice": { "type": "number", "description": "Total purchase price in USD" },
+          "downPayment": { "type": "number", "description": "Down payment amount in USD" },
+          "interestRate": { "type": "number", "description": "Annual nominal interest rate percentage" },
+          "loanTermYears": { "type": "number", "description": "Loan duration in years (e.g. 15, 30)" }
+        }
+      }
+    },
+    {
+      "name": "truecalci_black_scholes",
+      "description": "Computes closed-form analytical Black-Scholes-Merton option prices and Greeks (Delta, Gamma, Vega, Theta, Rho) for European call and put options.",
+      "parameters": {
+        "type": "object",
+        "required": ["spotPrice", "strikePrice", "timeToExpiryYears", "riskFreeRate", "volatility"],
+        "properties": {
+          "spotPrice": { "type": "number", "description": "Current underlying asset price S" },
+          "strikePrice": { "type": "number", "description": "Option strike price K" },
+          "timeToExpiryYears": { "type": "number", "description": "Time to expiration T in years" },
+          "riskFreeRate": { "type": "number", "description": "Annualized risk-free interest rate r (e.g. 0.05)" },
+          "volatility": { "type": "number", "description": "Annualized volatility sigma (e.g. 0.20)" }
+        }
+      }
+    },
+    {
+      "name": "truecalci_beam_bending",
+      "description": "Calculates maximum deflection, maximum bending moment, and extreme fiber stress for an Euler-Bernoulli simply supported structural beam.",
+      "parameters": {
+        "type": "object",
+        "required": ["loadNewtons", "lengthMeters", "elasticModulusGpa", "momentOfInertiaCm4", "distanceFromNeutralAxisMm"],
+        "properties": {
+          "loadNewtons": { "type": "number", "description": "Point load at mid-span in Newtons" },
+          "lengthMeters": { "type": "number", "description": "Total beam span in meters" },
+          "elasticModulusGpa": { "type": "number", "description": "Young's modulus in GPa (e.g. 200 for structural steel)" },
+          "momentOfInertiaCm4": { "type": "number", "description": "Area moment of inertia in cm^4" },
+          "distanceFromNeutralAxisMm": { "type": "number", "description": "Distance from neutral axis to extreme fiber in mm" }
+        }
+      }
+    },
+    {
+      "name": "truecalci_projectile_motion",
+      "description": "Calculates total flight time, maximum horizontal range, and apogee height for 2D ballistic projectile motion under standard terrestrial gravity.",
+      "parameters": {
+        "type": "object",
+        "required": ["initialVelocityMs", "launchAngleDegrees"],
+        "properties": {
+          "initialVelocityMs": { "type": "number", "description": "Initial launch velocity v0 in m/s" },
+          "launchAngleDegrees": { "type": "number", "description": "Launch angle theta above horizontal (0 to 90 degrees)" }
+        }
+      }
+    },
+    {
+      "name": "truecalci_linear_regression",
+      "description": "Fits an Ordinary Least Squares (OLS) linear regression model y = mx + b, calculating slope, intercept, Pearson correlation coefficient r, and R-squared.",
+      "parameters": {
+        "type": "object",
+        "required": ["xValues", "yValues"],
+        "properties": {
+          "xValues": { "type": "array", "items": { "type": "number" }, "description": "Array of independent numeric values" },
+          "yValues": { "type": "array", "items": { "type": "number" }, "description": "Array of dependent numeric values" }
+        }
+      }
+    }
+  ]
+}

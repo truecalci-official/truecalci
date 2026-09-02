@@ -1,17 +1,28 @@
-# Robots.txt for TrueCalci Global Suite
+# Robots.txt for TrueCalci Global Computational Suite
+# Production Host: https://truecalci.com
+
 User-agent: *
 Allow: /
 Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /openapi.json
+Allow: /.well-known/
 Allow: /sitemap.xml
 Allow: /terms.html
 Allow: /privacy.html
 Allow: /engineering-formulas.html
 
-# AI & LLM Search Engine Crawlers
+# Explicitly Whitelisted AI & LLM Search Engine Crawlers
 User-agent: GPTBot
 Allow: /
 
+User-agent: ChatGPT-User
+Allow: /
+
 User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
 Allow: /
 
 User-agent: PerplexityBot
@@ -20,4 +31,19 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: http://localhost:4000/sitemap.xml
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Cohere-ai
+Allow: /
+
+# Canonical Sitemaps and LLM Knowledge References
+Sitemap: https://truecalci.com/sitemap.xml
+LLM-Reference: https://truecalci.com/llms.txt
+LLM-Full-Reference: https://truecalci.com/llms-full.txt
+OpenAPI-Catalog: https://truecalci.com/openapi.json
+Agent-Card: https://truecalci.com/.well-known/agent.json
+MCP-Manifest: https://truecalci.com/.well-known/mcp.json

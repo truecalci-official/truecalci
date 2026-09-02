@@ -1,0 +1,181 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "TrueCalci Precision Computational WebAPI",
+    "version": "1.0.0",
+    "description": "High-precision deterministic calculation endpoints for AI agents, quantitative analysts, and financial applications.",
+    "contact": {
+      "name": "TrueCalci Team",
+      "email": "truecalci.official@gmail.com",
+      "url": "https://truecalci.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://truecalci.com",
+      "description": "Production Cloudflare Global Edge"
+    }
+  ],
+  "paths": {
+    "/api/v1/mortgage_piti": {
+      "post": {
+        "summary": "US Mortgage PITI & PMI Calculator",
+        "description": "Calculates monthly principal, interest, taxes, insurance, and automated PMI with full amortization schedule.",
+        "operationId": "calculateMortgagePITI",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["homePrice", "downPayment", "interestRate", "loanTermYears"],
+                "properties": {
+                  "homePrice": { "type": "number", "example": 450000 },
+                  "downPayment": { "type": "number", "example": 45000 },
+                  "interestRate": { "type": "number", "example": 6.75 },
+                  "loanTermYears": { "type": "number", "example": 30 },
+                  "propertyTaxAnnual": { "type": "number", "example": 4800 },
+                  "homeInsuranceAnnual": { "type": "number", "example": 1400 },
+                  "pmiAnnualRate": { "type": "number", "example": 0.85 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "monthlyPrincipalInterest": { "type": "number" },
+                    "monthlyPropertyTax": { "type": "number" },
+                    "monthlyInsurance": { "type": "number" },
+                    "monthlyPMI": { "type": "number" },
+                    "totalMonthlyPITI": { "type": "number" },
+                    "loanToValueRatio": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/black_scholes_options": {
+      "post": {
+        "summary": "Black-Scholes Options Pricing & Complete Greeks",
+        "description": "Calculates theoretical price and full analytical Greeks (Delta, Gamma, Vega, Theta, Rho) for European call and put options.",
+        "operationId": "calculateBlackScholes",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["spotPrice", "strikePrice", "timeToExpiryYears", "riskFreeRate", "volatility"],
+                "properties": {
+                  "spotPrice": { "type": "number", "example": 100 },
+                  "strikePrice": { "type": "number", "example": 100 },
+                  "timeToExpiryYears": { "type": "number", "example": 1 },
+                  "riskFreeRate": { "type": "number", "example": 0.05 },
+                  "volatility": { "type": "number", "example": 0.20 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calculated prices and Greeks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "callPrice": { "type": "number" },
+                    "putPrice": { "type": "number" },
+                    "d1": { "type": "number" },
+                    "d2": { "type": "number" },
+                    "greeks": {
+                      "type": "object",
+                      "properties": {
+                        "deltaCall": { "type": "number" },
+                        "deltaPut": { "type": "number" },
+                        "gamma": { "type": "number" },
+                        "vega": { "type": "number" },
+                        "thetaCall": { "type": "number" },
+                        "thetaPut": { "type": "number" },
+                        "rhoCall": { "type": "number" },
+                        "rhoPut": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/beam_bending": {
+      "post": {
+        "summary": "Euler-Bernoulli Beam Deflection & Stress",
+        "description": "Calculates center deflection, maximum bending moment, and fiber stress for simply supported beams.",
+        "operationId": "calculateBeamBending",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["loadNewtons", "lengthMeters", "elasticModulusGpa", "momentOfInertiaCm4", "distanceFromNeutralAxisMm"],
+                "properties": {
+                  "loadNewtons": { "type": "number", "example": 10000 },
+                  "lengthMeters": { "type": "number", "example": 5 },
+                  "elasticModulusGpa": { "type": "number", "example": 200 },
+                  "momentOfInertiaCm4": { "type": "number", "example": 3000 },
+                  "distanceFromNeutralAxisMm": { "type": "number", "example": 100 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Beam deflection and stress results"
+          }
+        }
+      }
+    },
+    "/api/v1/linear_regression": {
+      "post": {
+        "summary": "Ordinary Least Squares (OLS) Linear Regression",
+        "description": "Fits linear model y = mx + b, calculating slope, intercept, Pearson r, and R-squared.",
+        "operationId": "calculateLinearRegression",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["xValues", "yValues"],
+                "properties": {
+                  "xValues": { "type": "array", "items": { "type": "number" }, "example": [1, 2, 3, 4, 5] },
+                  "yValues": { "type": "array", "items": { "type": "number" }, "example": [2.1, 3.9, 6.2, 8.1, 9.8] }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Regression parameters"
+          }
+        }
+      }
+    }
+  }
+}

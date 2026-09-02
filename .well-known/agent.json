@@ -1,0 +1,36 @@
+{
+  "$schema": "https://a2a-standard.org/schema/agent-card.json",
+  "name": "TrueCalci Computational Agent",
+  "version": "1.0.0",
+  "identity": {
+    "organization": "TrueCalci Official",
+    "website": "https://truecalci.com",
+    "contact": "truecalci.official@gmail.com",
+    "github": "https://github.com/truecalci-official"
+  },
+  "capabilities": [
+    "quantitative-finance",
+    "structural-engineering",
+    "kinematics-physics",
+    "statistical-regression",
+    "multi-regional-taxation",
+    "model-context-protocol"
+  ],
+  "protocols": {
+    "mcp": {
+      "version": "2024-11-05",
+      "manifest": "https://truecalci.com/.well-known/mcp.json",
+      "sseEndpoint": "https://truecalci.com/api/v1/mcp"
+    },
+    "openapi": {
+      "version": "3.1.0",
+      "url": "https://truecalci.com/openapi.json"
+    }
+  },
+  "skillsIndex": "https://truecalci.com/.well-known/agent-skills/index.json",
+  "rateLimits": {
+    "anonymous": "1000 requests per minute",
+    "authenticated": "unlimited"
+  },
+  "status": "active"
+}

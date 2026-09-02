@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "skills": [
+    {
+      "id": "truecalci-mortgage-piti",
+      "name": "US Mortgage PITI & PMI Amortization",
+      "description": "Calculates monthly PITI payments and full loan amortization schedule with loan-to-value PMI triggers.",
+      "category": "Real Estate Finance",
+      "documentation": "https://truecalci.com/llms.txt#mortgage",
+      "endpoint": "https://truecalci.com/api/v1/mortgage_piti"
+    },
+    {
+      "id": "truecalci-black-scholes",
+      "name": "Black-Scholes Options Pricing & Greeks",
+      "description": "Calculates analytical European option pricing and full 5-Greeks risk metrics (Delta, Gamma, Vega, Theta, Rho).",
+      "category": "Quantitative Finance",
+      "documentation": "https://truecalci.com/llms-full.txt#black-scholes",
+      "endpoint": "https://truecalci.com/api/v1/black_scholes_options"
+    },
+    {
+      "id": "truecalci-beam-bending",
+      "name": "Euler-Bernoulli Beam Deflection & Stress",
+      "description": "Computes mid-span deflection, bending moment, and extreme fiber stress for simply supported beams.",
+      "category": "Structural Engineering",
+      "documentation": "https://truecalci.com/engineering-formulas.html",
+      "endpoint": "https://truecalci.com/api/v1/beam_bending"
+    },
+    {
+      "id": "truecalci-projectile-motion",
+      "name": "2D Kinematics Ballistic Projectiles",
+      "description": "Calculates flight time, horizontal range, and apex apogee for 2D trajectory motion.",
+      "category": "Applied Physics",
+      "documentation": "https://truecalci.com/engineering-formulas.html",
+      "endpoint": "https://truecalci.com/api/v1/projectile_motion"
+    },
+    {
+      "id": "truecalci-linear-regression",
+      "name": "Ordinary Least Squares (OLS) Linear Regression",
+      "description": "Calculates slope, intercept, Pearson r, and R-squared for bivariate data points.",
+      "category": "Data Science & Statistics",
+      "documentation": "https://truecalci.com/llms.txt#statistics",
+      "endpoint": "https://truecalci.com/api/v1/linear_regression"
+    },
+    {
+      "id": "truecalci-indian-tax",
+      "name": "Indian Income Tax Engine (Budget 2025-26)",
+      "description": "Computes New Tax Regime statutory slabs with standard deduction, Section 87A rebate, and HNI surcharges.",
+      "category": "Taxation",
+      "documentation": "https://truecalci.com/llms-full.txt#indian-tax",
+      "endpoint": "https://truecalci.com/api/v1/indian_income_tax"
+    }
+  ]
+}

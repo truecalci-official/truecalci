@@ -6,8 +6,17 @@
   <title>TrueCalci — Precision Global, Household & Engineering Calculator Suite</title>
   <meta name="description" content="Precision minimalist calculator suite for US, Europe, and India: US Mortgage (PITI & PMI), European VAT & Sales Tax, Tip Splitter, 401(k) Compound Wealth, Income Tax (Budget 2025-26), SIP, 991 Scientific Calci, and 64-bit Programmer tools.">
   
-  <link rel="canonical" href="http://localhost:4000/">
-  <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM Context">
+  <link rel="canonical" href="https://truecalci.com/">
+  <link rel="alternate" type="text/plain" href="https://truecalci.com/llms.txt" title="LLM Context">
+  <link rel="alternate" type="text/plain" href="https://truecalci.com/llms-full.txt" title="Full LLM Documentation">
+  <link rel="service-desc" type="application/json" href="https://truecalci.com/openapi.json">
+  <link rel="model-context-protocol" type="application/json" href="https://truecalci.com/.well-known/mcp.json">
+  <link rel="agent-card" type="application/json" href="https://truecalci.com/.well-known/agent.json">
+
+  <!-- AI Agent Content Signals & TDM Policy (Cloudflare Agent Readiness Standard) -->
+  <meta name="content-signal" content="ai-train=yes, ai-input=yes, search=yes">
+  <meta name="tdm-reservation" content="0">
+  <meta name="ai-agent-ready" content="true">
 
   <!-- Google Search Console Ownership Verification -->
   <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_TOKEN">
@@ -16,7 +25,7 @@
   <meta property="og:title" content="TrueCalci — Precision Global & Multi-Regional Calculator Suite">
   <meta property="og:description" content="All-in-one precision calculator suite engineered for US, European, and Indian users: US Mortgage PITI, VAT, Tip Splitter, Income Tax, SIP, and 991 Scientific Calci.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="http://localhost:4000/">
+  <meta property="og:url" content="https://truecalci.com/">
   <meta name="twitter:card" content="summary_large_image">
 
   <!-- Modern Typography: Inter + Plus Jakarta Sans + JetBrains Mono -->
@@ -31,14 +40,14 @@
   <link rel="stylesheet" href="css/financial.css">
   <link rel="stylesheet" href="css/components.css">
 
-  <!-- Schema.org Structured Data for Google, Bing & AI Search Engines -->
+  <!-- Schema.org Structured Data for Google, Bing, Claude, ChatGPT & Gemini -->
   <script type="application/ld+json">
   [
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "TrueCalci",
-      "url": "http://localhost:4000",
+      "url": "https://truecalci.com",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "All",
       "description": "High-precision computational workstation for personal finance, mortgage, tax, investments, and engineering mathematics.",
@@ -57,17 +66,40 @@
         "Indian Income Tax Budget 2025-26 (New vs Old Regime)",
         "Mutual Fund SIP and Step-Up investment simulator",
         "Engineering Student Scientific Calci 991 standard V.P.A.M.",
-        "64-Bit Programmer Calculator with interactive bitboard"
+        "64-Bit Programmer Calculator with interactive bitboard",
+        "Black-Scholes Options Pricing & Complete Greeks Engine",
+        "Euler-Bernoulli Beam Bending & Deflection Calculator",
+        "2D Ballistic Kinematics Projectile Motion Calculator",
+        "Ordinary Least Squares (OLS) Linear Regression"
       ]
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebAPI",
+      "name": "TrueCalci Computational WebAPI & MCP Server",
+      "url": "https://truecalci.com/openapi.json",
+      "documentation": "https://truecalci.com/llms.txt",
+      "termsOfService": "https://truecalci.com/terms.html"
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "MathSolver",
+      "name": "TrueCalci Precision Math & Physics Solver",
+      "url": "https://truecalci.com/engineering-formulas.html",
+      "potentialAction": {
+        "@type": "SolveMathAction",
+        "target": "https://truecalci.com/engineering-formulas.html",
+        "mathExpression": "P * L^3 / (48 * E * I)"
+      }
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "TrueCalci",
-      "url": "http://localhost:4000",
+      "url": "https://truecalci.com",
       "potentialAction": {
         "@type": "SearchAction",
-        "target": "http://localhost:4000/?q={search_term_string}",
+        "target": "https://truecalci.com/?q={search_term_string}",
         "query-input": "required name=search_term_string"
       }
     },
@@ -102,6 +134,29 @@
       ]
     }
   ]
+  </script>
+
+  <!-- WebMCP Browser-Level Agent Integration (Standard document.modelContext) -->
+  <script>
+  (function() {
+    window.webmcp = {
+      version: "1.0.0",
+      provider: "TrueCalci",
+      tools: [
+        "truecalci_mortgage_piti",
+        "truecalci_black_scholes",
+        "truecalci_beam_bending",
+        "truecalci_projectile_motion",
+        "truecalci_linear_regression",
+        "truecalci_indian_income_tax",
+        "truecalci_vat_sales_tax",
+        "truecalci_sip_calculator"
+      ],
+      manifestUrl: "https://truecalci.com/.well-known/mcp.json",
+      openapiUrl: "https://truecalci.com/openapi.json"
+    };
+    document.modelContext = window.webmcp;
+  })();
   </script>
 </head>
 <body>
