@@ -585,11 +585,12 @@ body {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(3px);
-  z-index: 998;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9998;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.25s ease;
 }
 
 .sidebar-backdrop.active {
@@ -859,21 +860,26 @@ body {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 295px;
+    width: 300px;
     max-width: 85vw;
     height: 100vh;
     max-height: 100vh;
-    z-index: 1000;
+    z-index: 9999 !important;
     transform: translateX(-100%);
     transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 0 18px 18px 0;
     box-shadow: 6px 0 30px rgba(0, 0, 0, 0.35);
     background-color: var(--bg-surface);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
   }
 
   .app-sidebar-nav.drawer-open {
-    transform: translateX(0);
+    display: flex !important;
+    transform: translateX(0) !important;
+    visibility: visible !important;
   }
 
   .sidebar-header-mobile {
@@ -1095,15 +1101,60 @@ body {
 }
 
 /* Full-Width Enterprise Homepage & Pricing Layout Override */
-body[data-view="home"] .app-sidebar-nav,
+body[data-view="home"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="home"] .app-sidebar-ad,
-body[data-view="pricing"] .app-sidebar-nav,
+body[data-view="pricing"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="pricing"] .app-sidebar-ad,
-body[data-view="developer"] .app-sidebar-nav,
+body[data-view="developer"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="developer"] .app-sidebar-ad,
-body[data-view="admin"] .app-sidebar-nav,
+body[data-view="admin"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="admin"] .app-sidebar-ad {
   display: none !important;
+}
+
+/* Universal Mobile / Drawer-Open Sidebar Override */
+.app-sidebar-nav.drawer-open,
+body[data-view="home"] .app-sidebar-nav.drawer-open,
+body[data-view="pricing"] .app-sidebar-nav.drawer-open,
+body[data-view="developer"] .app-sidebar-nav.drawer-open,
+body[data-view="admin"] .app-sidebar-nav.drawer-open {
+  display: flex !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  width: 300px !important;
+  max-width: 85vw !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  z-index: 99999 !important;
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background-color: var(--bg-surface) !important;
+  border-right: 1px solid var(--border-color) !important;
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.45) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  flex-direction: column !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-header-mobile {
+  display: flex !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-close-btn {
+  display: flex !important;
+  cursor: pointer !important;
+}
+
+/* Currency Dropdown is strictly hidden across the entire site, ONLY displayed on the Pricing page */
+.currency-dropdown-wrapper {
+  display: none !important;
+}
+
+body[data-view="pricing"] .currency-dropdown-wrapper {
+  display: inline-flex !important;
 }
 
 body[data-view="home"] .app-layout-grid,
@@ -1180,5 +1231,139 @@ body[data-view="admin"] .app-workspace {
 [data-theme="dark"] .theme-icon-moon {
   display: block !important;
 }
+
+/* ==========================================================================
+   INTERACTIVE GLASSMORPHISM CARDS (Apple / Linear Grade)
+   ========================================================================== */
+.pillar-glass-card {
+  position: relative;
+  padding: 32px 28px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+[data-theme="light"] .pillar-glass-card {
+  background: rgba(255, 255, 255, 0.76);
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="dark"] .pillar-glass-card,
+[data-theme="obsidian"] .pillar-glass-card {
+  background: rgba(24, 24, 27, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 36px 0 rgba(0, 0, 0, 0.4);
+}
+
+.pillar-glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(37, 99, 235, 0.16),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.pillar-glass-card:hover::before {
+  opacity: 1;
+}
+
+.pillar-glass-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37, 99, 235, 0.45);
+  box-shadow: 0 20px 45px -10px rgba(37, 99, 235, 0.2), 0 0 0 1px rgba(37, 99, 235, 0.25);
+}
+
+.pillar-glass-card-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Header Search Button on Mobile */
+.header-mobile-search-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.header-mobile-search-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-subtle);
+  border-color: var(--border-hover);
+}
+
+/* Mobile Header Refinements */
+@media (max-width: 768px) {
+  .header-search-container {
+    display: none;
+  }
+  .header-mobile-search-btn {
+    display: inline-flex;
+  }
+}
+
+@media (max-width: 640px) {
+  .header-container {
+    padding: 0.5rem 0.65rem !important;
+    gap: 0.4rem !important;
+  }
+
+  .brand-area {
+    gap: 6px !important;
+  }
+
+  .brand-icon {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .brand-title {
+    font-size: 1.02rem !important;
+  }
+
+  .workstation-text {
+    display: none !important;
+  }
+
+  .header-workstation-btn {
+    padding: 6px 8px !important;
+  }
+
+  .header-cta-btn {
+    padding: 6px 10px !important;
+    font-size: 0.78rem !important;
+    white-space: nowrap !important;
+  }
+
+  #header-auth-btn-text {
+    font-size: 0.78rem !important;
+  }
+}
+
 
 

@@ -142,36 +142,42 @@ export class ViewEnterpriseHome {
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
             <!-- Pillar 1 -->
-            <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--accent-light); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <div class="pillar-glass-card">
+              <div class="pillar-glass-card-content">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: var(--accent-light); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(37,99,235,0.15);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </div>
+                <h3 style="font-size: 1.18rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px; letter-spacing: -0.01em;">Ground Models with Deterministic Precision</h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+                  Large Language Models struggle with multi-bracket tax schedules, amortization integrals, and structural deflection. TrueCalci gives your agents an external, verified deterministic calculator that guarantees IEEE 754 precision.
+                </p>
               </div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Ground Models with Deterministic Precision</h3>
-              <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
-                Large Language Models struggle with multi-bracket tax schedules, amortization integrals, and structural deflection. TrueCalci gives your agents an external, verified deterministic calculator that guarantees IEEE 754 precision.
-              </p>
             </div>
 
             <!-- Pillar 2 -->
-            <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <div class="pillar-glass-card">
+              <div class="pillar-glass-card-content">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(16,185,129,0.15);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h3 style="font-size: 1.18rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px; letter-spacing: -0.01em;">Handle Thousands of Calculations in Seconds</h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+                  Engineered directly inside Cloudflare V8 isolates deployed across 330+ edge locations worldwide. Zero container boot times, zero cold starts, and lightning-fast concurrent execution as your agent traffic scales.
+                </p>
               </div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Handle Thousands of Calculations in Seconds</h3>
-              <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
-                Engineered directly inside Cloudflare V8 isolates deployed across 330+ edge locations worldwide. Zero container boot times, zero cold starts, and lightning-fast concurrent execution as your agent traffic scales.
-              </p>
             </div>
 
             <!-- Pillar 3 -->
-            <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <div class="pillar-glass-card">
+              <div class="pillar-glass-card-content">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(245, 158, 11, 0.12); color: #f59e0b; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; box-shadow: 0 4px 12px rgba(245,158,11,0.15);">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h3 style="font-size: 1.18rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px; letter-spacing: -0.01em;">Enterprise Safeguards & Zero Storage</h3>
+                <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
+                  Complete mathematical confidentiality. TrueCalci does not persist developer salaries, property values, or portfolio inputs on local disk databases. Requests are computed in transient memory and immediately purged.
+                </p>
               </div>
-              <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Enterprise Safeguards & Zero Storage</h3>
-              <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
-                Complete mathematical confidentiality. TrueCalci does not persist developer salaries, property values, or portfolio inputs on local disk databases. Requests are computed in transient memory and immediately purged.
-              </p>
             </div>
           </div>
         </section>
@@ -449,6 +455,29 @@ print(res.json())`;
       if (this.onNavigate) this.onNavigate("pricing");
       else window.location.hash = "#pricing";
       window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    });
+
+    // Interactive Glassmorphism Cursor Tracking & 3D Tilt for 3 Pillar Cards
+    const pillarCards = document.querySelectorAll(".pillar-glass-card");
+    pillarCards.forEach(card => {
+      card.addEventListener("mousemove", (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty("--mouse-x", `${x}px`);
+        card.style.setProperty("--mouse-y", `${y}px`);
+
+        // Micro-perspective 3D tilt tracking cursor
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -5;
+        const rotateY = ((x - centerX) / centerX) * 5;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-5px)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0)";
+      });
     });
   }
 }

@@ -360,9 +360,37 @@ class CalculatorApp {
 
   bindEvents() {
     // Mobile Drawer Open / Close
-    this.mobileMenuBtn?.addEventListener("click", () => this.openMobileDrawer());
+    this.mobileMenuBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      this.openMobileDrawer();
+    });
     this.sidebarCloseBtn?.addEventListener("click", () => this.closeMobileDrawer());
     this.sidebarBackdrop?.addEventListener("click", () => this.closeMobileDrawer());
+
+    // Mobile Header Search Button
+    const mobileSearchBtn = document.getElementById("header-mobile-search-btn");
+    if (mobileSearchBtn) {
+      mobileSearchBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const searchContainer = document.querySelector(".header-search-container");
+        if (searchContainer) {
+          const isHidden = window.getComputedStyle(searchContainer).display === "none";
+          if (isHidden) {
+            searchContainer.style.display = "block";
+            searchContainer.style.position = "absolute";
+            searchContainer.style.top = "calc(100% + 4px)";
+            searchContainer.style.left = "8px";
+            searchContainer.style.right = "8px";
+            searchContainer.style.maxWidth = "calc(100vw - 16px)";
+            searchContainer.style.zIndex = "1001";
+            this.globalSearchInput?.focus();
+          } else {
+            searchContainer.style.display = "";
+            searchContainer.style.position = "";
+          }
+        }
+      });
+    }
 
     // Sidebar Navigation Links
     document.querySelectorAll(".sidebar-link").forEach(link => {
@@ -370,8 +398,16 @@ class CalculatorApp {
         const tool = link.dataset.tool;
         if (tool) {
           this.loadTool(tool, true);
+          this.closeMobileDrawer();
         }
       });
+    });
+
+    // Close on Escape
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeMobileDrawer();
+      }
     });
 
     // Live Ticker Clickable Items (e.g. Gold -> Gold Calculator)
@@ -545,6 +581,12 @@ class CalculatorApp {
     }
 
     document.body.dataset.view = toolKey;
+
+    // Show Currency Dropdown only on the pricing/payments page
+    const currencyWrapper = document.getElementById("currency-dropdown-wrapper");
+    if (currencyWrapper) {
+      currencyWrapper.style.display = (toolKey === "pricing") ? "block" : "none";
+    }
 
     if (toolKey === "home") {
       this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
