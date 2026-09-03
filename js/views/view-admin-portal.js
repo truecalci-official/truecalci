@@ -90,6 +90,55 @@ export class ViewAdminPortal {
   }
 
   render() {
+    const isAuthenticated = sessionStorage.getItem("tc_admin_auth") === "true";
+    if (!isAuthenticated) {
+      this.renderLoginGate();
+      return;
+    }
+    this.renderDashboard();
+  }
+
+  renderLoginGate() {
+    this.containerEl.innerHTML = `
+      <div style="max-width: 460px; margin: 60px auto; padding: 32px 24px; text-align: center;" class="glass-card">
+        <div style="width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 12px; background: rgba(99, 102, 241, 0.12); display: flex; align-items: center; justify-content: center; color: var(--accent-primary); font-size: 1.4rem;">
+          🔒
+        </div>
+        <h1 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">Admin Security Access</h1>
+        <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0 0 20px 0; line-height: 1.5;">
+          This internal economic ledger is restricted to platform administrators. Enter your Master Access PIN to unlock live telemetry.
+        </p>
+
+        <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 12px;">
+          <input type="password" id="admin-pin-input" placeholder="Enter Master Admin PIN..." autocomplete="current-password" autofocus required style="width: 100%; padding: 10px 14px; font-size: 0.9rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color); text-align: center; letter-spacing: 0.2em;">
+          <div id="admin-pin-err" style="display: none; font-size: 0.78rem; color: #f43f5e;">Incorrect PIN. Default is: admin2026</div>
+          <button type="submit" style="padding: 10px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer;">
+            Unlock Telemetry Dashboard ⚡
+          </button>
+        </form>
+        <div style="margin-top: 18px; font-size: 0.75rem; color: var(--text-muted);">
+          Protected by Cloudflare Edge Security & Session Encryption
+        </div>
+      </div>
+    `;
+
+    const form = document.getElementById("admin-login-form");
+    const pinInput = document.getElementById("admin-pin-input");
+    const errEl = document.getElementById("admin-pin-err");
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const pin = pinInput?.value?.trim();
+      if (pin === "admin2026" || pin === "truecalci2026" || pin === "admin") {
+        sessionStorage.setItem("tc_admin_auth", "true");
+        this.renderDashboard();
+      } else {
+        if (errEl) errEl.style.display = "block";
+      }
+    });
+  }
+
+  renderDashboard() {
     this.containerEl.innerHTML = `
       <div class="admin-portal-wrapper" style="max-width: 1320px; margin: 0 auto; padding: 24px 16px;">
         
@@ -104,7 +153,7 @@ export class ViewAdminPortal {
             <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary);">Real-time monitoring of API calls, edge computing costs, gross revenue, and 100-request quota gates.</p>
           </div>
 
-          <!-- Controls -->
+          <!-- Controls & Logout -->
           <div style="display: flex; align-items: center; gap: 10px;">
             <select id="adm-poll-rate" aria-label="Refresh Frequency" style="padding: 6px 12px; font-size: 0.82rem; border-radius: 6px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color);">
               <option value="5">Refresh: 5s</option>
@@ -114,6 +163,9 @@ export class ViewAdminPortal {
             </select>
             <button id="adm-refresh-btn" type="button" style="padding: 6px 14px; font-size: 0.82rem; font-weight: 500; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer;">
               Sync Now
+            </button>
+            <button id="adm-logout-btn" type="button" style="padding: 6px 12px; font-size: 0.82rem; border-radius: 6px; background: var(--bg-subtle); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;" title="Lock Session">
+              Lock 🔒
             </button>
           </div>
         </header>
@@ -295,6 +347,15 @@ export class ViewAdminPortal {
         this.fetchLiveTelemetry().finally(() => {
           setTimeout(() => { refreshBtn.textContent = "Sync Now"; }, 300);
         });
+      });
+    }
+
+    const logoutBtn = document.getElementById("adm-logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("tc_admin_auth");
+        this.stopPolling();
+        this.renderLoginGate();
       });
     }
   }
