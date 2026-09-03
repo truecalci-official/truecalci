@@ -202,6 +202,29 @@ export const CALCULATOR_DEFINITIONS = {
       { name: "Where", formula: "P = Initial Lump Sum, PMT = Monthly Deposit, r = Annual Rate, n = Compounding Frequency (12), t = Years" }
     ],
     workedExample: "$10,000 initial + $500/month for 15 years at 8% annual return: Total Principal Invested = $100,000. Compounded Future Value = ~$201,848 (Gain: ~$101,848)."
+  },
+
+  // 13. Remote Contractor 1099 vs W-2 Parity Matrix
+  contractor_matrix: {
+    title: "1099 vs. W-2 Remote Contractor Real Take-Home Matrix",
+    category: "Global Freelance, Tech & Remote Work",
+    disclaimer: "Disclaimer: This tool calculates tax and economic parity under 2024/2025 US Internal Revenue Code provisions (FICA, SECA, § 199A QBI, § 164(f) deduction). It is intended for illustrative financial decision-making and does not constitute formal tax advisory. Consult a licensed CPA or tax attorney for entity-specific filings.",
+    overview: "Compares true take-home cash between a W-2 salaried employee and a 1099 independent contractor / LLC pass-through entity. Solves the exact breakeven billing rate ($/hr) required to match corporate employee benefits (health insurance, 401k match, paid time off) after accounting for the 15.3% Self-Employment Tax (SECA) and the 20% Section 199A Qualified Business Income (QBI) deduction.",
+    formulas: [
+      { name: "1099 Self-Employment Tax (SECA)", formula: "SE Tax = Net Profit × 0.9235 × [12.4% (SS up to $168,600) + 2.9% (Medicare) + 0.9% (Addl. Med > $200k)]" },
+      { name: "50% Above-the-Line SE Tax Deduction", formula: "Deduct exactly 50% of SE Tax from Net Profit to determine Adjusted Gross Income (AGI)" },
+      { name: "Section 199A QBI Deduction", formula: "QBI = 20% × min(Net Profit - 50% SE Tax - SE Health Insurance, Taxable Income before QBI)" },
+      { name: "W-2 Benefits Parity Multiplier", formula: "Equivalent 1099 Hourly Rate = (W-2 Annual Salary / 2080) × 1.28 to 1.35" },
+      { name: "Cross-Border Net Local Payout", formula: "Net Local = (USD Amount - Platform Fee) × Mid-Market FX Rate × (1 - FX Markup)" }
+    ],
+    presets: [
+      { label: "Junior Software Engineer", rate: "$90,000 W-2 vs. $60/hr 1099" },
+      { label: "Senior Full-Stack SWE", rate: "$140,000 W-2 vs. $95/hr 1099" },
+      { label: "Principal / Tech Lead", rate: "$200,000 W-2 vs. $145/hr 1099" },
+      { label: "Wise Business Cross-Border", rate: "0.55% transparent FX drag vs. 7.9% PayPal drag" }
+    ],
+    workedExample: "Evaluating $130,000 W-2 vs. $85/hr 1099 (48 wks × 40 hrs = 1,920 hrs = $163,200 gross). W-2 employee pays $9,945 FICA + $18,340 federal tax + $5,770 state tax → Net Cash = $92,220/yr ($7,685/mo) + $12,400 benefits. 1099 contractor writes off $6,000 expenses, pays $21,080 SECA, deducts 50% SECA + $7,200 health, claims $26,500 QBI 20% deduction, and pays $19,850 income taxes → Net Cash = $103,320/yr ($8,610/mo). The 1099 offer yields +$1,140/month (+12.4%) more spendable cash! Exact breakeven rate is $78.42/hr."
   }
 };
+
 

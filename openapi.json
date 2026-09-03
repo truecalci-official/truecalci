@@ -21,6 +21,57 @@
     }
   ],
   "paths": {
+    "/api/contractor-parity": {
+      "post": {
+        "summary": "1099 vs W-2 Remote Contractor Parity & Breakeven Rate Calculator",
+        "description": "Calculates tax, benefits, and cash-flow parity between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven hourly rate under 2024/2025 US tax law.",
+        "operationId": "calculateContractorParity",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["w2Salary", "contractorHourlyRate"],
+                "properties": {
+                  "w2Salary": { "type": "number", "example": 130000, "description": "W-2 gross annual salary in USD" },
+                  "contractorHourlyRate": { "type": "number", "example": 85, "description": "1099 contractor hourly billing rate in USD" },
+                  "filingStatus": { "type": "string", "enum": ["single", "mfj"], "example": "single" },
+                  "stateTaxRatePercent": { "type": "number", "example": 5.0 },
+                  "healthSubsidyAnnual": { "type": "number", "example": 7200 },
+                  "match401kPercent": { "type": "number", "example": 4.0 },
+                  "ptoDays": { "type": "number", "example": 25 },
+                  "hoursPerWeek": { "type": "number", "example": 40 },
+                  "weeksPerYear": { "type": "number", "example": 48 },
+                  "annualExpenses": { "type": "number", "example": 6000 },
+                  "eligibleQBI": { "type": "boolean", "example": true },
+                  "targetCurrency": { "type": "string", "example": "EUR" },
+                  "selectedRail": { "type": "string", "example": "wise" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful parity calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "w2": { "type": "object" },
+                    "contractor": { "type": "object" },
+                    "fx": { "type": "object" },
+                    "verdict": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/mortgage_piti": {
       "post": {
         "summary": "US Mortgage PITI & PMI Calculator",

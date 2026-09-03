@@ -3,6 +3,7 @@
 > TrueCalci is a precision, deterministic computational workstation engineered for global households, real estate investors, quantitative analysts, structural engineers, and autonomous AI agents.
 
 ## Core Calculators
+- [Remote Contractor Take-Home Matrix](https://truecalci.com/#contractor_matrix): 1099 vs. W-2 tax parity, 15.3% Self-Employment Tax (SECA), 50% SE deduction, 20% Section 199A QBI deduction, corporate benefits valuation, and exact breakeven billing rate solver.
 - [US Mortgage PITI](https://truecalci.com/#mortgage): Calculates monthly principal, interest, property taxes, home insurance, and automated Private Mortgage Insurance (PMI) with full amortization schedules.
 - [European VAT & Sales Tax](https://truecalci.com/#vat): Instant Add and Remove VAT calculations across UK (20%), Germany (19%), France (20%), Spain (21%), Italy (22%), and global sales tax regions.
 - [Tip & Restaurant Bill Splitter](https://truecalci.com/#tip): Itemized restaurant bill splitting with custom tip percentage allocations.

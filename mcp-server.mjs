@@ -17,8 +17,32 @@ import { IndianFinanceEngine } from './js/engines/indian-finance.js';
 import { CasioCalciEngine } from './js/engines/casio-engine.js';
 import { EngineeringPhysicsEngine } from './js/engines/engineering-physics.js';
 import { StatisticsOptionsEngine } from './js/engines/statistics-options.js';
+import { ContractorMatrixEngine } from './js/engines/contractor-matrix.js';
 
 const MCP_TOOLS = [
+  {
+    name: "truecalci_contractor_parity",
+    description: "Calculate tax, benefits parity, and net spendable cash between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven billing rate ($/hr).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        w2Salary: { type: "number", default: 130000, description: "W-2 gross annual salary ($/yr)" },
+        contractorHourlyRate: { type: "number", default: 85, description: "1099 contractor hourly billing rate ($/hr)" },
+        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" },
+        stateTaxRatePercent: { type: "number", default: 5.0 },
+        healthSubsidyAnnual: { type: "number", default: 7200 },
+        match401kPercent: { type: "number", default: 4.0 },
+        ptoDays: { type: "number", default: 25 },
+        hoursPerWeek: { type: "number", default: 40 },
+        weeksPerYear: { type: "number", default: 48 },
+        annualExpenses: { type: "number", default: 6000 },
+        eligibleQBI: { type: "boolean", default: true },
+        targetCurrency: { type: "string", default: "EUR" },
+        selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
+      },
+      required: ["w2Salary", "contractorHourlyRate"]
+    }
+  },
   {
     name: "truecalci_mortgage_piti",
     description: "Calculate US monthly mortgage payment (PITI: Principal, Interest, Property Tax, Insurance & PMI) and 30-year amortization schedule.",
@@ -119,6 +143,31 @@ const MCP_TOOLS = [
 
 function handleToolCall(name, args) {
   switch (name) {
+    case 'truecalci_contractor_parity':
+      return ContractorMatrixEngine.calculateParity(
+        {
+          salary: Number(args.w2Salary || 130000),
+          filingStatus: args.filingStatus || 'single',
+          stateTaxRatePercent: Number(args.stateTaxRatePercent !== undefined ? args.stateTaxRatePercent : 5.0),
+          healthSubsidyAnnual: Number(args.healthSubsidyAnnual !== undefined ? args.healthSubsidyAnnual : 7200),
+          match401kPercent: Number(args.match401kPercent !== undefined ? args.match401kPercent : 4.0),
+          ptoDays: Number(args.ptoDays !== undefined ? args.ptoDays : 25)
+        },
+        {
+          hourlyRate: Number(args.contractorHourlyRate || 85),
+          hoursPerWeek: Number(args.hoursPerWeek || 40),
+          weeksPerYear: Number(args.weeksPerYear || 48),
+          annualExpenses: Number(args.annualExpenses !== undefined ? args.annualExpenses : 6000),
+          filingStatus: args.filingStatus || 'single',
+          stateTaxRatePercent: Number(args.stateTaxRatePercent !== undefined ? args.stateTaxRatePercent : 5.0),
+          eligibleQBI: args.eligibleQBI !== false,
+          selfFundedHealthAnnual: Number(args.selfFundedHealthAnnual !== undefined ? args.selfFundedHealthAnnual : 7200)
+        },
+        {
+          targetCurrency: args.targetCurrency || 'EUR',
+          selectedRail: args.selectedRail || 'wise'
+        }
+      );
     case 'truecalci_mortgage_piti':
       return GlobalFinanceEngine.calculateMortgagePITI({
         homePrice: Number(args.homePrice),

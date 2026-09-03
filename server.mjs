@@ -10,6 +10,7 @@ import { BasicCalculatorEngine } from './js/engines/basic-engine.js';
 import { ProgrammerEngine, UnitConverterEngine } from './js/engines/programmer-engine.js';
 import { EngineeringPhysicsEngine } from './js/engines/engineering-physics.js';
 import { StatisticsOptionsEngine } from './js/engines/statistics-options.js';
+import { ContractorMatrixEngine } from './js/engines/contractor-matrix.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,6 +34,29 @@ const MIME_TYPES = {
 
 // Tool Definitions according to Model Context Protocol (MCP) and OpenAI Tool Spec
 const TOOL_DEFINITIONS = [
+  {
+    name: "contractor_takehome_matrix",
+    description: "Calculate tax, benefits parity, and net spendable cash between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven billing rate ($/hr).",
+    parameters: {
+      type: "object",
+      properties: {
+        w2Salary: { type: "number", default: 130000, description: "W-2 gross annual salary in USD ($/yr)" },
+        contractorHourlyRate: { type: "number", default: 85, description: "1099 contractor hourly billing rate in USD ($/hr)" },
+        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single", description: "Tax filing status" },
+        stateTaxRatePercent: { type: "number", default: 5.0, description: "State income tax rate %" },
+        healthSubsidyAnnual: { type: "number", default: 7200, description: "Annual W-2 employer health insurance subsidy ($/yr)" },
+        match401kPercent: { type: "number", default: 4.0, description: "W-2 employer 401(k) match %" },
+        ptoDays: { type: "number", default: 25, description: "W-2 paid time off days" },
+        hoursPerWeek: { type: "number", default: 40, description: "1099 billable hours per week" },
+        weeksPerYear: { type: "number", default: 48, description: "1099 billable weeks per year" },
+        annualExpenses: { type: "number", default: 6000, description: "1099 deductible business expenses ($/yr)" },
+        eligibleQBI: { type: "boolean", default: true, description: "Eligible for Section 199A 20% QBI deduction" },
+        targetCurrency: { type: "string", default: "EUR", description: "Target currency for international cross-border FX drag" },
+        selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
+      },
+      required: ["w2Salary", "contractorHourlyRate"]
+    }
+  },
   {
     name: "mortgage_piti",
     description: "Calculate US monthly mortgage payment (PITI: Principal, Interest, Property Tax, Insurance & PMI) and 30-year amortization schedule.",
@@ -216,6 +240,33 @@ const TOOL_DEFINITIONS = [
 
 function executeCalculation(toolName, params) {
   switch (toolName) {
+    case 'contractor_takehome_matrix':
+    case 'contractor_parity':
+      return ContractorMatrixEngine.calculateParity(
+        {
+          salary: Number(params.w2Salary || params.salary || 130000),
+          filingStatus: params.filingStatus || 'single',
+          stateTaxRatePercent: Number(params.stateTaxRatePercent !== undefined ? params.stateTaxRatePercent : 5.0),
+          healthSubsidyAnnual: Number(params.healthSubsidyAnnual !== undefined ? params.healthSubsidyAnnual : 7200),
+          match401kPercent: Number(params.match401kPercent !== undefined ? params.match401kPercent : 4.0),
+          ptoDays: Number(params.ptoDays !== undefined ? params.ptoDays : 25)
+        },
+        {
+          hourlyRate: Number(params.contractorHourlyRate || params.hourlyRate || 85),
+          hoursPerWeek: Number(params.hoursPerWeek || 40),
+          weeksPerYear: Number(params.weeksPerYear || 48),
+          annualExpenses: Number(params.annualExpenses !== undefined ? params.annualExpenses : 6000),
+          filingStatus: params.filingStatus || 'single',
+          stateTaxRatePercent: Number(params.stateTaxRatePercent !== undefined ? params.stateTaxRatePercent : 5.0),
+          eligibleQBI: params.eligibleQBI !== false,
+          selfFundedHealthAnnual: Number(params.selfFundedHealthAnnual !== undefined ? params.selfFundedHealthAnnual : 7200)
+        },
+        {
+          targetCurrency: params.targetCurrency || 'EUR',
+          selectedRail: params.selectedRail || 'wise'
+        }
+      );
+
     case 'mortgage_piti':
     case 'mortgage':
       return GlobalFinanceEngine.calculateMortgagePITI({
@@ -402,6 +453,44 @@ const server = http.createServer((req, res) => {
         try {
           const json = JSON.parse(body || '{}');
           handleCalculation(json.tool, json.params || json);
+        } catch (e) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Malformed JSON request body.' }));
+        }
+      });
+      return;
+    }
+  }
+
+  // Dedicated Route: /api/contractor-parity and /api/v1/contractor-parity
+  if (pathname === '/api/contractor-parity' || pathname === '/api/v1/contractor-parity') {
+    const handleContractorParity = (params) => {
+      try {
+        const result = executeCalculation('contractor_takehome_matrix', params);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          service: 'TrueCalci Remote Contractor Parity Engine',
+          result,
+          disclaimer: 'Calculated deterministically via TrueCalci Computational Engine under 2024/2025 US tax law.'
+        }, null, 2));
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    };
+
+    if (req.method === 'GET') {
+      handleContractorParity(Object.fromEntries(parsedUrl.searchParams.entries()));
+      return;
+    }
+
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          handleContractorParity(JSON.parse(body || '{}'));
         } catch (e) {
           res.writeHead(400, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ success: false, error: 'Malformed JSON request body.' }));

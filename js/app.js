@@ -6,16 +6,20 @@
 
 import { ViewIndianFinance } from "./views/view-indian-finance.js";
 import { ViewGlobalFinance } from "./views/view-global-finance.js";
+import { ViewContractorMatrix } from "./views/view-contractor-matrix.js";
 import { ViewCasio } from "./views/view-casio.js";
 import { ViewBasic } from "./views/view-basic.js";
 import { ViewProgrammer } from "./views/view-programmer.js";
 import { CALCULATOR_DEFINITIONS } from "./data/definitions.js";
 import { analytics } from "./analytics.js";
+import { ContractorMatrixEngine } from "./engines/contractor-matrix.js";
+
+window.ContractorMatrixEngine = ContractorMatrixEngine;
 
 class CalculatorApp {
   constructor() {
     this.validTools = [
-      "mortgage", "vat", "tip", "compound",
+      "contractor_matrix", "mortgage", "vat", "tip", "compound",
       "tax", "gst", "sip", "fd", "gold", 
       "ppf", "ssy", "home_loan", "land", 
       "calci_991", "basic", "programmer"
@@ -89,6 +93,7 @@ class CalculatorApp {
 
   initSearchIndex() {
     this.searchIndex = [
+      { key: "contractor_matrix", title: "Remote Contractor Take-Home Matrix (1099 vs W-2)", category: "Global Freelance & Tech", keywords: "1099 w2 contractor remote employee take home taxes self employment seca qbi freelance rate breakeven fx drag wise deel pass through" },
       { key: "mortgage", title: "US Mortgage Calculator (PITI & PMI)", category: "Global Real Estate", keywords: "mortgage piti pmi loan down payment 30 year 15 year fixed property tax home insurance usa" },
       { key: "vat", title: "VAT & Sales Tax Calculator (EU / UK / US)", category: "Global Tax", keywords: "vat value added tax sales tax hmrc mwst tva iva uk germany france spain gross net remove add" },
       { key: "tip", title: "Tip & Restaurant Bill Splitter", category: "Global Utilities", keywords: "tip bill split restaurant gratuity dinner diners per person share" },
@@ -410,6 +415,7 @@ class CalculatorApp {
     this.workspaceEl.innerHTML = "";
 
     const titles = {
+      contractor_matrix: { title: "Remote Contractor Take-Home Matrix (1099 vs. W-2)", subtitle: "Tax Parity, 15.3% SECA, 20% Section 199A QBI & Breakeven Simulator" },
       mortgage: { title: "US Mortgage Calculator (PITI & PMI)", subtitle: "Principal, Interest, Property Taxes, Home Insurance & PMI Amortization" },
       vat: { title: "VAT & Sales Tax Calculator", subtitle: "Instant Add Tax (Net → Gross) and Remove Tax (Gross → Net) with UK/EU/US presets" },
       tip: { title: "Tip & Restaurant Bill Splitter", subtitle: "Per-guest dining share, customizable tip percentages and bill splitting" },
@@ -459,7 +465,10 @@ class CalculatorApp {
     const globalTools = ["mortgage", "vat", "tip", "compound"];
     const financialTools = ["sip", "tax", "home_loan", "gold", "ppf", "ssy", "fd", "gst", "land"];
 
-    if (globalTools.includes(toolKey)) {
+    if (toolKey === "contractor_matrix") {
+      const cmView = new ViewContractorMatrix(mountEl, () => this.openKnowledgeDrawer());
+      cmView.setRegion(this.currentRegion);
+    } else if (globalTools.includes(toolKey)) {
       const gView = new ViewGlobalFinance(mountEl, () => this.openKnowledgeDrawer());
       gView.setRegion(this.currentRegion);
       gView.setTool(toolKey);

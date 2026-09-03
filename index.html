@@ -59,6 +59,7 @@
         "priceCurrency": "USD"
       },
       "featureList": [
+        "Remote Contractor Take-Home Matrix (1099 vs W-2 Parity, 15.3% SECA, 20% Section 199A QBI & Breakeven Rate)",
         "US Mortgage PITI with automated PMI calculation",
         "European VAT and Sales Tax dual-mode calculator",
         "Tip Splitter with itemized guest shares",
@@ -137,6 +138,22 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Under the New Tax Regime (Budget 2025-26), salaried taxpayers receive a ₹75,000 standard deduction and Section 87A tax rebate up to ₹60,000, making taxable income up to ₹12.75 Lakhs effectively tax-free."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How is a 1099 contractor rate compared to a W-2 salary?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Comparing 1099 vs W-2 requires calculating the 15.3% Self-Employment Tax (SECA FICA), subtracting the 50% above-the-line deduction, applying the 20% Section 199A Qualified Business Income (QBI) deduction, and factoring in self-funded health insurance and unpaid PTO. As an established rule of thumb, contractors must bill 1.28x to 1.35x their equivalent W-2 hourly rate to achieve parity."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the Section 199A QBI deduction for remote contractors?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Under Section 199A of the Internal Revenue Code, sole proprietors and pass-through LLC contractors can deduct up to 20% of their net qualified business income from their taxable income before calculating federal income taxes, significantly lowering their effective tax rate."
           }
         }
       ]
@@ -252,7 +269,7 @@
             type: "object",
             required: ["query"],
             properties: {
-              query: { type: "string", description: "Search keyword e.g. mortgage, beam, tax, sip" }
+              query: { type: "string", description: "Search keyword e.g. mortgage, beam, tax, sip, contractor" }
             }
           },
           execute: async function(params) {
@@ -262,6 +279,30 @@
               input.dispatchEvent(new Event('input'));
             }
             return { query: params.query, status: "executed" };
+          }
+        }, { signal });
+      } catch (err) {}
+
+      // Register Tool 5: Remote Contractor 1099 vs W-2 Parity
+      try {
+        navigator.modelContext.registerTool({
+          name: "calculate_contractor_parity",
+          description: "Calculates tax, benefits, and cash-flow parity between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven hourly rate.",
+          inputSchema: {
+            type: "object",
+            required: ["w2Salary", "contractorHourlyRate"],
+            properties: {
+              w2Salary: { type: "number", description: "W-2 gross annual salary in USD" },
+              contractorHourlyRate: { type: "number", description: "1099 billing rate in USD per hour" },
+              filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" },
+              stateTaxRatePercent: { type: "number", default: 5.0 }
+            }
+          },
+          execute: async function(params) {
+            return window.ContractorMatrixEngine ? window.ContractorMatrixEngine.calculateParity(
+              { salary: params.w2Salary, filingStatus: params.filingStatus || "single", stateTaxRatePercent: params.stateTaxRatePercent || 5.0 },
+              { hourlyRate: params.contractorHourlyRate, filingStatus: params.filingStatus || "single", stateTaxRatePercent: params.stateTaxRatePercent || 5.0 }
+            ) : { status: "ok" };
           }
         }, { signal });
       } catch (err) {}
@@ -413,6 +454,13 @@
       <!-- Section 0: Global & US Essentials -->
       <div class="nav-section">
         <span class="nav-section-title">Global & US Essentials (🌐)</span>
+        <button class="sidebar-link active" data-tool="contractor_matrix">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span>Remote Contractor (1099 vs W-2)</span>
+          </div>
+          <span class="sidebar-tag" style="background:#ecfdf5; color:#065f46; font-weight:800;">Flagship</span>
+        </button>
         <button class="sidebar-link" data-tool="mortgage">
           <div class="sidebar-link-content">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>

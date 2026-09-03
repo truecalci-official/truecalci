@@ -8,6 +8,7 @@ import { BasicCalculatorEngine } from "./js/engines/basic-engine.js";
 import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-engine.js";
 import { EngineeringPhysicsEngine } from "./js/engines/engineering-physics.js";
 import { StatisticsOptionsEngine } from "./js/engines/statistics-options.js";
+import { ContractorMatrixEngine } from "./js/engines/contractor-matrix.js";
 import { CALCULATOR_DEFINITIONS } from "./js/data/definitions.js";
 
 console.log("================================================================================");
@@ -408,6 +409,92 @@ try {
 } catch (e) {
   assert(false, `API verification failed with error: ${e.message}`);
 }
+
+// -----------------------------------------------------------------------------
+// 9. Remote Contractor Take-Home Matrix (1099 vs. W-2 Parity) Tests
+// -----------------------------------------------------------------------------
+console.log("\n[9] Testing Remote Contractor Take-Home Matrix Engine...");
+
+// 9.1 W-2 Calculation: $130,000 Salary (Single Filer, 5% state tax, $7.2k health, 4% match)
+const w2Test = ContractorMatrixEngine.calculateW2({
+  salary: 130000,
+  filingStatus: "single",
+  stateTaxRatePercent: 5.0,
+  healthSubsidyAnnual: 7200,
+  match401kPercent: 4.0,
+  ptoDays: 25
+});
+assert(w2Test.grossSalary === 130000, "W-2 gross salary is $130,000");
+assert(w2Test.standardDeduction === 14600, "Single standard deduction is $14,600");
+assert(w2Test.federalTaxableIncome === 115400, "W-2 taxable income is $115,400");
+assert(w2Test.taxes.totalFica === 9945, `W-2 Employee FICA is $9,945 (got ${w2Test.taxes.totalFica})`);
+assert(w2Test.taxes.federalTax >= 20000 && w2Test.taxes.federalTax <= 21000, `W-2 federal tax is ~$20,739 (got ${w2Test.taxes.federalTax})`);
+assert(w2Test.cashFlow.annualTakeHomeCash >= 93000 && w2Test.cashFlow.annualTakeHomeCash <= 94000, `W-2 annual take-home is ~$93,547 (got ${w2Test.cashFlow.annualTakeHomeCash})`);
+assert(w2Test.benefits.ptoMonetaryValue >= 12000 && w2Test.benefits.ptoMonetaryValue <= 13000, `PTO 25 days monetary value is ~$12,500 (got ${w2Test.benefits.ptoMonetaryValue})`);
+
+// 9.2 1099 Contractor Calculation: $85/hr, 48 wks, 40 hrs = $163,200 Gross
+const cTest = ContractorMatrixEngine.calculate1099({
+  hourlyRate: 85,
+  hoursPerWeek: 40,
+  weeksPerYear: 48,
+  annualExpenses: 6000,
+  filingStatus: "single",
+  stateTaxRatePercent: 5.0,
+  eligibleQBI: true,
+  selfFundedHealthAnnual: 7200
+});
+assert(cTest.grossRevenue === 163200, "1099 gross revenue is $163,200");
+assert(cTest.totalBillableHours === 1920, "Total billable hours is 1,920 (48 wks × 40 hrs)");
+assert(cTest.netScheduleCProfit === 157200, "Schedule C net profit is $157,200 ($163.2k - $6k expenses)");
+assert(cTest.taxes.totalSETax >= 22000 && cTest.taxes.totalSETax <= 22500, `15.3% SECA tax is ~$22,212 (got ${cTest.taxes.totalSETax})`);
+assert(cTest.deductions.halfSETax >= 11000 && cTest.deductions.halfSETax <= 11250, "Half SECA deduction is ~50% of SE tax");
+assert(cTest.deductions.qbiDeduction > 0, `Section 199A QBI 20% deduction is applied (got ${cTest.deductions.qbiDeduction})`);
+assert(cTest.cashFlow.annualNetSpendableCash >= 100000 && cTest.cashFlow.annualNetSpendableCash <= 106000, `1099 net spendable cash is ~$103,320 (got ${cTest.cashFlow.annualNetSpendableCash})`);
+
+// 9.3 Parity Evaluation & Winner
+const parityTest = ContractorMatrixEngine.calculateParity(
+  { salary: 130000, filingStatus: "single" },
+  { hourlyRate: 85, hoursPerWeek: 40, weeksPerYear: 48, annualExpenses: 6000 }
+);
+assert(parityTest.verdict.winner === "1099", "1099 offer wins against $130k W-2 offer");
+assert(parityTest.verdict.diffMonthly >= 800 && parityTest.verdict.diffMonthly <= 1100, `Monthly gain is ~$925/mo (got $${parityTest.verdict.diffMonthly}/mo)`);
+
+// 9.4 Exact Breakeven Solver Validation
+const targetW2Net = parityTest.w2.cashFlow.annualTakeHomeCash;
+const breakevenRate = parityTest.verdict.breakevenHourlyRateCash;
+assert(breakevenRate >= 74 && breakevenRate <= 78, `Breakeven rate is ~$76/hr (got $${breakevenRate}/hr)`);
+
+// Running the breakeven rate back through 1099 engine MUST produce net cash within $1 of target W2
+const breakeven1099 = ContractorMatrixEngine.calculate1099({
+  hourlyRate: breakevenRate,
+  hoursPerWeek: 40,
+  weeksPerYear: 48,
+  annualExpenses: 6000,
+  filingStatus: "single",
+  stateTaxRatePercent: 5.0,
+  eligibleQBI: true,
+  selfFundedHealthAnnual: 7200
+});
+const netDifferenceAtBreakeven = Math.abs(breakeven1099.cashFlow.annualNetSpendableCash - targetW2Net);
+assert(netDifferenceAtBreakeven <= 25, `Breakeven rate yields net cash within $25 of W-2 target (diff: $${netDifferenceAtBreakeven})`);
+
+// 9.5 Cross-Border FX Drag Calculation
+const fxTest = ContractorMatrixEngine.calculateFXDrag({
+  grossUsd: 100000,
+  targetCurrency: "EUR",
+  selectedRail: "wise"
+});
+assert(fxTest.midMarketRate === 0.92, "EUR mid-market benchmark rate is 0.92");
+assert(fxTest.activeRail.name === "Wise Business", "Active rail is Wise Business");
+assert(fxTest.activeRail.totalDragPercent === 0.55, "Wise drag is 0.55%");
+
+const paypalRail = fxTest.rails.find(r => r.key === "paypal");
+assert(paypalRail.totalDragPercent >= 7.8 && paypalRail.totalDragPercent <= 8.0, "PayPal international drag is ~7.9%");
+assert(fxTest.savingsVsWorstUsd >= 7000, `Wise savings vs PayPal on $100k is >$7,000 (got $${fxTest.savingsVsWorstUsd})`);
+
+// 9.6 Definitions and Schema
+assert(CALCULATOR_DEFINITIONS.contractor_matrix !== undefined, "CALCULATOR_DEFINITIONS contains contractor_matrix");
+assert(CALCULATOR_DEFINITIONS.contractor_matrix.formulas.length >= 4, "contractor_matrix includes detailed tax & parity formulas");
 
 // -----------------------------------------------------------------------------
 // Summary

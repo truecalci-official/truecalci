@@ -28,6 +28,11 @@
   ],
   "skills": [
     {
+      "id": "truecalci_contractor_parity",
+      "name": "Remote Contractor 1099 vs W-2 Parity & Breakeven Solver",
+      "description": "Calculates tax, benefits parity, SECA 15.3%, Section 199A QBI 20%, and solves the exact breakeven 1099 hourly billing rate."
+    },
+    {
       "id": "truecalci_mortgage_piti",
       "name": "US Mortgage PITI & PMI Amortization",
       "description": "Calculates monthly principal, interest, taxes, insurance, and automated PMI with full amortization schedule."
