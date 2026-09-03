@@ -227,6 +227,31 @@ async function runTests() {
     assert.ok(errJson.message.includes("100 requests"));
   });
 
+  await itAsync("VPN IP-hopping test: X-Client-Token preserves quota across different IPs", async () => {
+    const persistentToken = "tc_token_vpn_test_9988";
+    
+    // Request 1 from US VPN IP
+    const req1 = new Request("https://truecalci.com/api/v1/vat_sales_tax", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "CF-Connecting-IP": "198.51.100.1", "X-Client-Token": persistentToken },
+      body: JSON.stringify({ amount: 100, vatRatePercent: 20 })
+    });
+    const res1 = await worker.fetch(req1, mockEnv);
+    assert.strictEqual(res1.status, 200);
+    assert.strictEqual(res1.headers.get("X-RateLimit-Remaining"), "99");
+
+    // Request 2 from German VPN IP with same token
+    const req2 = new Request("https://truecalci.com/api/v1/vat_sales_tax", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "CF-Connecting-IP": "85.214.132.22", "X-Client-Token": persistentToken },
+      body: JSON.stringify({ amount: 100, vatRatePercent: 20 })
+    });
+    const res2 = await worker.fetch(req2, mockEnv);
+    assert.strictEqual(res2.status, 200);
+    // Quota correctly decremented from 99 to 98 despite different IP!
+    assert.strictEqual(res2.headers.get("X-RateLimit-Remaining"), "98");
+  });
+
   console.log("\n[5] Live Telemetry & Financial Cost Ledger...");
 
   await itAsync("GET /api/admin/telemetry returns real-time economics", async () => {

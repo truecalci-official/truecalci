@@ -139,19 +139,43 @@ const telemetry = {
   }
 };
 
-function getClientIP(request) {
-  return request.headers.get("CF-Connecting-IP") || 
-         request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim() || 
-         "127.0.0.1";
+function getClientIdentity(request) {
+  // 1. Explicit API Key (Bearer token or X-API-Key header)
+  const authHeader = request.headers.get("Authorization") || "";
+  if (authHeader.startsWith("Bearer ")) {
+    return { id: "key:" + authHeader.slice(7).trim(), type: "key" };
+  }
+  const apiKey = request.headers.get("X-API-Key");
+  if (apiKey) {
+    return { id: "key:" + apiKey.trim(), type: "key" };
+  }
+
+  // 2. Persistent Anonymous Device Token (Header or Cookie) - VPN & Wi-Fi Resistant!
+  const clientToken = request.headers.get("X-Client-Token");
+  if (clientToken && clientToken.length >= 8) {
+    return { id: "token:" + clientToken.trim(), type: "token" };
+  }
+
+  const cookieHeader = request.headers.get("Cookie") || "";
+  const cookieMatch = cookieHeader.match(/tc_client_token=([a-zA-Z0-9_\-]+)/);
+  if (cookieMatch) {
+    return { id: "token:" + cookieMatch[1].trim(), type: "token" };
+  }
+
+  // 3. Fallback: Edge IP Address (CF-Connecting-IP)
+  const ip = request.headers.get("CF-Connecting-IP") || 
+             request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim() || 
+             "127.0.0.1";
+  return { id: "ip:" + ip, type: "ip" };
 }
 
-function checkRateLimit(clientIP) {
+function checkRateLimit(clientId) {
   const currentMonth = new Date().getUTCMonth();
-  let client = ipUsageMap.get(clientIP);
+  let client = ipUsageMap.get(clientId);
 
   if (!client || client.resetMonth !== currentMonth) {
     client = { count: 0, resetMonth: currentMonth };
-    ipUsageMap.set(clientIP, client);
+    ipUsageMap.set(clientId, client);
   }
 
   const allowed = client.count < MONTHLY_RATE_LIMIT;
@@ -264,7 +288,8 @@ export default {
     const startTime = performance.now();
     const url = new URL(request.url);
     const hostname = url.hostname.toLowerCase();
-    const clientIP = getClientIP(request);
+    const clientIdentity = getClientIdentity(request);
+    const clientIP = request.headers.get("CF-Connecting-IP") || "127.0.0.1";
     const accept = request.headers.get("Accept") || "";
 
     telemetry.uniqueIps.add(clientIP);
@@ -391,7 +416,7 @@ export default {
     if (url.pathname === "/api/v1/mcp" || url.pathname === "/mcp") {
       if (request.method === "POST") {
         // Enforce 100-request rate limit
-        const rateCheck = checkRateLimit(clientIP);
+        const rateCheck = checkRateLimit(clientIdentity.id);
         if (!rateCheck.allowed) {
           telemetry.sessionBlocked++;
           return new Response(JSON.stringify({
@@ -502,7 +527,7 @@ export default {
 
     if (API_ROUTES[url.pathname]) {
       const toolName = API_ROUTES[url.pathname];
-      const rateCheck = checkRateLimit(clientIP);
+      const rateCheck = checkRateLimit(clientIdentity.id);
 
       // The Gate Blocker: Return HTTP 429 when quota exceeded
       if (!rateCheck.allowed) {
