@@ -10,6 +10,8 @@ import { ViewContractorMatrix } from "./views/view-contractor-matrix.js";
 import { ViewCasio } from "./views/view-casio.js";
 import { ViewBasic } from "./views/view-basic.js";
 import { ViewProgrammer } from "./views/view-programmer.js";
+import { ViewAdminPortal } from "./views/view-admin-portal.js";
+import { ViewDeveloperPortal } from "./views/view-developer-portal.js";
 import { CALCULATOR_DEFINITIONS } from "./data/definitions.js";
 import { analytics } from "./analytics.js";
 import { ContractorMatrixEngine } from "./engines/contractor-matrix.js";
@@ -22,12 +24,24 @@ class CalculatorApp {
       "contractor_matrix", "mortgage", "vat", "tip", "compound",
       "tax", "gst", "sip", "fd", "gold", 
       "ppf", "ssy", "home_loan", "land", 
-      "calci_991", "basic", "programmer"
+      "calci_991", "basic", "programmer",
+      "developer", "admin", "api", "pricing"
     ];
 
-    // Read initial tool from URL hash for refresh persistence
+    // Read initial tool from Subdomain, body initialView, or URL hash
+    const hostname = window.location.hostname.toLowerCase();
+    const initialView = document.body.dataset.initialView || "";
     const initialHash = window.location.hash.replace("#", "").trim();
-    this.currentTool = this.validTools.includes(initialHash) ? initialHash : "mortgage";
+
+    if (hostname.startsWith("admin.") || initialHash === "admin" || initialView === "admin") {
+      this.currentTool = "admin";
+    } else if (hostname.startsWith("developer.") || hostname.startsWith("api.") || initialHash === "developer" || initialHash === "api" || initialView === "developer") {
+      this.currentTool = "developer";
+    } else {
+      this.currentTool = this.validTools.includes(initialHash) ? initialHash : "contractor_matrix";
+    }
+
+    this.currentAdminView = null;
 
     this.audioEnabled = true;
     this.audioCtx = null;
@@ -453,6 +467,26 @@ class CalculatorApp {
       </div>
       <div id="tool-view-mount"></div>
     `;
+
+    if (this.currentAdminView) {
+      this.currentAdminView.destroy();
+      this.currentAdminView = null;
+    }
+
+    if (toolKey === "admin") {
+      this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
+      const mountEl = document.getElementById("tool-view-mount");
+      this.currentAdminView = new ViewAdminPortal(mountEl);
+      this.currentAdminView.render();
+      return;
+    }
+
+    if (toolKey === "developer" || toolKey === "api" || toolKey === "pricing") {
+      this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
+      const mountEl = document.getElementById("tool-view-mount");
+      new ViewDeveloperPortal(mountEl).render();
+      return;
+    }
 
     this.workspaceEl.innerHTML = headerHtml;
 

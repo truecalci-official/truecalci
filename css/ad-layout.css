@@ -423,6 +423,9 @@
   margin: 1.25rem auto;
   padding: 0 1.25rem;
   width: 100%;
+  min-height: 60px;
+  contain: layout;
+  content-visibility: auto;
 }
 
 .ad-slot-728x90 {
@@ -442,6 +445,7 @@
   font-size: 0.78rem;
   box-shadow: var(--shadow-sm);
   padding: 0 1rem;
+  contain: layout paint;
 }
 
 @media (max-width: 768px) {

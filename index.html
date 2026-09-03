@@ -331,12 +331,19 @@
           <span>Calculators</span>
         </button>
 
-        <a href="index.html" class="brand-area">
-          <div class="brand-icon">⚡</div>
+        <a href="index.html" class="brand-area" aria-label="TrueCalci Home">
+          <img src="assets/brand-logo.jpg" alt="TrueCalci Monogram" class="brand-icon" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color);">
           <div>
             <span class="brand-title">TrueCalci</span>
           </div>
         </a>
+
+        <!-- Portal Mode Switcher (Workstation | Developer | Admin) -->
+        <nav class="portal-nav-switcher" aria-label="Portal Navigation" style="display: flex; gap: 4px; background: var(--bg-subtle); padding: 3px; border-radius: 20px; border: 1px solid var(--border-color); margin-left: 0.5rem;">
+          <a href="#contractor_matrix" class="sidebar-link" data-tool="contractor_matrix" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-primary);">🧮 Workstation</a>
+          <a href="#developer" class="sidebar-link" data-tool="developer" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-secondary);">⚡ Developer Hub</a>
+          <a href="#admin" class="sidebar-link" data-tool="admin" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-secondary);">📊 Admin</a>
+        </nav>
       </div>
 
       <!-- Center Global Omnibar Search -->
