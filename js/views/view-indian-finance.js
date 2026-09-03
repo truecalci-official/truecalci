@@ -78,21 +78,21 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Monthly Investment (P)</span>
               <div class="fin-input-box-wrapper">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="sip-amount-num" class="fin-number-input" value="10000" min="500" max="1000000" step="500">
+                <input type="number" id="sip-amount-num" aria-label="Monthly SIP Investment Amount" class="fin-number-input" value="10000" min="500" max="1000000" step="500">
               </div>
             </div>
-            <input type="range" id="sip-amount-slider" class="fin-slider" value="10000" min="500" max="200000" step="500">
+            <input type="range" id="sip-amount-slider" aria-label="Monthly SIP Investment Amount Slider" class="fin-slider" value="10000" min="500" max="200000" step="500">
           </div>
 
           <div class="fin-input-group">
             <div class="fin-input-header">
               <span class="fin-input-label">Expected Return Rate (p.a.)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="sip-rate-num" class="fin-number-input" value="12.0" min="1" max="30" step="0.5">
+                <input type="number" id="sip-rate-num" aria-label="Expected Annual SIP Return Rate Percentage" class="fin-number-input" value="12.0" min="1" max="30" step="0.5">
                 <span class="fin-currency-prefix">%</span>
               </div>
             </div>
-            <input type="range" id="sip-rate-slider" class="fin-slider" value="12.0" min="1" max="30" step="0.5">
+            <input type="range" id="sip-rate-slider" aria-label="Expected Annual SIP Return Rate Slider" class="fin-slider" value="12.0" min="1" max="30" step="0.5">
             <div class="fin-preset-chips">
               <button class="fin-chip" data-rate="7.5">Conservative (7.5%)</button>
               <button class="fin-chip" data-rate="10.0">Moderate (10%)</button>
@@ -105,22 +105,22 @@ export class ViewIndianFinance {
             <div class="fin-input-header">
               <span class="fin-input-label">Time Period (Years)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="sip-years-num" class="fin-number-input" value="15" min="1" max="40" step="1">
+                <input type="number" id="sip-years-num" aria-label="SIP Investment Horizon Years" class="fin-number-input" value="15" min="1" max="40" step="1">
                 <span class="fin-currency-prefix">Yr</span>
               </div>
             </div>
-            <input type="range" id="sip-years-slider" class="fin-slider" value="15" min="1" max="40" step="1">
+            <input type="range" id="sip-years-slider" aria-label="SIP Investment Horizon Years Slider" class="fin-slider" value="15" min="1" max="40" step="1">
           </div>
 
           <div class="fin-input-group">
             <div class="fin-input-header">
               <span class="fin-input-label">Annual Step-Up (%) <small style="color:var(--text-muted);">(Optional)</small></span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="sip-stepup-num" class="fin-number-input" value="0" min="0" max="30" step="1">
+                <input type="number" id="sip-stepup-num" aria-label="Annual Step-Up Percentage" class="fin-number-input" value="0" min="0" max="30" step="1">
                 <span class="fin-currency-prefix">%</span>
               </div>
             </div>
-            <input type="range" id="sip-stepup-slider" class="fin-slider" value="0" min="0" max="30" step="1">
+            <input type="range" id="sip-stepup-slider" aria-label="Annual Step-Up Percentage Slider" class="fin-slider" value="0" min="0" max="30" step="1">
           </div>
         </div>
 
@@ -278,10 +278,10 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Gross Annual Income (Annual CTC / Gross)</span>
               <div class="fin-input-box-wrapper" style="width: 170px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="tax-income-num" class="fin-number-input" value="1250000" min="100000" max="10000000" step="50000">
+                <input type="number" id="tax-income-num" aria-label="Annual Gross Taxable Income" class="fin-number-input" value="1250000" min="100000" max="10000000" step="50000">
               </div>
             </div>
-            <input type="range" id="tax-income-slider" class="fin-slider" value="1250000" min="200000" max="5000000" step="50000">
+            <input type="range" id="tax-income-slider" aria-label="Annual Gross Taxable Income Slider" class="fin-slider" value="1250000" min="200000" max="5000000" step="50000">
             <div class="fin-preset-chips">
               <button class="fin-chip" data-income="750000">₹7.5 Lakh</button>
               <button class="fin-chip" data-income="1000000">₹10 Lakh</button>
@@ -293,7 +293,7 @@ export class ViewIndianFinance {
 
           <div class="fin-input-group">
             <label style="font-size:0.875rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
-              <input type="checkbox" id="tax-salaried-check" checked style="width:16px; height:16px;">
+              <input type="checkbox" id="tax-salaried-check" aria-label="Salaried Employee Checkbox" checked style="width:16px; height:16px;">
               <span>Salaried Employee (Eligible for ₹75,000 Standard Deduction)</span>
             </label>
           </div>
@@ -307,28 +307,28 @@ export class ViewIndianFinance {
                 <span class="fin-input-label" style="font-size:0.75rem;">Section 80C (PPF, ELSS, EPF, LIC)</span>
                 <div class="fin-input-box-wrapper" style="width:100%;">
                   <span class="fin-currency-prefix">₹</span>
-                  <input type="number" id="tax-80c-num" class="fin-number-input" value="150000" max="150000" step="10000">
+                  <input type="number" id="tax-80c-num" aria-label="Section 80C Deduction Amount" class="fin-number-input" value="150000" max="150000" step="10000">
                 </div>
               </div>
               <div class="fin-input-group">
                 <span class="fin-input-label" style="font-size:0.75rem;">Section 80D (Health Insurance)</span>
                 <div class="fin-input-box-wrapper" style="width:100%;">
                   <span class="fin-currency-prefix">₹</span>
-                  <input type="number" id="tax-80d-num" class="fin-number-input" value="25000" max="100000" step="5000">
+                  <input type="number" id="tax-80d-num" aria-label="Section 80D Health Insurance Deduction Amount" class="fin-number-input" value="25000" max="100000" step="5000">
                 </div>
               </div>
               <div class="fin-input-group">
                 <span class="fin-input-label" style="font-size:0.75rem;">HRA Exemption</span>
                 <div class="fin-input-box-wrapper" style="width:100%;">
                   <span class="fin-currency-prefix">₹</span>
-                  <input type="number" id="tax-hra-num" class="fin-number-input" value="100000" step="10000">
+                  <input type="number" id="tax-hra-num" aria-label="Section 10(13A) HRA Exemption Amount" class="fin-number-input" value="100000" step="10000">
                 </div>
               </div>
               <div class="fin-input-group">
                 <span class="fin-input-label" style="font-size:0.75rem;">Other Deductions (NPS 80CCD, etc.)</span>
                 <div class="fin-input-box-wrapper" style="width:100%;">
                   <span class="fin-currency-prefix">₹</span>
-                  <input type="number" id="tax-other-num" class="fin-number-input" value="50000" step="10000">
+                  <input type="number" id="tax-other-num" aria-label="Other Allowable Deductions Amount" class="fin-number-input" value="50000" step="10000">
                 </div>
               </div>
             </div>
@@ -505,10 +505,10 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Loan Amount (P)</span>
               <div class="fin-input-box-wrapper" style="width:160px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="emi-principal-num" class="fin-number-input" value="5000000" step="100000">
+                <input type="number" id="emi-principal-num" aria-label="Loan Principal Amount" class="fin-number-input" value="5000000" step="100000">
               </div>
             </div>
-            <input type="range" id="emi-principal-slider" class="fin-slider" value="5000000" min="500000" max="20000000" step="100000">
+            <input type="range" id="emi-principal-slider" aria-label="Loan Principal Amount Slider" class="fin-slider" value="5000000" min="500000" max="20000000" step="100000">
             <div class="fin-preset-chips">
               <button class="fin-chip" data-p="3000000">₹30 Lakh</button>
               <button class="fin-chip active" data-p="5000000">₹50 Lakh</button>
@@ -521,11 +521,11 @@ export class ViewIndianFinance {
             <div class="fin-input-header">
               <span class="fin-input-label">Interest Rate (p.a.)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="emi-rate-num" class="fin-number-input" value="8.50" step="0.05">
+                <input type="number" id="emi-rate-num" aria-label="Loan Annual Interest Rate Percentage" class="fin-number-input" value="8.50" step="0.05">
                 <span class="fin-currency-prefix">%</span>
               </div>
             </div>
-            <input type="range" id="emi-rate-slider" class="fin-slider" value="8.50" min="6.5" max="15.0" step="0.05">
+            <input type="range" id="emi-rate-slider" aria-label="Loan Annual Interest Rate Slider" class="fin-slider" value="8.50" min="6.5" max="15.0" step="0.05">
             <div class="fin-preset-chips">
               <button class="fin-chip active" data-r="8.50">SBI / HDFC (8.50%)</button>
               <button class="fin-chip" data-r="9.00">Bank Typical (9.00%)</button>
@@ -537,11 +537,11 @@ export class ViewIndianFinance {
             <div class="fin-input-header">
               <span class="fin-input-label">Tenure (Years)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="emi-tenure-num" class="fin-number-input" value="20" min="1" max="30">
+                <input type="number" id="emi-tenure-num" aria-label="Loan Tenure Years" class="fin-number-input" value="20" min="1" max="30">
                 <span class="fin-currency-prefix">Yr</span>
               </div>
             </div>
-            <input type="range" id="emi-tenure-slider" class="fin-slider" value="20" min="1" max="30">
+            <input type="range" id="emi-tenure-slider" aria-label="Loan Tenure Years Slider" class="fin-slider" value="20" min="1" max="30">
           </div>
 
           <div class="fin-input-group" style="background:var(--bg-subtle); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
@@ -549,7 +549,7 @@ export class ViewIndianFinance {
               <span class="fin-input-label" style="font-size:0.8rem;">Monthly Prepayment / Extra EMI</span>
               <div class="fin-input-box-wrapper" style="width:130px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="emi-prepay-num" class="fin-number-input" value="0" step="1000">
+                <input type="number" id="emi-prepay-num" aria-label="Monthly Extra Prepayment Amount" class="fin-number-input" value="0" step="1000">
               </div>
             </div>
             <span style="font-size:0.72rem; color:var(--text-muted); margin-top:4px;">
@@ -722,11 +722,11 @@ export class ViewIndianFinance {
             <div class="fin-input-header">
               <span class="fin-input-label">Weight of Jewellery (Grams)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="gold-weight-num" class="fin-number-input" value="10.0" step="0.5">
+                <input type="number" id="gold-weight-num" aria-label="Gold Weight in Grams" class="fin-number-input" value="10.0" step="0.5">
                 <span class="fin-currency-prefix">g</span>
               </div>
             </div>
-            <input type="range" id="gold-weight-slider" class="fin-slider" value="10.0" min="1" max="100" step="0.5">
+            <input type="range" id="gold-weight-slider" aria-label="Gold Weight Slider" class="fin-slider" value="10.0" min="1" max="100" step="0.5">
           </div>
 
           <div class="fin-input-group">
@@ -734,26 +734,26 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Base 24K Gold Rate (₹ / Gram)</span>
               <div class="fin-input-box-wrapper" style="width:150px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="gold-rate-num" class="fin-number-input" value="7500" step="50">
+                <input type="number" id="gold-rate-num" aria-label="Gold Rate per 10 Grams" class="fin-number-input" value="7500" step="50">
               </div>
             </div>
-            <input type="range" id="gold-rate-slider" class="fin-slider" value="7500" min="5000" max="12000" step="50">
+            <input type="range" id="gold-rate-slider" aria-label="Gold Rate Slider" class="fin-slider" value="7500" min="5000" max="12000" step="50">
           </div>
 
           <div class="fin-input-group">
             <div class="fin-input-header">
               <span class="fin-input-label">Making Charges (%)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="gold-making-num" class="fin-number-input" value="10" step="1">
+                <input type="number" id="gold-making-num" aria-label="Jewellery Making Charges Percentage" class="fin-number-input" value="10" step="1">
                 <span class="fin-currency-prefix">%</span>
               </div>
             </div>
-            <input type="range" id="gold-making-slider" class="fin-slider" value="10" min="3" max="30" step="1">
+            <input type="range" id="gold-making-slider" aria-label="Jewellery Making Charges Slider" class="fin-slider" value="10" min="3" max="30" step="1">
           </div>
 
           <div class="fin-input-group">
             <label style="font-size:0.875rem; font-weight:600; display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
-              <input type="checkbox" id="gold-hallmark-check" checked style="width:16px; height:16px;">
+              <input type="checkbox" id="gold-hallmark-check" aria-label="BIS Hallmark Fee Checkbox" checked style="width:16px; height:16px;">
               <span>Include BIS Hallmarking Fee (₹45 statutory)</span>
             </label>
           </div>
@@ -852,10 +852,10 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Yearly Investment (Max ₹1.5L / FY)</span>
               <div class="fin-input-box-wrapper" style="width:160px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="ppf-deposit-num" class="fin-number-input" value="150000" max="150000" step="5000">
+                <input type="number" id="ppf-deposit-num" aria-label="PPF Annual Deposit Amount" class="fin-number-input" value="150000" max="150000" step="5000">
               </div>
             </div>
-            <input type="range" id="ppf-deposit-slider" class="fin-slider" value="150000" min="500" max="150000" step="2500">
+            <input type="range" id="ppf-deposit-slider" aria-label="PPF Annual Deposit Slider" class="fin-slider" value="150000" min="500" max="150000" step="2500">
           </div>
           <div class="fin-input-group">
             <span class="fin-input-label">Statutory Rate of Interest</span>
@@ -911,10 +911,10 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Yearly Deposit (Max ₹1.5L / FY)</span>
               <div class="fin-input-box-wrapper" style="width:160px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="ssy-deposit-num" class="fin-number-input" value="150000" max="150000" step="5000">
+                <input type="number" id="ssy-deposit-num" aria-label="Sukanya Samriddhi Annual Deposit Amount" class="fin-number-input" value="150000" max="150000" step="5000">
               </div>
             </div>
-            <input type="range" id="ssy-deposit-slider" class="fin-slider" value="150000" min="250" max="150000" step="2500">
+            <input type="range" id="ssy-deposit-slider" aria-label="Sukanya Samriddhi Annual Deposit Slider" class="fin-slider" value="150000" min="250" max="150000" step="2500">
           </div>
           <div class="fin-input-group">
             <span class="fin-input-label">Statutory Rate of Interest</span>
@@ -970,30 +970,30 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Total Investment Amount (P)</span>
               <div class="fin-input-box-wrapper" style="width:160px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="fd-amount-num" class="fin-number-input" value="100000" step="10000">
+                <input type="number" id="fd-amount-num" aria-label="Fixed Deposit Principal Amount" class="fin-number-input" value="100000" step="10000">
               </div>
             </div>
-            <input type="range" id="fd-amount-slider" class="fin-slider" value="100000" min="10000" max="2000000" step="10000">
+            <input type="range" id="fd-amount-slider" aria-label="Fixed Deposit Principal Slider" class="fin-slider" value="100000" min="10000" max="2000000" step="10000">
           </div>
           <div class="fin-input-group">
             <div class="fin-input-header">
               <span class="fin-input-label">Interest Rate (p.a.)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="fd-rate-num" class="fin-number-input" value="7.00" step="0.1">
+                <input type="number" id="fd-rate-num" aria-label="Fixed Deposit Interest Rate Percentage" class="fin-number-input" value="7.00" step="0.1">
                 <span class="fin-currency-prefix">%</span>
               </div>
             </div>
-            <input type="range" id="fd-rate-slider" class="fin-slider" value="7.00" min="3.0" max="10.0" step="0.1">
+            <input type="range" id="fd-rate-slider" aria-label="Fixed Deposit Interest Rate Slider" class="fin-slider" value="7.00" min="3.0" max="10.0" step="0.1">
           </div>
           <div class="fin-input-group">
             <div class="fin-input-header">
               <span class="fin-input-label">Tenure (Years)</span>
               <div class="fin-input-box-wrapper">
-                <input type="number" id="fd-tenure-num" class="fin-number-input" value="5" min="1" max="10">
+                <input type="number" id="fd-tenure-num" aria-label="Fixed Deposit Tenure Years" class="fin-number-input" value="5" min="1" max="10">
                 <span class="fin-currency-prefix">Yr</span>
               </div>
             </div>
-            <input type="range" id="fd-tenure-slider" class="fin-slider" value="5" min="1" max="10">
+            <input type="range" id="fd-tenure-slider" aria-label="Fixed Deposit Tenure Slider" class="fin-slider" value="5" min="1" max="10">
           </div>
         </div>
 
@@ -1063,7 +1063,7 @@ export class ViewIndianFinance {
               <span class="fin-input-label">Amount</span>
               <div class="fin-input-box-wrapper" style="width:160px;">
                 <span class="fin-currency-prefix">₹</span>
-                <input type="number" id="gst-amount-num" class="fin-number-input" value="10000" step="500">
+                <input type="number" id="gst-amount-num" aria-label="GST Base Transaction Amount" class="fin-number-input" value="10000" step="500">
               </div>
             </div>
           </div>
@@ -1141,12 +1141,12 @@ export class ViewIndianFinance {
         <div class="fin-inputs-panel">
           <div class="fin-input-group">
             <span class="fin-input-label">Convert Land Area Value</span>
-            <input type="number" id="land-val-input" class="fin-number-input" value="100" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; text-align:left; font-size:1.25rem;">
+            <input type="number" id="land-val-input" aria-label="Land Area Value" class="fin-number-input" value="100" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; text-align:left; font-size:1.25rem;">
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
             <div class="fin-input-group">
               <span class="fin-input-label">From Unit</span>
-              <select id="land-from-select" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; font-family:var(--font-sans); font-size:0.9rem; font-weight:600;">
+              <select id="land-from-select" aria-label="Convert From Land Unit" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; font-family:var(--font-sans); font-size:0.9rem; font-weight:600;">
                 <option value="gaj" selected>Gaj (Square Yard)</option>
                 <option value="guntha">Guntha (121 Gaj)</option>
                 <option value="acre">Acre (4,840 Gaj)</option>
@@ -1157,7 +1157,7 @@ export class ViewIndianFinance {
             </div>
             <div class="fin-input-group">
               <span class="fin-input-label">To Unit</span>
-              <select id="land-to-select" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; font-family:var(--font-sans); font-size:0.9rem; font-weight:600;">
+              <select id="land-to-select" aria-label="Convert To Land Unit" style="background:var(--bg-subtle); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:0.5rem; font-family:var(--font-sans); font-size:0.9rem; font-weight:600;">
                 <option value="sqft" selected>Square Feet</option>
                 <option value="gaj">Gaj (Square Yard)</option>
                 <option value="guntha">Guntha</option>

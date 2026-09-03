@@ -65,35 +65,35 @@ export class ViewGlobalFinance {
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="mg-price">
               <span>Home Purchase Price</span>
               <span class="fin-input-badge">${this.currencySymbol}</span>
             </label>
-            <input type="number" id="mg-price" class="fin-input" value="450000" step="5000" min="10000">
-            <input type="range" id="mg-price-range" class="fin-slider" value="450000" min="50000" max="2000000" step="10000">
+            <input type="number" id="mg-price" class="fin-input" value="450000" step="5000" min="10000" aria-label="Home Purchase Price">
+            <input type="range" id="mg-price-range" class="fin-slider" value="450000" min="50000" max="2000000" step="10000" aria-label="Home Purchase Price Slider">
           </div>
 
           <div class="fin-grid-2">
             <div class="fin-form-group">
-              <label class="fin-label">
+              <label class="fin-label" for="mg-down-range">
                 <span>Down Payment (%)</span>
                 <span id="mg-down-val" class="fin-val-highlight">20%</span>
               </label>
-              <input type="range" id="mg-down-range" class="fin-slider" value="20" min="0" max="50" step="1">
+              <input type="range" id="mg-down-range" class="fin-slider" value="20" min="0" max="50" step="1" aria-label="Down Payment Percentage Slider">
             </div>
             <div class="fin-form-group">
-              <label class="fin-label">
+              <label class="fin-label" for="mg-rate">
                 <span>Interest Rate (%)</span>
                 <span id="mg-rate-val" class="fin-val-highlight">6.75%</span>
               </label>
-              <input type="number" id="mg-rate" class="fin-input" value="6.75" step="0.05" min="0.5" max="20">
+              <input type="number" id="mg-rate" class="fin-input" value="6.75" step="0.05" min="0.5" max="20" aria-label="Interest Rate Percentage">
             </div>
           </div>
 
           <div class="fin-grid-2">
             <div class="fin-form-group">
-              <label class="fin-label">Loan Term</label>
-              <select id="mg-term" class="fin-select">
+              <label class="fin-label" for="mg-term">Loan Term</label>
+              <select id="mg-term" class="fin-select" aria-label="Loan Term Duration">
                 <option value="30" selected>30 Years (Fixed)</option>
                 <option value="20">20 Years (Fixed)</option>
                 <option value="15">15 Years (Fixed)</option>
@@ -101,19 +101,19 @@ export class ViewGlobalFinance {
               </select>
             </div>
             <div class="fin-form-group">
-              <label class="fin-label">Property Tax Rate (%)</label>
-              <input type="number" id="mg-tax-rate" class="fin-input" value="1.20" step="0.05" min="0">
+              <label class="fin-label" for="mg-tax-rate">Property Tax Rate (%)</label>
+              <input type="number" id="mg-tax-rate" class="fin-input" value="1.20" step="0.05" min="0" aria-label="Annual Property Tax Rate Percentage">
             </div>
           </div>
 
           <div class="fin-grid-2">
             <div class="fin-form-group">
-              <label class="fin-label">Homeowners Insurance (${this.currencySymbol}/yr)</label>
-              <input type="number" id="mg-insurance" class="fin-input" value="1400" step="50" min="0">
+              <label class="fin-label" for="mg-insurance">Homeowners Insurance (${this.currencySymbol}/yr)</label>
+              <input type="number" id="mg-insurance" class="fin-input" value="1400" step="50" min="0" aria-label="Annual Homeowners Insurance Premium">
             </div>
             <div class="fin-form-group">
-              <label class="fin-label">PMI Rate (% if &lt; 20% down)</label>
-              <input type="number" id="mg-pmi" class="fin-input" value="0.75" step="0.05" min="0">
+              <label class="fin-label" for="mg-pmi">PMI Rate (% if &lt; 20% down)</label>
+              <input type="number" id="mg-pmi" class="fin-input" value="0.75" step="0.05" min="0" aria-label="Annual Private Mortgage Insurance Rate Percentage">
             </div>
           </div>
         </div>
@@ -261,19 +261,19 @@ export class ViewGlobalFinance {
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="vat-amount">
               <span id="vat-amount-label">Net Amount (Pre-Tax)</span>
               <span class="fin-input-badge">${this.currencySymbol}</span>
             </label>
-            <input type="number" id="vat-amount" class="fin-input" value="1000" step="10" min="0">
+            <input type="number" id="vat-amount" class="fin-input" value="1000" step="10" min="0" aria-label="Taxable Amount">
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="vat-rate">
               <span>VAT / Tax Rate (%)</span>
               <span id="vat-rate-display" class="fin-val-highlight">20%</span>
             </label>
-            <input type="number" id="vat-rate" class="fin-input" value="20" step="0.5" min="0" max="100">
+            <input type="number" id="vat-rate" class="fin-input" value="20" step="0.5" min="0" max="100" aria-label="VAT Tax Rate Percentage">
           </div>
         </div>
 
@@ -384,30 +384,30 @@ export class ViewGlobalFinance {
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="tip-bill">
               <span>Bill Amount (Subtotal)</span>
               <span class="fin-input-badge">${this.currencySymbol}</span>
             </label>
-            <input type="number" id="tip-bill" class="fin-input" value="85.00" step="1" min="0">
+            <input type="number" id="tip-bill" class="fin-input" value="85.00" step="1" min="0" aria-label="Bill Subtotal Amount">
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">Select Tip Percentage</label>
+            <label class="fin-label" for="tip-custom-pct">Select Tip Percentage</label>
             <div class="filter-pills-bar" style="margin-bottom:0.75rem;">
-              <button class="pill-btn tip-pct-btn" data-pct="15">15% (Fair)</button>
-              <button class="pill-btn tip-pct-btn active" data-pct="18">18% (Standard)</button>
-              <button class="pill-btn tip-pct-btn" data-pct="20">20% (Good)</button>
-              <button class="pill-btn tip-pct-btn" data-pct="25">25% (Great)</button>
+              <button class="pill-btn tip-pct-btn" data-pct="15" aria-label="15 Percent Tip">15% (Fair)</button>
+              <button class="pill-btn tip-pct-btn active" data-pct="18" aria-label="18 Percent Tip">18% (Standard)</button>
+              <button class="pill-btn tip-pct-btn" data-pct="20" aria-label="20 Percent Tip">20% (Good)</button>
+              <button class="pill-btn tip-pct-btn" data-pct="25" aria-label="25 Percent Tip">25% (Great)</button>
             </div>
-            <input type="number" id="tip-custom-pct" class="fin-input" value="18" min="0" max="100" placeholder="Custom Tip %">
+            <input type="number" id="tip-custom-pct" class="fin-input" value="18" min="0" max="100" placeholder="Custom Tip %" aria-label="Custom Tip Percentage">
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="tip-guests-range">
               <span>Split Between (Number of Diners)</span>
               <span id="tip-guests-val" class="fin-val-highlight">2 People</span>
             </label>
-            <input type="range" id="tip-guests-range" class="fin-slider" value="2" min="1" max="20" step="1">
+            <input type="range" id="tip-guests-range" class="fin-slider" value="2" min="1" max="20" step="1" aria-label="Number of Diners Slider">
           </div>
         </div>
 
@@ -493,35 +493,35 @@ export class ViewGlobalFinance {
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="cp-principal">
               <span>Initial Principal Investment</span>
               <span class="fin-input-badge">${this.currencySymbol}</span>
             </label>
-            <input type="number" id="cp-principal" class="fin-input" value="10000" step="500" min="0">
+            <input type="number" id="cp-principal" class="fin-input" value="10000" step="500" min="0" aria-label="Initial Principal Amount">
           </div>
 
           <div class="fin-form-group">
-            <label class="fin-label">
+            <label class="fin-label" for="cp-monthly">
               <span>Monthly Recurring Contribution</span>
               <span class="fin-input-badge">${this.currencySymbol}</span>
             </label>
-            <input type="number" id="cp-monthly" class="fin-input" value="500" step="50" min="0">
+            <input type="number" id="cp-monthly" class="fin-input" value="500" step="50" min="0" aria-label="Monthly Recurring Contribution Amount">
           </div>
 
           <div class="fin-grid-2">
             <div class="fin-form-group">
-              <label class="fin-label">
+              <label class="fin-label" for="cp-rate">
                 <span>Annual Return (%)</span>
                 <span id="cp-rate-val" class="fin-val-highlight">8.0%</span>
               </label>
-              <input type="number" id="cp-rate" class="fin-input" value="8.0" step="0.5" min="0.1" max="30">
+              <input type="number" id="cp-rate" class="fin-input" value="8.0" step="0.5" min="0.1" max="30" aria-label="Expected Annual Return Rate Percentage">
             </div>
             <div class="fin-form-group">
-              <label class="fin-label">
+              <label class="fin-label" for="cp-years">
                 <span>Investment Horizon</span>
                 <span id="cp-years-val" class="fin-val-highlight">15 Years</span>
               </label>
-              <input type="range" id="cp-years" class="fin-slider" value="15" min="1" max="40" step="1">
+              <input type="range" id="cp-years" class="fin-slider" value="15" min="1" max="40" step="1" aria-label="Investment Horizon Years Slider">
             </div>
           </div>
         </div>
