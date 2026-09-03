@@ -162,11 +162,15 @@ export class ViewCasio {
           <div class="calci-ai-companion">
             <div class="ai-companion-header">
               <div>
-                <h3 class="ai-companion-title">⚡ Smart AI Math & Natural Language Solver</h3>
+                <h3 class="ai-companion-title" style="display: flex; align-items: center; gap: 8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  Smart AI Math & Natural Language Solver
+                </h3>
                 <span class="ai-companion-sub">Ask in plain English or math expressions to solve instantly</span>
               </div>
-              <a href="engineering-formulas.html" target="_blank" class="view-all-formulas-link">
-                📖 Full Formula Sheet →
+              <a href="engineering-formulas.html" target="_blank" class="view-all-formulas-link" style="display: flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                Full Formula Sheet →
               </a>
             </div>
 

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Authenticating with Google...</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 20px;">
+    <div style="width: 48px; height: 48px; border: 3px solid #10b981; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <h2>Authenticating with Google...</h2>
+    <p style="color: #94a3b8; font-size: 0.9rem;">Verifying credentials and unlocking developer dashboard...</p>
+  </div>
+  <style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+  <script>
+    // Extract tokens from URL hash or query params
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash || window.location.search);
+    const idToken = params.get('id_token') || params.get('access_token');
+    
+    let name = "Google Developer";
+    let email = "developer@gmail.com";
+    let picture = "https://lh3.googleusercontent.com/a/default-user";
+
+    if (idToken && idToken.includes('.')) {
+      try {
+        const base64Url = idToken.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        const payload = JSON.parse(jsonPayload);
+        if (payload.name) name = payload.name;
+        if (payload.email) email = payload.email;
+        if (payload.picture) picture = payload.picture;
+      } catch (e) {
+        console.warn("Could not decode JWT payload:", e);
+      }
+    }
+
+    const sessionUser = {
+      id: 'goog_' + Date.now(),
+      name: name,
+      handle: email.split('@')[0],
+      email: email,
+      avatar_url: picture,
+      provider: 'google',
+      tier: 'Developer Starter',
+      tierId: 'starter',
+      quotaLimit: 2500
+    };
+
+    localStorage.setItem('tc_dev_user', JSON.stringify(sessionUser));
+    localStorage.setItem('tc_dev_auth', 'true');
+    window.location.href = '/#developer';
+  </script>
+</body>
+</html>

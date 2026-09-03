@@ -1,5 +1,5 @@
 /**
- * OmniCalc India - Google Analytics 4 (GA4) Modular Integration
+ * TrueCalci - Google Analytics 4 (GA4) Modular Integration
  * Works seamlessly with Google Analytics without requiring any third-party libraries.
  * In local development, it logs events to the console without sending mock data to Google.
  */
@@ -52,18 +52,17 @@ class AnalyticsService {
       });
 
       if (this.debug) {
-        console.log(`[OmniCalc Analytics] Connected to GA4 Property: ${this.measurementId}`);
+        console.log(`[TrueCalci Analytics] Connected to GA4 Property: ${this.measurementId}`);
       }
     } else {
-      // Development / Mock mode
       win.dataLayer = win.dataLayer || [];
       win.gtag = (command, action, params) => {
         if (this.debug) {
-          console.log(`[OmniCalc Analytics Local Preview] ${command} -> ${action}:`, params);
+          console.log(`[TrueCalci Analytics Local Preview] ${command} -> ${action}:`, params);
         }
       };
       if (this.debug && isBrowser) {
-        console.log(`[OmniCalc Analytics] Running in local/mock mode. Set a valid GA4 ID in js/config.js to activate live tracking.`);
+        console.log(`[TrueCalci Analytics] Running in local/mock mode. Set a valid GA4 ID in js/config.js to activate live tracking.`);
       }
     }
 
@@ -95,7 +94,7 @@ class AnalyticsService {
     const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
     this.trackEvent("page_view", {
       page_path: pagePath,
-      page_title: pageTitle || (isBrowser ? document.title : "OmniCalc"),
+      page_title: pageTitle || (isBrowser ? document.title : "TrueCalci"),
       page_location: isBrowser ? window.location.href : "http://localhost:4000/"
     });
   }

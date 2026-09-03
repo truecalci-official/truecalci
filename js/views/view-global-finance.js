@@ -201,9 +201,9 @@ export class ViewGlobalFinance {
 
       const pmiAlert = document.getElementById("mg-pmi-alert");
       if (res.isPmiRequired) {
-        pmiAlert.innerHTML = `<span style="color:var(--warning,#f59e0b);">⚠️ Down payment &lt; 20%: Monthly PMI of ${this.currencySymbol}${this.format(res.monthlyPmi)} included</span>`;
+        pmiAlert.innerHTML = `<span style="color:var(--warning,#f59e0b); display:inline-flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Down payment &lt; 20%: Monthly PMI of ${this.currencySymbol}${this.format(res.monthlyPmi)} included</span>`;
       } else {
-        pmiAlert.textContent = `✅ 20%+ Down Payment: No Private Mortgage Insurance (PMI) required!`;
+        pmiAlert.innerHTML = `<span style="color:var(--success,#10b981); display:inline-flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 20%+ Down Payment: No Private Mortgage Insurance (PMI) required!</span>`;
       }
     };
 

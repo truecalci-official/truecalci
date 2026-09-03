@@ -18,11 +18,12 @@ export class ViewEnterpriseHome {
   }
 
   render() {
+    const isIndia = (localStorage.getItem("calc_region") === "india");
     this.containerEl.innerHTML = `
       <div class="enterprise-home-root" style="max-width: 1320px; margin: 0 auto; padding: 0 16px 64px;">
         
         <!-- Top Announcement Banner (Tavily Style) -->
-        <div class="announcement-banner" style="margin: 16px 0 28px; padding: 10px 16px; border-radius: 30px; background: rgba(79, 70, 229, 0.07); border: 1px solid rgba(79, 70, 229, 0.18); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.82rem; color: var(--text-primary); text-align: center;">
+        <div class="announcement-banner" style="margin: 16px 0 28px; padding: 10px 16px; border-radius: 30px; background: var(--accent-light); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.82rem; color: var(--text-primary); text-align: center;">
           <span style="display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 12px; background: var(--accent-primary); color: #ffffff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;">NEW</span>
           <span>TrueCalci Edge Compute v2: Sub-1ms deterministic mathematical and tax parity execution for AI agents.</span>
           <a href="#developer" class="announcement-link" style="color: var(--accent-primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
@@ -45,10 +46,12 @@ export class ViewEnterpriseHome {
           <!-- Dual Primary CTAs -->
           <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; margin-bottom: 48px;">
             <button id="hero-btn-start-free" type="button" style="padding: 12px 24px; font-size: 0.92rem; font-weight: 600; border-radius: 8px; background: #18181b; color: #ffffff; border: 1px solid #18181b; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-md); transition: transform 0.15s ease;">
-              <span>🐙</span> Start Building Free (GitHub / Google)
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+              Start Building Free
             </button>
             <button id="hero-btn-launch-workstation" type="button" style="padding: 12px 24px; font-size: 0.92rem; font-weight: 600; border-radius: 8px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm); transition: transform 0.15s ease;">
-              <span>🧮</span> Launch Workstation Studio (13 Calculators) →
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+              Launch Workstation Studio (13 Calculators) →
             </button>
           </div>
 
@@ -62,13 +65,28 @@ export class ViewEnterpriseHome {
               <span style="font-size: 0.76rem; color: var(--text-muted);">Model Context Protocol (MCP) streamable HTTP ready</span>
             </div>
 
-            <!-- Tool Selector Tabs -->
+            <!-- Tool Selector Tabs (Sleek Inline SVGs) -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-              <button class="hero-tool-tab active" data-tool="contractor_parity" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--accent-primary); color: #ffffff; cursor: pointer;">💼 Contractor Parity</button>
-              <button class="hero-tool-tab" data-tool="casio_991_solve" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">🧮 Casio 991 Solver</button>
-              <button class="hero-tool-tab" data-tool="mortgage_piti" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">🏠 US Mortgage PITI</button>
-              <button class="hero-tool-tab" data-tool="beam_bending" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">📐 Beam Deflection</button>
-              <button class="hero-tool-tab" data-tool="black_scholes" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">📈 Black-Scholes Delta</button>
+              <button class="hero-tool-tab active" data-tool="contractor_parity" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--accent-primary); color: #ffffff; cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                Contractor Parity
+              </button>
+              <button class="hero-tool-tab" data-tool="casio_991_solve" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+                Casio 991 Solver
+              </button>
+              <button class="hero-tool-tab" data-tool="mortgage_piti" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                US Mortgage PITI
+              </button>
+              <button class="hero-tool-tab" data-tool="beam_bending" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                Beam Deflection
+              </button>
+              <button class="hero-tool-tab" data-tool="black_scholes" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                Black-Scholes Delta
+              </button>
             </div>
 
             <!-- Parameters Bar & Run Button -->
@@ -76,8 +94,9 @@ export class ViewEnterpriseHome {
               <div id="hero-sandbox-inputs-container">
                 <!-- Dynamically populated based on active tool -->
               </div>
-              <button id="hero-sandbox-run-btn" type="button" style="padding: 10px 20px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer; white-space: nowrap; box-shadow: var(--shadow-sm);">
-                Run Query ⚡
+              <button id="hero-sandbox-run-btn" type="button" style="padding: 10px 20px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer; white-space: nowrap; box-shadow: var(--shadow-sm); display: inline-flex; align-items: center; gap: 6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Run Query
               </button>
             </div>
 
@@ -87,7 +106,7 @@ export class ViewEnterpriseHome {
                 <span style="font-size: 0.74rem; font-family: var(--font-mono); color: #a1a1aa;">Deterministic Edge Output</span>
                 <button id="hero-copy-output-btn" type="button" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">Copy Result</button>
               </div>
-              <pre id="hero-sandbox-response" style="margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: #34d399; max-height: 180px; overflow-y: auto; white-space: pre-wrap;">Click "Run Query ⚡" to execute sub-millisecond calculation at Cloudflare edge...</pre>
+              <pre id="hero-sandbox-response" style="margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: #34d399; max-height: 180px; overflow-y: auto; white-space: pre-wrap;">Click "Run Query" to execute sub-millisecond calculation at Cloudflare edge...</pre>
             </div>
           </div>
         </section>
@@ -97,7 +116,7 @@ export class ViewEnterpriseHome {
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; text-align: center;">
             <div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.03em;">100%</div>
-              <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 4px;">Deterministic (Zero Hallucinations)</div>
+              <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 4px;">Deterministic Precision</div>
             </div>
             <div>
               <div style="font-size: 2rem; font-weight: 800; color: #10b981; letter-spacing: -0.03em;">&lt;0.8ms</div>
@@ -105,7 +124,7 @@ export class ViewEnterpriseHome {
             </div>
             <div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--accent-primary); letter-spacing: -0.03em;">13 Engines</div>
-              <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 4px;">Finance, Math, Physics & Options</div>
+              <div style="font-size: 0.82rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; margin-top: 4px;">Finance, Math & Engineering</div>
             </div>
             <div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.03em;">99.99%</div>
@@ -114,7 +133,7 @@ export class ViewEnterpriseHome {
           </div>
         </section>
 
-        <!-- 3-Pillar Enterprise Value Grid (Tavily "Loved by developers, built for enterprises") -->
+        <!-- 3-Pillar Enterprise Value Grid (Tavily Style) -->
         <section style="margin-bottom: 64px;">
           <div style="text-align: center; margin-bottom: 36px;">
             <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-primary); margin-bottom: 8px;">/ Engineering Philosophy</div>
@@ -124,8 +143,8 @@ export class ViewEnterpriseHome {
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
             <!-- Pillar 1 -->
             <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(79, 70, 229, 0.1); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
-                🎯
+              <div style="width: 40px; height: 40px; border-radius: 8px; background: var(--accent-light); color: var(--accent-primary); display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
               </div>
               <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Ground Models with Deterministic Precision</h3>
               <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
@@ -135,8 +154,8 @@ export class ViewEnterpriseHome {
 
             <!-- Pillar 2 -->
             <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
-                ⚡
+              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               </div>
               <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Handle Thousands of Calculations in Seconds</h3>
               <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
@@ -146,8 +165,8 @@ export class ViewEnterpriseHome {
 
             <!-- Pillar 3 -->
             <div class="glass-card" style="padding: 28px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 16px;">
-                🔒
+              <div style="width: 40px; height: 40px; border-radius: 8px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
               </div>
               <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0 0 10px;">Enterprise Safeguards & Zero Storage</h3>
               <p style="font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin: 0;">
@@ -163,10 +182,10 @@ export class ViewEnterpriseHome {
             <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px;">
               <div>
                 <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin: 0 0 4px;">Universal Streamable HTTP MCP Integration</h2>
-                <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0;">Plug TrueCalci directly into Claude Desktop, Cursor, or your custom agent workflow in 30 seconds.</p>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">Compatible with Model Context Protocol specification</span>
               </div>
               <!-- Code Tabs -->
-              <div style="display: flex; gap: 6px; background: var(--bg-subtle); padding: 3px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <div style="display: flex; gap: 6px; background: var(--bg-subtle); padding: 4px; border-radius: 6px; border: 1px solid var(--border-color);">
                 <button class="hero-code-tab active" data-tab="mcp_claude" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: var(--bg-surface); color: var(--accent-primary); cursor: pointer;">Claude Desktop</button>
                 <button class="hero-code-tab" data-tab="mcp_cursor" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Cursor</button>
                 <button class="hero-code-tab" data-tab="python" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Python</button>
@@ -183,85 +202,25 @@ export class ViewEnterpriseHome {
           </div>
         </section>
 
-        <!-- Transparent 4-Tier Pricing Section -->
+        <!-- Pricing Exploration Banner (Dodo Payments MoR Callout) -->
         <section id="pricing-section" style="margin-bottom: 64px;">
-          <div style="text-align: center; margin-bottom: 36px;">
-            <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-primary); margin-bottom: 8px;">/ Pricing Plans</div>
-            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; margin: 0 0 10px;">Find a Plan to Power Your Agents</h2>
-            <p style="font-size: 0.88rem; color: var(--text-secondary); max-width: 620px; margin: 0 auto;">One unified parent account with transparent credit billing via UPI and global cards.</p>
-          </div>
-
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
-            
-            <!-- Tier 1: Free -->
-            <div class="glass-card" style="padding: 24px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Anonymous Researcher</div>
-                <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 8px 0;">$0 <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">/ month</span></div>
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">Keyless instant testing for autonomous agents and students.</p>
-                <ul style="padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
-                  <li>100 requests / month</li>
-                  <li>No credit card required</li>
-                  <li>All 13 math & finance engines</li>
-                  <li>Streamable HTTP MCP</li>
-                </ul>
+          <div class="glass-card" style="padding: 36px 32px; border-radius: 16px; background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-subtle) 100%); border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; box-shadow: var(--shadow-md);">
+            <div style="max-width: 620px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.06em;">Dodo Payments • Merchant of Record</span>
+                <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Automated GST & VAT Invoices</span>
               </div>
-              <span style="display: block; text-align: center; font-size: 0.82rem; font-weight: 600; color: #10b981; padding: 10px; border-radius: 6px; background: rgba(16, 185, 129, 0.1);">Active Default</span>
+              <h2 style="font-size: 1.65rem; font-weight: 800; color: var(--text-primary); margin: 0 0 8px; letter-spacing: -0.02em;">Find a Plan to Power Your Autonomous Agents</h2>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">Access all 16+ verified engines with 100 free requests, $5/mo Developer Starter (2,500 requests), and flexible metered compute settled globally via Dodo Payments.</p>
             </div>
-
-            <!-- Tier 2: Starter -->
-            <div class="glass-card" style="padding: 24px; border-radius: 12px; background: var(--bg-surface); border: 2px solid var(--accent-primary); position: relative; display: flex; flex-direction: column; justify-content: space-between;">
-              <span style="position: absolute; top: -11px; right: 16px; font-size: 0.68rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--accent-primary); color: #ffffff;">POPULAR</span>
-              <div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase;">Developer Starter</div>
-                <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 8px 0;">$5 <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">/ month</span></div>
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">For micro-SaaS builders and personal agent automations.</p>
-                <ul style="padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
-                  <li><strong>25,000 requests / month</strong></li>
-                  <li>Dedicated personal API key</li>
-                  <li>300 requests / minute rate limit</li>
-                  <li>Sub-5ms prioritized execution</li>
-                </ul>
-              </div>
-              <button class="pricing-cta-btn" data-plan="starter" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer;">Get Starter Key ($5/mo)</button>
-            </div>
-
-            <!-- Tier 3: Pro -->
-            <div class="glass-card" style="padding: 24px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Pro Agency</div>
-                <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 8px 0;">$15 <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">/ month</span></div>
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">For high-volume agents and financial modeling teams.</p>
-                <ul style="padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
-                  <li><strong>100,000 requests / month</strong></li>
-                  <li>1,000 requests / minute burst rate</li>
-                  <li>Multi-user team API keys</li>
-                  <li>99.99% Edge SLA Guarantee</li>
-                </ul>
-              </div>
-              <button class="pricing-cta-btn" data-plan="pro" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--bg-subtle); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">Get Pro Key ($15/mo)</button>
-            </div>
-
-            <!-- Tier 4: Enterprise Pay-As-You-Go -->
-            <div class="glass-card" style="padding: 24px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="font-size: 0.78rem; font-weight: 700; color: #10b981; text-transform: uppercase;">Enterprise Metered</div>
-                <div style="font-size: 1.8rem; font-weight: 800; color: var(--text-primary); margin: 8px 0;">$15+ <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">base + usage</span></div>
-                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 16px;">Metered billing beyond 100k calls with UPI and cards.</p>
-                <ul style="padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.8; margin-bottom: 20px;">
-                  <li><strong>100,000 base calls included</strong></li>
-                  <li><strong>$0.20 per 1,000 extra calls</strong> (₹15 / 1k)</li>
-                  <li>Instant UPI AutoPay & QR Code</li>
-                  <li>Automated Monthly GST / VAT PDF Invoices</li>
-                </ul>
-              </div>
-              <button class="pricing-cta-btn" data-plan="metered" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: #10b981; color: #ffffff; border: none; cursor: pointer;">Enable Metered Usage ⚡</button>
-            </div>
-
+            <a href="#pricing" id="home-explore-plans-btn" style="padding: 12px 24px; font-size: 0.9rem; font-weight: 700; border-radius: 8px; background: var(--accent-primary); color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); transition: transform 0.15s ease;">
+              <span>Explore Compute Plans</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
           </div>
         </section>
 
-        <!-- Enterprise Compliance & Legal Footer (Tavily Style) -->
+        <!-- Enterprise Compliance & Legal Footer (Tavily Style - Cleaned of Internal Specs) -->
         <footer style="padding-top: 48px; border-top: 1px solid var(--border-color);">
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 40px;">
             <!-- Col 1: Product -->
@@ -270,9 +229,8 @@ export class ViewEnterpriseHome {
               <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
                 <li><a href="#home" style="color: var(--text-secondary); text-decoration: none;">Overview</a></li>
                 <li><a href="#contractor_matrix" style="color: var(--text-secondary); text-decoration: none;">Workstation Studio</a></li>
-                <li><a href="#pricing-section" style="color: var(--text-secondary); text-decoration: none;">Pricing Plans</a></li>
+                <li><a href="#pricing" style="color: var(--text-secondary); text-decoration: none;">Pricing Plans</a></li>
                 <li><a href="#developer" style="color: var(--text-secondary); text-decoration: none;">Streamable MCP Server</a></li>
-                <li><a href="https://truecalci.com/openapi.json" target="_blank" style="color: var(--text-secondary); text-decoration: none;">OpenAPI Spec</a></li>
               </ul>
             </div>
 
@@ -287,18 +245,18 @@ export class ViewEnterpriseHome {
               </ul>
             </div>
 
-            <!-- Col 3: Resources -->
+            <!-- Col 3: Resources (Clean Public Resources Only) -->
             <div>
               <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Resources</div>
               <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
                 <li><a href="engineering-formulas.html" style="color: var(--text-secondary); text-decoration: none;">Engineering Formulas</a></li>
-                <li><a href="llms.txt" target="_blank" style="color: var(--text-secondary); text-decoration: none;">LLMs.txt Discovery</a></li>
-                <li><a href=".well-known/api-catalog" target="_blank" style="color: var(--text-secondary); text-decoration: none;">RFC 9727 API Catalog</a></li>
-                <li><a href=".well-known/security.txt" target="_blank" style="color: var(--text-secondary); text-decoration: none;">Security.txt (RFC 9116)</a></li>
+                <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Tax Slabs & Schedules</a></li>
+                <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy & Data Protection</a></li>
+                <li><a href="#developer" style="color: var(--text-secondary); text-decoration: none;">API Documentation</a></li>
               </ul>
             </div>
 
-            <!-- Col 4: Company & Trust -->
+            <!-- Col 4: Company & Compliance -->
             <div>
               <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Company & Trust</div>
               <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
@@ -499,7 +457,7 @@ print(res.json())`;
           const responseBox = document.getElementById("hero-sandbox-response");
           if (responseBox) responseBox.textContent = `Error: ${err.message}`;
         } finally {
-          runBtn.textContent = "Run Query ⚡";
+          runBtn.textContent = "Run Query";
           runBtn.style.opacity = "1";
         }
       });
@@ -537,18 +495,23 @@ print(res.json())`;
       else window.location.hash = "#contractor_matrix";
     });
 
-    // Start Free Button
+    // Start Free Button -> Open Authentication Dialog
     document.getElementById("hero-btn-start-free")?.addEventListener("click", () => {
-      if (this.onNavigate) this.onNavigate("developer");
-      else window.location.hash = "#developer";
+      if (window.openAuthModal) {
+        window.openAuthModal();
+      } else if (this.onNavigate) {
+        this.onNavigate("auth");
+      } else {
+        window.location.hash = "#auth";
+      }
     });
 
-    // Pricing CTA Buttons
-    document.querySelectorAll(".pricing-cta-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (this.onNavigate) this.onNavigate("developer");
-        else window.location.hash = "#developer";
-      });
+    // Explore Compute Plans Button -> Navigates to #pricing with smooth top scroll
+    document.getElementById("home-explore-plans-btn")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (this.onNavigate) this.onNavigate("pricing");
+      else window.location.hash = "#pricing";
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     });
   }
 }

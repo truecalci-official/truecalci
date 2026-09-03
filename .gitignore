@@ -11,6 +11,18 @@ yarn-error.log*
 public_deploy/
 *.zip
 
+# Environment & Secrets
+.env
+.env.*
+.env.txt
+
+# Scratch / experiments
+my-react-app/
+remoteparity/
+scratch_*.mjs
+test_*.mjs
+
 # OS metadata
 .DS_Store
 Thumbs.db
+

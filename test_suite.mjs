@@ -1,5 +1,5 @@
 /**
- * Comprehensive Automated Verification Test Suite for OmniCalc Suite
+ * Comprehensive Automated Verification Test Suite for TrueCalci Precision Suite
  */
 
 import { IndianFinanceEngine } from "./js/engines/indian-finance.js";
@@ -12,7 +12,7 @@ import { ContractorMatrixEngine } from "./js/engines/contractor-matrix.js";
 import { CALCULATOR_DEFINITIONS } from "./js/data/definitions.js";
 
 console.log("================================================================================");
-console.log("RUNNING AUTOMATED VERIFICATION FOR OMNICALC INDIA SUITE");
+console.log("RUNNING AUTOMATED VERIFICATION FOR TRUECALCI PRECISION SUITE");
 console.log("================================================================================");
 
 let testsPassed = 0;

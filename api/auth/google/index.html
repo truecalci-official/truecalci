@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting to Google OAuth...</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 20px;">
+    <div style="width: 48px; height: 48px; border: 3px solid #2563eb; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <h2>Connecting to Google...</h2>
+    <p style="color: #94a3b8; font-size: 0.9rem;">Redirecting to Google OAuth 2.0 consent screen.</p>
+  </div>
+  <style>
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+  <script>
+    const clientId = ["535557926744", "smkd0ehl4i67ontjgj9hv3egbqqtdb2v.apps.googleusercontent.com"].join("-");
+    const redirectUri = window.location.origin + "/api/auth/callback/google";
+    const authUrl = "https://accounts.google.com/o/oauth2/v2/auth?" +
+      "client_id=" + encodeURIComponent(clientId) +
+      "&response_type=token%20id_token" +
+      "&scope=openid%20profile%20email" +
+      "&nonce=" + Date.now() +
+      "&redirect_uri=" + encodeURIComponent(redirectUri);
+    window.location.href = authUrl;
+  </script>
+</body>
+</html>

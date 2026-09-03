@@ -158,7 +158,7 @@ export class ViewIndianFinance {
       <!-- Year-wise schedule table -->
       <div class="schedule-header-actions">
         <h4 class="schedule-title">Year-on-Year Growth Projection</h4>
-        <button class="export-btn" id="sip-export-csv">📥 Export CSV</button>
+        <button class="export-btn" id="sip-export-csv"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
       </div>
       <div class="schedule-table-wrapper">
         <table class="schedule-table">
@@ -402,7 +402,7 @@ export class ViewIndianFinance {
 
           <div style="background:var(--bg-subtle); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid var(--border-color); text-align:center;">
             <span style="font-size:0.85rem; font-weight:600;" id="tax-recommendation-text">
-              🎉 You save <strong>₹91,000</strong> with the New Tax Regime!
+              You save <strong>₹91,000</strong> with the New Tax Regime!
             </span>
           </div>
         </div>
@@ -483,13 +483,13 @@ export class ViewIndianFinance {
       cardOld.classList.remove("recommended");
       badgeNew.style.display = "block";
       badgeOld.style.display = "none";
-      recText.innerHTML = `🎉 You save <strong>${IndianFinanceEngine.formatINR(res.taxSavings)}</strong> with the <strong>New Tax Regime</strong>!`;
+      recText.innerHTML = `You save <strong>${IndianFinanceEngine.formatINR(res.taxSavings)}</strong> with the <strong>New Tax Regime</strong>!`;
     } else {
       cardOld.classList.add("recommended");
       cardNew.classList.remove("recommended");
       badgeOld.style.display = "block";
       badgeNew.style.display = "none";
-      recText.innerHTML = `🎉 You save <strong>${IndianFinanceEngine.formatINR(res.taxSavings)}</strong> with the <strong>Old Tax Regime</strong>!`;
+      recText.innerHTML = `You save <strong>${IndianFinanceEngine.formatINR(res.taxSavings)}</strong> with the <strong>Old Tax Regime</strong>!`;
     }
   }
 
@@ -595,7 +595,7 @@ export class ViewIndianFinance {
       <!-- Amortization Schedule Table -->
       <div class="schedule-header-actions">
         <h4 class="schedule-title">Amortization Schedule (Year-by-Year)</h4>
-        <button class="export-btn" id="emi-export-csv">📥 Export CSV</button>
+        <button class="export-btn" id="emi-export-csv"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
       </div>
       <div class="schedule-table-wrapper">
         <table class="schedule-table">

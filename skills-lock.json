@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "skills": {
+    "apple-design": {
+      "source": "emilkowalski/skills",
+      "sourceType": "github",
+      "skillPath": "skills/apple-design/SKILL.md",
+      "computedHash": "0d19303902efa64eace10e6b183eb29ef3220d424c1a7fd1eafc52adde216932"
+    },
+    "better-auth-integration": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/better-auth-integration/SKILL.md",
+      "computedHash": "d0621569a2f443ef9ae49273e38653d07ed4ce5c526ed1643e45cf5ede58ea1f"
+    },
+    "billing-sdk": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/billing-sdk/SKILL.md",
+      "computedHash": "90701786411077529dee479a7ff3a3c7531005ac82b0da6a0e850b651167802d"
+    },
+    "checkout-integration": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/checkout-integration/SKILL.md",
+      "computedHash": "ae0811ca4d3092eb3b206c83b03a201f9c0adcc4facbaaa32dec71faf4ea5c14"
+    },
+    "credit-based-billing": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/credit-based-billing/SKILL.md",
+      "computedHash": "fef90bc2f735b68ac48187efa08737804dbe11d7fd8444ae7116dca3476e87df"
+    },
+    "customer-management": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/customer-management/SKILL.md",
+      "computedHash": "36ab6ff7cc1ff41d7efbedbe77bb66fa8e46416a71977f9995d444dcc1bfe83a"
+    },
+    "discounts-and-promotions": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/discounts-and-promotions/SKILL.md",
+      "computedHash": "ae395e37bf9accfde111ce392c5a08d3ea3ac1b57c1d91f442c49fd4f88c7553"
+    },
+    "dodo-best-practices": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/dodo-best-practices/SKILL.md",
+      "computedHash": "e76e2c45d37b1071a6de07a2dc19ab3205ef40afea1b0193ea74755ff4f5e451"
+    },
+    "framework-adapters": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/framework-adapters/SKILL.md",
+      "computedHash": "1c1b3430f6877b70045f7bb12e406d2ebdbd4dc85f1050bcb089850263135119"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
+    },
+    "license-keys": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/license-keys/SKILL.md",
+      "computedHash": "df2ba540572bcd63557a3d26e766420eea8611b563ad402e6cadf6dd3958dd0b"
+    },
+    "localized-pricing": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/localized-pricing/SKILL.md",
+      "computedHash": "9c4f022d5cb330897b9250da8d82e9323e5484da41e4f5e60484d20cf8220f0a"
+    },
+    "material-3": {
+      "source": "hamen/material-3-skill",
+      "sourceType": "github",
+      "skillPath": "skills/material-3/SKILL.md",
+      "computedHash": "b675af544d7f335ca6dd2edb708930605484084354a4ef383362c9ec2b1717c7"
+    },
+    "mobile-checkout": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/mobile-checkout/SKILL.md",
+      "computedHash": "8fdf3210b1e65358ed020dbaaa601764ca0485562a039c7a4f14507302e4e63b"
+    },
+    "product-catalog-management": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/product-catalog-management/SKILL.md",
+      "computedHash": "be55626bf01cf2a37b5c5dd706b3268059d028d83304f46906bde1ca4b48f490"
+    },
+    "refunds-and-disputes": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/refunds-and-disputes/SKILL.md",
+      "computedHash": "0a17f8fba7a1c66a0033a279e10d6b4925e7c1a1f8e1f3897f24de1ce3413917"
+    },
+    "subscription-integration": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/subscription-integration/SKILL.md",
+      "computedHash": "28a221ec6ad8bca27a92a02b2ac29e3c6861cdfa7432afdb67f4ca8d3fd560c8"
+    },
+    "testing-and-go-live": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/testing-and-go-live/SKILL.md",
+      "computedHash": "cc47f6cab0d95ac4dcb00b5b3cc22606b4aefe24caa671a78efc34a0604195a3"
+    },
+    "usage-based-billing": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/usage-based-billing/SKILL.md",
+      "computedHash": "b85694c520ca8e25c6fe7c41a894c311d5525ff739210cf4ff1bed8ad20fc375"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
+    },
+    "webhook-integration": {
+      "source": "dodopayments/dodo-agent-plugin",
+      "sourceType": "github",
+      "skillPath": "skills/webhook-integration/SKILL.md",
+      "computedHash": "095d51d37ea5257ef93b167a5bf96af495189bb5c84ef89a75e99d3c68c20867"
+    }
+  }
+}

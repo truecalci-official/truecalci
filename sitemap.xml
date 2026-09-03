@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-  OmniCalc India XML Sitemap
-  Submit this file to Google Search Console (e.g. https://search.google.com/search-console)
-  Replace 'https://truecalci.com' with your live production URL (e.g. 'https://omnicalc.in')
+  TrueCalci XML Sitemap
+  Deploy to: https://truecalci.com/sitemap.xml
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <!-- Core Web Application -->

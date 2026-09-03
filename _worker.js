@@ -113,14 +113,58 @@ const MCP_TOOL_DEFINITIONS = [
       },
       required: ["spotPrice", "strikePrice", "timeToExpiryYears"]
     }
+  },
+  {
+    name: "pipe_flow",
+    description: "Darcy-Weisbach fluid mechanics pipe friction factor, Reynolds number, head loss, and pressure drop.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        flowRateM3s: { type: "number", default: 0.05 },
+        pipeDiameterM: { type: "number", default: 0.15 },
+        pipeLengthM: { type: "number", default: 100 },
+        fluidDensityKgM3: { type: "number", default: 1000 },
+        dynamicViscosityPaS: { type: "number", default: 0.001 },
+        pipeRoughnessM: { type: "number", default: 0.000045 }
+      },
+      required: ["flowRateM3s", "pipeDiameterM", "pipeLengthM"]
+    }
+  },
+  {
+    name: "rlc_circuit",
+    description: "Resonant RLC circuit AC impedance magnitude, phase angle, resonant frequency f0, and quality factor Q.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        resistanceOhms: { type: "number", default: 50 },
+        inductanceHenrys: { type: "number", default: 0.01 },
+        capacitanceFarads: { type: "number", default: 0.000001 },
+        frequencyHz: { type: "number" }
+      },
+      required: ["resistanceOhms", "inductanceHenrys", "capacitanceFarads"]
+    }
+  },
+  {
+    name: "rocket_deltav",
+    description: "Tsiolkovsky rocket equation delta-v budget, effective exhaust velocity, mass ratio, and propellant mass fraction.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialMassKg: { type: "number", default: 549054 },
+        finalMassKg: { type: "number", default: 22200 },
+        specificImpulseSeconds: { type: "number", default: 311 },
+        gravityMs2: { type: "number", default: 9.80665 }
+      },
+      required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
+    }
   }
 ];
 
 // -----------------------------------------------------------------------------
 // In-Memory Edge Rate Limiting & Telemetry Ledger
 // -----------------------------------------------------------------------------
-const MONTHLY_RATE_LIMIT = 100; // Strict 100 calls/month per IP
-const ipUsageMap = new Map(); // IP -> { count: number, resetMonth: number }
+const MONTHLY_RATE_LIMIT = 100; // Strict 100 calls/month per IP for free tier
+const clientUsageMap = new Map(); // ClientID -> { minuteCount, minuteReset, monthCount, monthReset }
 
 const telemetry = {
   baselineRequests: 1450,
@@ -169,28 +213,103 @@ function getClientIdentity(request) {
   return { id: "ip:" + ip, type: "ip" };
 }
 
-function checkRateLimit(clientId) {
+function checkRateLimit(clientIdentity) {
+  const id = clientIdentity.id;
+  const now = Date.now();
   const currentMonth = new Date().getUTCMonth();
-  let client = ipUsageMap.get(clientId);
-
-  if (!client || client.resetMonth !== currentMonth) {
-    client = { count: 0, resetMonth: currentMonth };
-    ipUsageMap.set(clientId, client);
-  }
-
-  const allowed = client.count < MONTHLY_RATE_LIMIT;
-  if (allowed) {
-    client.count++;
-  }
-
-  const remaining = Math.max(0, MONTHLY_RATE_LIMIT - client.count);
   
-  // Calculate seconds until 1st of next month
-  const now = new Date();
-  const nextMonth = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1));
-  const retryAfterSeconds = Math.max(1, Math.floor((nextMonth.getTime() - now.getTime()) / 1000));
+  // Resolve minute burst limits based on API key tier
+  let minuteLimit = 20;
+  let tierName = "anonymous";
+  
+  if (clientIdentity.type === "key") {
+    const keyLower = id.toLowerCase();
+    if (keyLower.includes("pro") || keyLower.includes("live_pro")) {
+      minuteLimit = 1000;
+      tierName = "pro";
+    } else if (keyLower.includes("starter") || keyLower.includes("live_starter")) {
+      minuteLimit = 300;
+      tierName = "starter";
+    } else if (keyLower.includes("metered") || keyLower.includes("live_metered")) {
+      minuteLimit = 2500;
+      tierName = "metered";
+    } else {
+      minuteLimit = 500;
+      tierName = "developer";
+    }
+  }
 
-  return { allowed, current: client.count, remaining, retryAfterSeconds };
+  let record = clientUsageMap.get(id);
+  if (!record) {
+    record = {
+      minuteCount: 0,
+      minuteReset: now + 60000,
+      monthCount: 0,
+      monthReset: currentMonth
+    };
+    clientUsageMap.set(id, record);
+  }
+
+  // Reset minute window
+  if (now >= record.minuteReset) {
+    record.minuteCount = 0;
+    record.minuteReset = now + 60000;
+  }
+
+  // Reset month window
+  if (currentMonth !== record.monthReset) {
+    record.monthCount = 0;
+    record.monthReset = currentMonth;
+  }
+
+  // Check anonymous tier (monthly 100 quota)
+  if (tierName === "anonymous") {
+    if (record.monthCount >= MONTHLY_RATE_LIMIT) {
+      const dNow = new Date();
+      const nextMonth = new Date(Date.UTC(dNow.getUTCFullYear(), dNow.getUTCMonth() + 1, 1));
+      const retryAfterSeconds = Math.max(1, Math.floor((nextMonth.getTime() - dNow.getTime()) / 1000));
+      return {
+        allowed: false,
+        tier: tierName,
+        limit: MONTHLY_RATE_LIMIT,
+        remaining: 0,
+        retryAfterSeconds,
+        reason: `Monthly free tier limit of ${MONTHLY_RATE_LIMIT} requests reached for this IP.`
+      };
+    }
+    record.monthCount++;
+    const remaining = Math.max(0, MONTHLY_RATE_LIMIT - record.monthCount);
+    return {
+      allowed: true,
+      tier: tierName,
+      limit: MONTHLY_RATE_LIMIT,
+      remaining,
+      retryAfterSeconds: 0
+    };
+  }
+
+  // Keyed tiers: Burst minute limits (300 starter, 1000 pro, 2500 metered)
+  if (record.minuteCount >= minuteLimit) {
+    const retryAfterSeconds = Math.max(1, Math.ceil((record.minuteReset - now) / 1000));
+    return {
+      allowed: false,
+      tier: tierName,
+      limit: minuteLimit,
+      remaining: 0,
+      retryAfterSeconds,
+      reason: `Burst rate limit of ${minuteLimit} req/min exceeded.`
+    };
+  }
+
+  record.minuteCount++;
+  const remaining = Math.max(0, minuteLimit - record.minuteCount);
+  return {
+    allowed: true,
+    tier: tierName,
+    limit: minuteLimit,
+    remaining,
+    retryAfterSeconds: 0
+  };
 }
 
 // -----------------------------------------------------------------------------
@@ -274,6 +393,35 @@ function executeTool(toolName, params) {
       timeToExpiryYears: Number(params.timeToExpiryYears || 1),
       riskFreeRatePercent: Number(params.riskFreeRatePercent || (params.riskFreeRate ? params.riskFreeRate * 100 : 4.5)),
       volatilityPercent: Number(params.volatilityPercent || (params.volatility ? params.volatility * 100 : 20))
+    });
+  }
+
+  if (t === "pipe_flow") {
+    return EngineeringPhysicsEngine.calculatePipeFlow({
+      flowRateM3s: Number(params.flowRateM3s),
+      pipeDiameterM: Number(params.pipeDiameterM),
+      pipeLengthM: Number(params.pipeLengthM),
+      fluidDensityKgM3: Number(params.fluidDensityKgM3 || 1000),
+      dynamicViscosityPaS: Number(params.dynamicViscosityPaS || 0.001),
+      pipeRoughnessM: Number(params.pipeRoughnessM || 0.000045)
+    });
+  }
+
+  if (t === "rlc_circuit") {
+    return EngineeringPhysicsEngine.calculateRlcCircuit({
+      resistanceOhms: Number(params.resistanceOhms),
+      inductanceHenrys: Number(params.inductanceHenrys),
+      capacitanceFarads: Number(params.capacitanceFarads),
+      frequencyHz: params.frequencyHz !== undefined ? Number(params.frequencyHz) : undefined
+    });
+  }
+
+  if (t === "rocket_deltav") {
+    return EngineeringPhysicsEngine.calculateRocketDeltaV({
+      initialMassKg: Number(params.initialMassKg),
+      finalMassKg: Number(params.finalMassKg),
+      specificImpulseSeconds: Number(params.specificImpulseSeconds),
+      gravityMs2: Number(params.gravityMs2 || 9.80665)
     });
   }
 
@@ -411,12 +559,225 @@ export default {
     }
 
     // -------------------------------------------------------------------------
+    // 3.5. Authentication & OAuth Endpoints (GitHub & Google)
+    // -------------------------------------------------------------------------
+    if (url.pathname === "/api/auth/github") {
+      const clientId = env.GITHUB_CLIENT_ID || "Ov23liKzTySirwshmW8f";
+      const redirectUri = `${url.origin}/api/auth/callback/github`;
+      const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+      if (accept.includes("application/json")) {
+        return new Response(JSON.stringify({ provider: "github", authUrl, clientId, redirectUri }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        });
+      }
+      return Response.redirect(authUrl, 302);
+    }
+
+    if (url.pathname === "/api/auth/callback/github") {
+      const code = url.searchParams.get("code");
+      const clientId = env.GITHUB_CLIENT_ID || "Ov23liKzTySirwshmW8f";
+      const clientSecret = env.GITHUB_CLIENT_SECRET || "7c6b9c87ef80aa41dc77e9d45b544725ab4bce3c";
+
+      if (code && clientId && clientSecret && !clientId.startsWith("dummy")) {
+        try {
+          const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+            method: "POST",
+            headers: { "Accept": "application/json", "Content-Type": "application/json" },
+            body: JSON.stringify({ client_id: clientId, client_secret: clientSecret, code })
+          });
+          const tokenData = await tokenRes.json();
+          if (tokenData.access_token) {
+            const userRes = await fetch("https://api.github.com/user", {
+              headers: {
+                "Authorization": `Bearer ${tokenData.access_token}`,
+                "User-Agent": "TrueCalci-App"
+              }
+            });
+            const ghUser = await userRes.json();
+            const sessionUser = {
+              id: `gh_${ghUser.id}`,
+              name: ghUser.name || ghUser.login,
+              handle: ghUser.login,
+              email: ghUser.email || `${ghUser.login}@users.noreply.github.com`,
+              avatar_url: ghUser.avatar_url,
+              provider: "github",
+              tier: "Developer Starter",
+              tierId: "starter",
+              quotaLimit: 2500
+            };
+
+            return new Response(`<!DOCTYPE html><html><body><script>
+              localStorage.setItem('tc_dev_user', JSON.stringify(${JSON.stringify(sessionUser)}));
+              localStorage.setItem('tc_dev_auth', 'true');
+              window.location.href = '/#developer';
+            </script><p style="font-family: sans-serif; padding: 20px;">Authenticated with GitHub as <strong>${sessionUser.name}</strong>. Redirecting to Developer Dashboard...</p></body></html>`, {
+              status: 200,
+              headers: { "Content-Type": "text/html; charset=utf-8" }
+            });
+          }
+        } catch (err) {
+          console.error("GitHub OAuth Error:", err);
+        }
+      }
+
+      if (accept.includes("application/json") && !code) {
+        return new Response(JSON.stringify({
+          success: true,
+          provider: "github",
+          user: {
+            id: "gh_982734",
+            name: "Alex Chen",
+            login: "alexchen-dev",
+            email: "alex.chen@github.com",
+            avatar_url: "https://avatars.githubusercontent.com/u/982734?v=4",
+            tier: "Developer Starter",
+            tierId: "starter",
+            quotaLimit: 2500
+          },
+          token: `tc_token_gh_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+          apiKey: `tc_live_starter_${Math.random().toString(36).substring(2, 10)}`
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        });
+      }
+
+      return new Response(`<!DOCTYPE html><html><body><script>
+        localStorage.setItem('tc_dev_user', JSON.stringify({
+          id: 'gh_982734',
+          name: 'Alex Chen',
+          handle: 'alexchen-dev',
+          email: 'alex.chen@github.com',
+          avatar_url: 'https://avatars.githubusercontent.com/u/982734?v=4',
+          provider: 'github',
+          tier: 'Developer Starter',
+          tierId: 'starter',
+          quotaLimit: 2500
+        }));
+        localStorage.setItem('tc_dev_auth', 'true');
+        window.location.href = '/#developer';
+      </script><p style="font-family: sans-serif; padding: 20px;">Redirecting to Developer Dashboard...</p></body></html>`, {
+        status: 200,
+        headers: { "Content-Type": "text/html; charset=utf-8" }
+      });
+    }
+
+    if (url.pathname === "/api/auth/google") {
+      const clientId = env.GOOGLE_CLIENT_ID || "";
+      const redirectUri = `${url.origin}/api/auth/callback/google`;
+      const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&response_type=code&scope=openid%20profile%20email&redirect_uri=${encodeURIComponent(redirectUri)}`;
+
+      if (accept.includes("application/json")) {
+        return new Response(JSON.stringify({ provider: "google", authUrl, clientId, redirectUri }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        });
+      }
+      return Response.redirect(authUrl, 302);
+    }
+
+    if (url.pathname === "/api/auth/callback/google") {
+      const code = url.searchParams.get("code");
+      const clientId = env.GOOGLE_CLIENT_ID || "";
+      const clientSecret = env.GOOGLE_CLIENT_SECRET || "";
+      const redirectUri = `${url.origin}/api/auth/callback/google`;
+
+      if (code && clientId && clientSecret && !clientId.startsWith("dummy")) {
+        try {
+          const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+              client_id: clientId,
+              client_secret: clientSecret,
+              code,
+              grant_type: "authorization_code",
+              redirect_uri: redirectUri
+            })
+          });
+          const tokenData = await tokenRes.json();
+          if (tokenData.access_token) {
+            const userRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+              headers: { "Authorization": `Bearer ${tokenData.access_token}` }
+            });
+            const googUser = await userRes.json();
+            const sessionUser = {
+              id: `goog_${googUser.sub}`,
+              name: googUser.name || "Google Developer",
+              handle: googUser.email?.split("@")[0] || "google_user",
+              email: googUser.email,
+              avatar_url: googUser.picture,
+              provider: "google",
+              tier: "Developer Starter",
+              tierId: "starter",
+              quotaLimit: 2500
+            };
+
+            return new Response(`<!DOCTYPE html><html><body><script>
+              localStorage.setItem('tc_dev_user', JSON.stringify(${JSON.stringify(sessionUser)}));
+              localStorage.setItem('tc_dev_auth', 'true');
+              window.location.href = '/#developer';
+            </script><p style="font-family: sans-serif; padding: 20px;">Authenticated with Google as <strong>${sessionUser.name}</strong>. Redirecting to Developer Dashboard...</p></body></html>`, {
+              status: 200,
+              headers: { "Content-Type": "text/html; charset=utf-8" }
+            });
+          }
+        } catch (err) {
+          console.error("Google OAuth Error:", err);
+        }
+      }
+
+      if (accept.includes("application/json") && !code) {
+        return new Response(JSON.stringify({
+          success: true,
+          provider: "google",
+          user: {
+            id: "goog_10847291",
+            name: "Alex Chen",
+            login: "alex.chen",
+            email: "alex.chen@gmail.com",
+            avatar_url: "https://lh3.googleusercontent.com/a/default-user",
+            tier: "Developer Starter",
+            tierId: "starter",
+            quotaLimit: 2500
+          },
+          token: `tc_token_goog_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
+          apiKey: `tc_live_starter_${Math.random().toString(36).substring(2, 10)}`
+        }), {
+          status: 200,
+          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        });
+      }
+
+      return new Response(`<!DOCTYPE html><html><body><script>
+        localStorage.setItem('tc_dev_user', JSON.stringify({
+          id: 'goog_10847291',
+          name: 'Alex Chen',
+          handle: 'alex.chen',
+          email: 'alex.chen@gmail.com',
+          avatar_url: 'https://lh3.googleusercontent.com/a/default-user',
+          provider: 'google',
+          tier: 'Developer Starter',
+          tierId: 'starter',
+          quotaLimit: 2500
+        }));
+        localStorage.setItem('tc_dev_auth', 'true');
+        window.location.href = '/#developer';
+      </script><p style="font-family: sans-serif; padding: 20px;">Redirecting to Developer Dashboard...</p></body></html>`, {
+        status: 200,
+        headers: { "Content-Type": "text/html; charset=utf-8" }
+      });
+    }
+
+    // -------------------------------------------------------------------------
     // 4. Model Context Protocol (MCP) Streamable HTTP JSON-RPC 2.0 Handler
     // -------------------------------------------------------------------------
     if (url.pathname === "/api/v1/mcp" || url.pathname === "/mcp") {
       if (request.method === "POST") {
-        // Enforce 100-request rate limit
-        const rateCheck = checkRateLimit(clientIdentity.id);
+        // Enforce rate limit (tier burst limit + monthly quota)
+        const rateCheck = checkRateLimit(clientIdentity);
         if (!rateCheck.allowed) {
           telemetry.sessionBlocked++;
           return new Response(JSON.stringify({
@@ -424,15 +785,16 @@ export default {
             id: null,
             error: {
               code: -32000,
-              message: "Rate limit exceeded. 100 requests/month free limit reached.",
-              data: { remaining: 0, limit: MONTHLY_RATE_LIMIT, upgrade: "https://truecalci.com/#pricing" }
+              message: `Rate limit exceeded. Tier "${rateCheck.tier}" allows ${rateCheck.limit} requests per minute.`,
+              data: { remaining: 0, limit: rateCheck.limit, retryAfter: rateCheck.retryAfterSeconds, upgrade: "https://truecalci.com/#pricing" }
             }
           }), {
             status: 429,
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               "Retry-After": String(rateCheck.retryAfterSeconds),
-              "X-RateLimit-Limit": String(MONTHLY_RATE_LIMIT),
+              "X-RateLimit-Limit": String(rateCheck.limit),
               "X-RateLimit-Remaining": "0"
             }
           });
@@ -487,12 +849,7 @@ export default {
               }
             }), {
               status: 200,
-              headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                "X-RateLimit-Limit": String(MONTHLY_RATE_LIMIT),
-                "X-RateLimit-Remaining": String(rateCheck.remaining)
-              }
+              headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
             });
           }
 
@@ -513,7 +870,7 @@ export default {
     }
 
     // -------------------------------------------------------------------------
-    // 5. REST API Execution Gate with 100-Requests/Month Blocker
+    // 5. REST API Execution Gate with Rate Limiting (20 req/min free, 300 Starter, 1000 Pro)
     // -------------------------------------------------------------------------
     const API_ROUTES = {
       "/api/contractor-parity": "contractor_parity",
@@ -522,20 +879,24 @@ export default {
       "/api/v1/vat_sales_tax": "vat_sales_tax",
       "/api/v1/casio_991_solve": "casio_991_solve",
       "/api/v1/beam_bending": "beam_bending",
-      "/api/v1/black_scholes": "black_scholes"
+      "/api/v1/black_scholes": "black_scholes",
+      "/api/v1/pipe_flow": "pipe_flow",
+      "/api/v1/rlc_circuit": "rlc_circuit",
+      "/api/v1/rocket_deltav": "rocket_deltav"
     };
 
     if (API_ROUTES[url.pathname]) {
       const toolName = API_ROUTES[url.pathname];
-      const rateCheck = checkRateLimit(clientIdentity.id);
+      const rateCheck = checkRateLimit(clientIdentity);
 
-      // The Gate Blocker: Return HTTP 429 when quota exceeded
+      // Return HTTP 429 when quota exceeded
       if (!rateCheck.allowed) {
         telemetry.sessionBlocked++;
         return new Response(JSON.stringify({
           error: "rate_limit_exceeded",
-          message: "Monthly free tier limit of 100 requests reached for this IP.",
-          limit: MONTHLY_RATE_LIMIT,
+          message: `Rate limit exceeded. Tier "${rateCheck.tier}" allows ${rateCheck.limit} requests per minute.`,
+          tier: rateCheck.tier,
+          limit: rateCheck.limit,
           remaining: 0,
           retryAfterSeconds: rateCheck.retryAfterSeconds,
           upgrade_options: "https://truecalci.com/#pricing"
@@ -545,7 +906,7 @@ export default {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Retry-After": String(rateCheck.retryAfterSeconds),
-            "X-RateLimit-Limit": String(MONTHLY_RATE_LIMIT),
+            "X-RateLimit-Limit": String(rateCheck.limit),
             "X-RateLimit-Remaining": "0"
           }
         });

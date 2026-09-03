@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engineering Mathematics & Architecture Formula Sheet — OmniCalc 991</title>
-  <meta name="description" content="Comprehensive engineering mathematics formula reference sheet for Indian engineering students (GATE, AICTE, university exams). Calculus, Linear Algebra, Differential Equations, Electrical, Civil, Mechanical, and Architecture formulas.">
+  <title>Engineering Mathematics & Architecture Formula Sheet — TrueCalci 991</title>
+  <meta name="description" content="Engineering Mathematics, Calculus, and Architecture formulas for GATE, AICTE, and university exams. Compatible with TrueCalci 991.">
   
   <link rel="canonical" href="http://localhost:4000/engineering-formulas.html">
   
@@ -231,14 +231,14 @@
   <header class="app-header">
     <div class="header-container">
       <a href="index.html" class="brand-area">
-        <div class="brand-icon">₹</div>
+        <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
         <div>
-          <span class="brand-title">OmniCalc</span>
+          <span class="brand-title">TrueCalci</span>
         </div>
       </a>
       <div style="display:flex; align-items:center; gap:0.75rem;">
-        <a href="index.html#calci_991" class="btn-hero" style="font-size:0.82rem; padding:0.45rem 0.9rem; background:var(--accent-primary); color:#fff;">
-          📟 Open 991 Calci
+        <a href="index.html#calci_991" class="btn-hero" style="font-size:0.82rem; padding:0.45rem 0.9rem; background:var(--accent-primary); color:#fff; text-decoration:none; border-radius:6px; font-weight:600;">
+          Open 991 Calci
         </a>
       </div>
     </div>
@@ -255,11 +255,11 @@
         Curated handbook for GATE, AICTE, university engineering semesters (Mechanical, Civil, Electrical, Computer Science, Architecture). All equations are tested and directly executable inside the Engineering Calci 991 simulation.
       </p>
       <div class="hero-actions">
-        <a href="index.html#calci_991" class="btn-hero">
-          ⚡ Launch Calci 991 Simulator
+        <a href="index.html#calci_991" class="btn-hero" style="text-decoration:none;">
+          Launch Calci 991 Simulator
         </a>
-        <a href="terms.html" class="btn-hero-outline">
-          ⚖️ Regulatory Terms
+        <a href="terms.html" class="btn-hero-outline" style="text-decoration:none;">
+          Regulatory Terms
         </a>
       </div>
     </div>
@@ -288,7 +288,7 @@
   </main>
 
   <footer class="regulatory-disclaimer" style="text-align:center; padding: 2rem;">
-    <p>© 2026 OmniCalc India. Permitted college examination standards. <a href="index.html" style="color:var(--accent-primary);">Home</a> | <a href="engineering-formulas.html" style="color:var(--accent-primary);">Engineering Formulas</a> | <a href="terms.html" style="color:var(--accent-primary);">Terms of Service</a> | <a href="privacy.html" style="color:var(--accent-primary);">Privacy Policy</a></p>
+    <p>© 2026 TrueCalci Inc. Permitted college examination standards. <a href="index.html" style="color:var(--accent-primary);">Home</a> | <a href="engineering-formulas.html" style="color:var(--accent-primary);">Engineering Formulas</a> | <a href="terms.html" style="color:var(--accent-primary);">Terms of Service</a> | <a href="privacy.html" style="color:var(--accent-primary);">Privacy Policy</a></p>
   </footer>
 
   <script>
@@ -435,7 +435,24 @@
         title: "Bernoulli's Energy Equation",
         eq: "P + (1/2)·ρ·v² + ρ·g·z = constant",
         desc: "Conservation of mechanical energy along a streamline in incompressible, steady, frictionless fluid flow.",
-        calciExpr: "101325 + 0.5 * 1000 * 10^2"
+      },
+      {
+        id: "pipe_flow",
+        cat: "mechanical",
+        badge: "Fluid Dynamics",
+        title: "Darcy-Weisbach Pipe Flow & Head Loss",
+        eq: "h_f = f · (L / D) · (v² / 2g)  |  Re = (ρ·v·D)/μ",
+        desc: "Calculates pipe friction factor (Swamee-Jain / Hagen-Poiseuille), Reynolds number, and pressure drop.",
+        calciExpr: "0.02 * (100 / 0.15) * (2.83^2 / (2 * 9.81))"
+      },
+      {
+        id: "rocket_deltav",
+        cat: "mechanical",
+        badge: "Aerospace Mechanics",
+        title: "Tsiolkovsky Rocket Equation (Delta-v)",
+        eq: "Δv = I_sp · g₀ · ln(m₀ / m_f)",
+        desc: "Determines orbital velocity change budget, engine specific impulse (Isp), and propellant mass fraction.",
+        calciExpr: "311 * 9.80665 * ln(549054 / 22200)"
       },
 
       // Architecture

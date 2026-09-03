@@ -70,16 +70,16 @@ export class ViewContractorMatrix {
           <span class="cm-preset-label">Quick Scenarios:</span>
           <div class="filter-pills-bar">
             <button type="button" class="pill-btn cm-preset-btn" data-preset="junior" aria-label="Junior Developer Preset: $90k W-2 versus $60 per hour 1099">
-              🌱 Junior Dev ($90k vs $60/hr)
+              Junior Dev ($90k vs $60/hr)
             </button>
             <button type="button" class="pill-btn cm-preset-btn active" data-preset="senior" aria-label="Senior Staff SWE Preset: $140k W-2 versus $95 per hour 1099">
-              ⚡ Senior SWE ($140k vs $95/hr)
+              Senior SWE ($140k vs $95/hr)
             </button>
             <button type="button" class="pill-btn cm-preset-btn" data-preset="lead" aria-label="Principal or Tech Lead Preset: $200k W-2 versus $145 per hour 1099">
-              🚀 Tech Lead ($200k vs $145/hr)
+              Tech Lead ($200k vs $145/hr)
             </button>
             <button type="button" class="pill-btn cm-preset-btn" data-preset="crossborder" aria-label="Cross Border Remote Contractor Preset: Wise versus Deel">
-              🌐 Cross-Border Remote (USD $\\to$ Local)
+              Cross-Border Remote (USD → Local)
             </button>
           </div>
         </div>
@@ -87,7 +87,7 @@ export class ViewContractorMatrix {
         <!-- Hero Parity Verdict Card -->
         <div class="cm-verdict-hero" id="cm-verdict-card" aria-live="polite">
           <div class="cm-verdict-badge-wrap">
-            <span class="cm-verdict-pill" id="cm-verdict-pill">🎉 1099 Contractor Offer Wins</span>
+            <span class="cm-verdict-pill" id="cm-verdict-pill">1099 Contractor Offer Wins</span>
             <span class="cm-verdict-tag" id="cm-verdict-tag">+12.4% More Cash</span>
           </div>
           <div class="cm-verdict-headline" id="cm-verdict-headline">
@@ -126,7 +126,7 @@ export class ViewContractorMatrix {
           <div class="fin-card cm-card cm-card-w2">
             <div class="fin-card-header">
               <div class="cm-card-title-group">
-                <span class="cm-card-icon">🏢</span>
+                <span class="cm-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
                 <div>
                   <h3 class="fin-card-title">Option A: W-2 Salaried Offer</h3>
                   <span class="cm-card-sub">Corporate employment with benefits & employer FICA match</span>
@@ -231,7 +231,7 @@ export class ViewContractorMatrix {
           <div class="fin-card cm-card cm-card-1099">
             <div class="fin-card-header">
               <div class="cm-card-title-group">
-                <span class="cm-card-icon">🚀</span>
+                <span class="cm-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
                 <div>
                   <h3 class="fin-card-title">Option B: 1099 / Pass-Through LLC</h3>
                   <span class="cm-card-sub">Independent contractor, pass-through deductions & write-offs</span>
@@ -435,8 +435,9 @@ export class ViewContractorMatrix {
               </table>
             </div>
 
-            <div class="cm-fx-callout" id="cm-fx-callout">
-              💡 <strong>Smart Rail Tip:</strong> Switching from PayPal to Wise Business on $163,200 annual revenue saves approximately <strong>$11,990/year</strong> in currency conversion drag!
+            <div class="cm-fx-callout" id="cm-fx-callout" style="display: flex; align-items: center; gap: 8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg>
+              <span><strong>Smart Rail Tip:</strong> Switching from PayPal to Wise Business on $163,200 annual revenue saves approximately <strong>$11,990/year</strong> in currency conversion drag!</span>
             </div>
           </div>
         </div>
@@ -447,7 +448,7 @@ export class ViewContractorMatrix {
           <!-- Card 1: Expat / Contractor CPA Lead -->
           <div class="cm-partner-card">
             <div class="cm-partner-badge">Verified Partner</div>
-            <div class="cm-partner-icon">⚖️</div>
+            <div class="cm-partner-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
             <h4 class="cm-partner-title">Expat & Contractor Tax CPA Consultation</h4>
             <p class="cm-partner-desc">Maximize your Section 199A QBI deduction, optimize Schedule C write-offs, and set up your Solo 401(k) with US licensed CPAs.</p>
             <a href="https://www.greenbacktaxservices.com/" target="_blank" rel="noopener noreferrer" class="cm-partner-cta" aria-label="Book CPA Consultation">
@@ -459,7 +460,7 @@ export class ViewContractorMatrix {
           <!-- Card 2: Wise Business Cross-Border Rail -->
           <div class="cm-partner-card">
             <div class="cm-partner-badge" style="background:#ecfdf5; color:#065f46;">Lowest FX Fee</div>
-            <div class="cm-partner-icon">💳</div>
+            <div class="cm-partner-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
             <h4 class="cm-partner-title">Wise Business: Zero-Markup USD Invoicing</h4>
             <p class="cm-partner-desc">Get local US bank routing details (ACH/wire) and convert payments into 40+ currencies at pure mid-market exchange rates.</p>
             <a href="https://wise.com/business/" target="_blank" rel="noopener noreferrer" class="cm-partner-cta" aria-label="Open Wise Business Account">
@@ -471,7 +472,7 @@ export class ViewContractorMatrix {
           <!-- Card 3: Nomad & Remote Health Insurance -->
           <div class="cm-partner-card">
             <div class="cm-partner-badge" style="background:#eff6ff; color:#1e40af;">Global Coverage</div>
-            <div class="cm-partner-icon">🩺</div>
+            <div class="cm-partner-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="9" y1="11" x2="15" y2="11"/></svg></div>
             <h4 class="cm-partner-title">SafetyWing Remote Health for Contractors</h4>
             <p class="cm-partner-desc">Comprehensive worldwide health insurance designed for remote contractors, freelancers, and nomads operating across borders.</p>
             <a href="https://safetywing.com/remote-health" target="_blank" rel="noopener noreferrer" class="cm-partner-cta" aria-label="View SafetyWing Coverage Plans">
@@ -743,19 +744,19 @@ export class ViewContractorMatrix {
 
     if (verdict.winner === "1099") {
       verdictCard.className = "cm-verdict-hero cm-winner-1099";
-      verdictPill.textContent = "🎉 1099 Contractor Offer Wins";
+      verdictPill.textContent = "1099 Contractor Offer Wins";
       verdictTag.textContent = `+${verdict.percentDiff}% More Spendable Cash`;
       verdictHeadline.innerHTML = `The 1099 offer yields <strong>+$${verdict.diffMonthly.toLocaleString()}/mo</strong> more spendable cash!`;
       verdictSubtext.textContent = `After all federal/state taxes, 15.3% SECA, 20% Section 199A QBI deduction, and self-funded health insurance.`;
     } else if (verdict.winner === "w2") {
       verdictCard.className = "cm-verdict-hero cm-winner-w2";
-      verdictPill.textContent = "🛡️ W-2 Salaried Offer Wins";
+      verdictPill.textContent = "W-2 Salaried Offer Wins";
       verdictTag.textContent = `+${verdict.percentDiff}% More Value`;
       verdictHeadline.innerHTML = `The W-2 offer leaves <strong>+$${verdict.diffMonthly.toLocaleString()}/mo</strong> more spendable cash in bank!`;
       verdictSubtext.textContent = `W-2 employer FICA match, paid time off (${w2.benefits.ptoDays} days), and health insurance subsidies outweigh the 1099 rate.`;
     } else {
       verdictCard.className = "cm-verdict-hero cm-winner-tie";
-      verdictPill.textContent = "⚖️ Neutral Parity";
+      verdictPill.textContent = "Neutral Parity";
       verdictTag.textContent = `Equivalent Take-Home`;
       verdictHeadline.innerHTML = `Both offers yield identical spendable take-home cash.`;
       verdictSubtext.textContent = `Evaluate based on career autonomy, job security, and project flexibility.`;
@@ -831,11 +832,11 @@ export class ViewContractorMatrix {
 
       const callout = root.querySelector("#cm-fx-callout");
       if (callout) {
-        callout.innerHTML = `💡 <strong>Savings Callout:</strong> Choosing <strong>Wise Business</strong> over PayPal on $${contractor.grossRevenue.toLocaleString()} annual invoicing retains an additional <strong>$${fx.savingsVsWorstUsd.toLocaleString()} / year</strong> in your local bank account!`;
+        callout.innerHTML = `<div style="display: flex; align-items: center; gap: 8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/></svg><span><strong>Savings Callout:</strong> Choosing <strong>Wise Business</strong> over PayPal on $${contractor.grossRevenue.toLocaleString()} annual invoicing retains an additional <strong>$${fx.savingsVsWorstUsd.toLocaleString()} / year</strong> in your local bank account!</span></div>`;
       }
     }
 
-    // 6. Record into Companion Dock Calculation Tape
+    // 6. Record into History Tape
     if (typeof window.recordCalculationTape === "function") {
       const tapeSummary = `${verdict.winner === '1099' ? '1099 Wins (+$' + verdict.diffMonthly.toLocaleString() + '/mo)' : 'W-2 Wins (+$' + verdict.diffMonthly.toLocaleString() + '/mo)'}`;
       const tapeSub = `Breakeven: $${verdict.breakevenHourlyRateCash.toFixed(2)}/hr | W-2: $${this.format(w2.grossSalary)} vs 1099: $${this.state.cHourlyRate}/hr`;
