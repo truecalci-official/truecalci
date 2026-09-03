@@ -434,8 +434,8 @@ print(res.json())`;
 
     // Launch Workstation Button
     document.getElementById("hero-btn-launch-workstation")?.addEventListener("click", () => {
-      if (this.onNavigate) this.onNavigate("contractor_matrix");
-      else window.location.hash = "#contractor_matrix";
+      if (this.onNavigate) this.onNavigate("mortgage");
+      else window.location.hash = "#mortgage";
     });
 
     // Start Free Button -> Open Authentication Dialog

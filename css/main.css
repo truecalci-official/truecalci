@@ -1112,7 +1112,7 @@ body[data-view="admin"] .app-sidebar-ad {
   display: none !important;
 }
 
-/* Universal Mobile / Drawer-Open Sidebar Override */
+/* Universal Mobile / Drawer-Open Sidebar Upgrade (Apple / Linear UI Treatment) */
 .app-sidebar-nav.drawer-open,
 body[data-view="home"] .app-sidebar-nav.drawer-open,
 body[data-view="pricing"] .app-sidebar-nav.drawer-open,
@@ -1123,29 +1123,220 @@ body[data-view="admin"] .app-sidebar-nav.drawer-open {
   top: 0 !important;
   left: 0 !important;
   bottom: 0 !important;
-  width: 300px !important;
-  max-width: 85vw !important;
+  width: 315px !important;
+  max-width: 88vw !important;
   height: 100vh !important;
   max-height: 100vh !important;
   z-index: 99999 !important;
   transform: translateX(0) !important;
   visibility: visible !important;
   opacity: 1 !important;
-  background-color: var(--bg-surface) !important;
-  border-right: 1px solid var(--border-color) !important;
-  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.45) !important;
+  
+  /* Translucent frosted glassmorphism instead of flat black */
+  background: rgba(18, 20, 28, 0.94) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  
+  border-radius: 0 20px 20px 0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  
+  box-shadow: 20px 0 60px -10px rgba(0, 0, 0, 0.6), 
+              0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+              
+  padding: 0 !important;
   overflow-y: auto !important;
   -webkit-overflow-scrolling: touch !important;
   flex-direction: column !important;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+[data-theme="light"] .app-sidebar-nav.drawer-open,
+[data-theme="light"] body[data-view="home"] .app-sidebar-nav.drawer-open,
+[data-theme="light"] body[data-view="pricing"] .app-sidebar-nav.drawer-open,
+[data-theme="light"] body[data-view="developer"] .app-sidebar-nav.drawer-open,
+[data-theme="light"] body[data-view="admin"] .app-sidebar-nav.drawer-open {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 20px 0 60px -10px rgba(0, 0, 0, 0.15), 
+              0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Premium Drawer Header with Brand Monogram & Count */
 .app-sidebar-nav.drawer-open .sidebar-header-mobile {
   display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 16px 18px 14px !important;
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, transparent 100%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="light"] .app-sidebar-nav.drawer-open .sidebar-header-mobile {
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.05) 0%, transparent 100%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-header-title {
+  font-family: var(--font-display) !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  letter-spacing: -0.01em !important;
+}
+
+.drawer-count-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border-radius: 20px;
+  background: rgba(37, 99, 235, 0.15);
+  color: #3b82f6;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  letter-spacing: 0.02em;
 }
 
 .app-sidebar-nav.drawer-open .sidebar-close-btn {
   display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: var(--text-secondary) !important;
+  font-size: 1.25rem !important;
+  line-height: 1 !important;
   cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+}
+
+[data-theme="light"] .app-sidebar-nav.drawer-open .sidebar-close-btn {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-close-btn:hover {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  transform: rotate(90deg) !important;
+}
+
+/* Nav Section Spacing & Titles in Drawer */
+.app-sidebar-nav.drawer-open nav {
+  padding: 12px 14px 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.app-sidebar-nav.drawer-open .nav-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.app-sidebar-nav.drawer-open .nav-section-title {
+  font-size: 0.68rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: var(--accent-primary) !important;
+  padding: 6px 8px 4px !important;
+  opacity: 0.95 !important;
+}
+
+/* Links inside Drawer */
+.app-sidebar-nav.drawer-open .sidebar-link {
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: var(--text-secondary) !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .app-sidebar-nav.drawer-open .sidebar-link {
+  background: rgba(0, 0, 0, 0.015) !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  transform: translateX(3px) !important;
+}
+
+[data-theme="light"] .app-sidebar-nav.drawer-open .sidebar-link:hover {
+  background: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-link.active {
+  background: rgba(37, 99, 235, 0.12) !important;
+  color: var(--accent-primary) !important;
+  border-color: rgba(37, 99, 235, 0.3) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.15) !important;
+}
+
+.app-sidebar-nav.drawer-open .sidebar-tag {
+  font-size: 0.68rem !important;
+  font-weight: 600 !important;
+  padding: 2px 8px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Drawer Bottom Quick Action Strip */
+.sidebar-drawer-footer {
+  margin-top: auto;
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+[data-theme="light"] .sidebar-drawer-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.sidebar-drawer-footer-links {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.sidebar-drawer-footer-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.sidebar-drawer-footer-links a:hover {
+  color: var(--accent-primary);
 }
 
 /* Currency Dropdown is strictly hidden across the entire site, ONLY displayed on the Pricing page */
