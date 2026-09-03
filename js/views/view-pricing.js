@@ -159,7 +159,7 @@ export class ViewPricing {
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Dedicated Personal API Key (<code style="font-family: var(--font-mono);">tc_live_...</code>)</span>
+                  <span>Full REST & Streamable MCP Access</span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
@@ -168,7 +168,7 @@ export class ViewPricing {
               </ul>
             </div>
             <button class="btn-tier-action" data-tier="starter" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer; transition: opacity 0.2s;">
-              ${this.activeTier === 'starter' ? '✓ Active Tier' : `Get Starter Key (${symbol}${starterPrice}/mo)`}
+              ${this.activeTier === 'starter' ? '✓ Active Tier' : `Get Started (${symbol}${starterPrice}/mo)`}
             </button>
           </div>
 
@@ -189,7 +189,7 @@ export class ViewPricing {
               <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; font-size: 0.82rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span><strong>10,000 calls / month</strong></span>
+                  <span><strong>15,000 calls / month</strong></span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
@@ -197,7 +197,7 @@ export class ViewPricing {
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Multi-Seat Team API Keys</span>
+                  <span>Priority Multi-Agent & Team Edge Routing</span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
@@ -206,7 +206,7 @@ export class ViewPricing {
               </ul>
             </div>
             <button class="btn-tier-action" data-tier="pro" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer; transition: opacity 0.2s;">
-              ${this.activeTier === 'pro' ? '✓ Active Tier' : `Get Pro Key (${symbol}${proPrice}/mo)`}
+              ${this.activeTier === 'pro' ? '✓ Active Tier' : `Get Pro Agency (${symbol}${proPrice}/mo)`}
             </button>
           </div>
 
@@ -231,7 +231,7 @@ export class ViewPricing {
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span><strong>${isIndia ? '₹15 per 1,000 extra calls' : '$0.20 per 1,000 extra calls'}</strong></span>
+                  <span><strong>${isIndia ? '₹80 per 1,000 extra calls' : '$1.00 per 1,000 extra calls'}</strong></span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><polyline points="20 6 9 17 4 12"/></svg>
