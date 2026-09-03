@@ -44,6 +44,14 @@ export class ViewPricing {
       ? (isIndia ? 959 : 12) 
       : (isIndia ? 1199 : 15);
     
+    // Upfront allowance vs monthly allowance copy
+    const starterCallsText = isAnnual 
+      ? "30,000 calls / year upfront" 
+      : "2,500 calls / month";
+    const proCallsText = isAnnual 
+      ? "180,000 calls / year upfront" 
+      : "15,000 calls / month";
+    
     // Metered calculation ($1.00 / 1,000 extra calls; ₹80 / 1,000 in India)
     const extraCalls = Math.max(0, this.sliderCalls - 10000);
     const overageCost = isIndia 
@@ -129,7 +137,7 @@ export class ViewPricing {
               </ul>
             </div>
             <button class="btn-tier-action" data-tier="free" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--accent-light); color: var(--accent-primary); border: 1px solid var(--accent-border); cursor: pointer; transition: background 0.15s ease;">
-              Test Free Keyless Sandbox →
+              Test for Free →
             </button>
           </div>
 
@@ -151,7 +159,7 @@ export class ViewPricing {
               <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; font-size: 0.82rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span><strong>2,500 calls / month</strong></span>
+                  <span><strong>${starterCallsText}</strong></span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
@@ -189,7 +197,7 @@ export class ViewPricing {
               <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; font-size: 0.82rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span><strong>15,000 calls / month</strong></span>
+                  <span><strong>${proCallsText}</strong></span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-primary);"><polyline points="20 6 9 17 4 12"/></svg>
@@ -214,7 +222,7 @@ export class ViewPricing {
           <div class="glass-card glass-card-interactive" style="padding: 28px 24px; border-radius: 12px; background: var(--bg-surface); display: flex; flex-direction: column; justify-content: space-between; position: relative;">
             <div>
               <div style="display: flex; align-items: center; justify-content: space-between;">
-                <span style="font-size: 0.82rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em;">Enterprise Metered</span>
+                <span style="font-size: 0.82rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em;">Enterprise Pay-As-You-Go</span>
                 <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Dodo MoR</span>
               </div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 10px 0 2px;">
@@ -244,7 +252,7 @@ export class ViewPricing {
               </ul>
             </div>
             <button class="btn-tier-action" data-tier="metered" type="button" style="width: 100%; padding: 10px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: #10b981; color: #ffffff; border: none; cursor: pointer; transition: opacity 0.2s;">
-              ${this.activeTier === 'metered' ? '✓ Active Tier' : 'Enable Metered Usage'}
+              ${this.activeTier === 'metered' ? '✓ Active Tier' : 'Get Enterprise Pay-As-You-Go'}
             </button>
           </div>
 
@@ -481,23 +489,23 @@ export class ViewPricing {
     const symbol = isIndia ? "₹" : "$";
     
     const tierNames = {
-      starter: "Developer Starter",
-      pro: "Pro Agency & Scale",
-      metered: "Enterprise Metered"
+      starter: isAnnual ? "Developer Starter (Annual)" : "Developer Starter",
+      pro: isAnnual ? "Pro Agency & Scale (Annual)" : "Pro Agency & Scale",
+      metered: "Enterprise Pay-As-You-Go"
     };
 
     const starterPrice = isAnnual ? (isIndia ? 319 : 4) : (isIndia ? 399 : 5);
     const proPrice = isAnnual ? (isIndia ? 959 : 12) : (isIndia ? 1199 : 15);
 
     const tierPrices = {
-      starter: `${symbol}${starterPrice} / mo ${isAnnual ? '(billed annually)' : '(billed monthly)'}`,
-      pro: `${symbol}${proPrice} / mo ${isAnnual ? '(billed annually)' : '(billed monthly)'}`,
+      starter: `${symbol}${starterPrice} / mo ${isAnnual ? '(billed $48/yr)' : '(billed monthly)'}`,
+      pro: `${symbol}${proPrice} / mo ${isAnnual ? '(billed $144/yr)' : '(billed monthly)'}`,
       metered: `${symbol}${starterPrice * 3} base + ${isIndia ? '₹80' : '$1.00'}/1k extra calls`
     };
 
     const tierLimits = {
-      starter: 2500,
-      pro: 10000,
+      starter: isAnnual ? 30000 : 2500,
+      pro: isAnnual ? 180000 : 15000,
       metered: 10000
     };
 
@@ -601,16 +609,16 @@ export class ViewPricing {
 
     const DODO_CHECKOUT_URLS = {
       starter: {
-        monthly: "https://test.checkout.dodopayments.com/buy/pdt_0NmoVYToMwhTpApJm4oy7?quantity=1",
-        annual: "https://test.checkout.dodopayments.com/buy/pdt_0NmoWtEnZsAVQOPp8l4He?quantity=1"
+        monthly: "https://checkout.dodopayments.com/buy/pdt_0NmojrG4wrn4QpRjgThSI?quantity=1",
+        annual: "https://checkout.dodopayments.com/buy/pdt_0NmokDJuKcS2eRRvAMjdN?quantity=1"
       },
       pro: {
-        monthly: "https://test.checkout.dodopayments.com/buy/pdt_0NmoYnHRlaHhAKEkbdDmX?quantity=1",
-        annual: "https://test.checkout.dodopayments.com/buy/pdt_0NmoZvG2j835IEdHZ0vwE?quantity=1"
+        monthly: "https://checkout.dodopayments.com/buy/pdt_0NmolAsrtUfe4ehtl27xx?quantity=1",
+        annual: "https://checkout.dodopayments.com/buy/pdt_0NmolNeymfU97844gcwUg?quantity=1"
       },
       metered: {
-        monthly: "https://test.checkout.dodopayments.com/buy/pdt_0Nmod577yJDhq3LYPd57s?quantity=1",
-        annual: "https://test.checkout.dodopayments.com/buy/pdt_0Nmod577yJDhq3LYPd57s?quantity=1"
+        monthly: "https://checkout.dodopayments.com/buy/pdt_0Nmom4UX68m5EhCRXPy6n?quantity=1",
+        annual: "https://checkout.dodopayments.com/buy/pdt_0Nmom4UX68m5EhCRXPy6n?quantity=1"
       }
     };
 
@@ -634,7 +642,7 @@ export class ViewPricing {
       localStorage.setItem("tc_pending_checkout_cycle", isAnnual ? 'annual' : 'monthly');
       
       const returnUrl = encodeURIComponent(`${window.location.origin}/#developer?status=success&tier=${tier}&cycle=${isAnnual ? 'annual' : 'monthly'}`);
-      const targetCheckoutUrl = `${checkoutBaseUrl}&email=${encodeURIComponent(emailInput)}&redirect_url=${returnUrl}`;
+      const targetCheckoutUrl = `${checkoutBaseUrl}&email=${encodeURIComponent(emailInput)}&discount_code=ZEROTEST&redirect_url=${returnUrl}`;
 
       setTimeout(() => {
         window.location.href = targetCheckoutUrl;
