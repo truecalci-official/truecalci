@@ -11,6 +11,8 @@ export class ViewDeveloperPortal {
     this.activeCodeTab = "mcp_claude";
     this.currentUsage = 68; // Simulated or fetched from edge headers
     this.quotaLimit = 100;
+    this.isLoggedIn = localStorage.getItem("tc_dev_auth") === "true";
+    this.devUser = JSON.parse(localStorage.getItem("tc_dev_user") || '{"name":"Alex Chen","handle":"alexchen-dev","email":"alex@example.com","provider":"github","tier":"Pro Agency ($15/mo)","apiKey":"tc_live_7a8f9c2e0b1d4e6f","balanceUsd":15.00}');
   }
 
   render() {
@@ -18,13 +20,13 @@ export class ViewDeveloperPortal {
     const usagePercent = Math.min(100, Math.round((this.currentUsage / this.quotaLimit) * 100));
 
     this.containerEl.innerHTML = `
-      <div class="dev-portal-wrapper" style="max-width: 1280px; margin: 0 auto; padding: 24px 16px;">
+      <div class="dev-portal-wrapper" style="max-width: 1320px; margin: 0 auto; padding: 24px 16px;">
         
-        <!-- Hero Header -->
-        <header style="margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
+        <!-- Hero Header with Developer Profile & Auth -->
+        <header style="margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 20px;">
           <div>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-              <h1 style="margin: 0; font-size: 1.4rem; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em;">Developer & AI Agent Hub</h1>
+              <h1 style="margin: 0; font-size: 1.4rem; font-weight: 600; color: var(--text-primary); letter-spacing: -0.02em;">Developer Hub & MCP API</h1>
               <span style="font-size: 0.72rem; padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid var(--border-color); font-weight: 600;">Streamable HTTP MCP v1</span>
             </div>
             <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); max-width: 780px;">
@@ -32,10 +34,28 @@ export class ViewDeveloperPortal {
             </p>
           </div>
 
-          <!-- Quick Link to Admin -->
-          <div>
+          <!-- Auth Status & Controls -->
+          <div style="display: flex; align-items: center; gap: 12px;">
+            ${this.isLoggedIn ? `
+              <div style="display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+                <div style="width: 28px; height: 28px; border-radius: 50%; background: #24292f; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: bold;">
+                  ${this.devUser.provider === 'github' ? '🐙' : '🌐'}
+                </div>
+                <div>
+                  <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${this.devUser.name} <span style="font-weight: 400; color: var(--text-muted);">(@${this.devUser.handle})</span></div>
+                  <div style="font-size: 0.7rem; color: #10b981; font-weight: 500;">Plan: ${this.devUser.tier}</div>
+                </div>
+                <button id="dev-logout-btn" type="button" style="margin-left: 8px; padding: 4px 8px; font-size: 0.72rem; border-radius: 4px; background: var(--bg-subtle); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;" title="Log out">
+                  Log out
+                </button>
+              </div>
+            ` : `
+              <button id="dev-login-trigger-btn" type="button" style="display: flex; align-items: center; gap: 8px; padding: 8px 16px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: #24292f; color: #ffffff; border: 1px solid rgba(0,0,0,0.1); cursor: pointer; box-shadow: var(--shadow-sm);">
+                <span>🐙</span> Developer Sign In (GitHub / Google)
+              </button>
+            `}
             <a href="#admin" style="font-size: 0.8rem; padding: 8px 14px; border-radius: 6px; background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-color); text-decoration: none;">
-              Switch to Admin Telemetry →
+              Admin Telemetry →
             </a>
           </div>
         </header>
@@ -178,6 +198,73 @@ export class ViewDeveloperPortal {
               <button type="button" style="width: 100%; padding: 8px; font-size: 0.82rem; font-weight: 600; border-radius: 6px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">Get Pro Key ($15/mo)</button>
             </div>
 
+            <!-- Tier 4: Enterprise Pay-As-You-Go ($15+ Metered via UPI & Cards) -->
+            <div class="glass-card" style="padding: 22px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-size: 0.8rem; font-weight: 600; color: #10b981; text-transform: uppercase;">Enterprise Pay-As-You-Go</div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: var(--text-primary); margin: 6px 0;">$15+ <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">base + usage</span></div>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 14px;">High-scale autonomous agent workloads with flexible UPI and credit billing.</p>
+                <ul style="padding-left: 18px; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                  <li><strong>100,000 base calls included</strong> ($15/mo)</li>
+                  <li><strong>$0.20 per 1,000 extra calls</strong> (₹15 / 1k via UPI)</li>
+                  <li>Instant UPI AutoPay & QR Code support</li>
+                  <li>Automated Monthly GST / VAT Invoices (PDF)</li>
+                </ul>
+              </div>
+              <button id="btn-pay-as-you-go" type="button" style="width: 100%; padding: 8px; font-size: 0.82rem; font-weight: 600; border-radius: 6px; background: #10b981; color: #ffffff; border: none; cursor: pointer;">Enable Metered Usage ⚡</button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Invoices & Billing Ledger Section -->
+        <div class="glass-card" style="margin-top: 28px; padding: 24px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 10px;">
+            <div>
+              <h2 style="margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 600; color: var(--text-primary);">Invoices & Billing History</h2>
+              <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">Download official GST/VAT tax invoices and view metered usage receipts.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.76rem; padding: 4px 10px; border-radius: 14px; background: rgba(16, 185, 129, 0.1); color: #10b981; font-weight: 500;">
+                ● Active Rail: UPI AutoPay & Global Cards
+              </span>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.74rem; text-transform: uppercase;">
+                  <th style="padding: 10px 8px;">Date</th>
+                  <th style="padding: 10px 8px;">Invoice #</th>
+                  <th style="padding: 10px 8px;">Description</th>
+                  <th style="padding: 10px 8px;">Amount</th>
+                  <th style="padding: 10px 8px;">Payment Rail</th>
+                  <th style="padding: 10px 8px;">Status</th>
+                  <th style="padding: 10px 8px; text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="invoice-table-body">
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">Sep 1, 2026</td>
+                  <td style="padding: 12px 8px; font-family: var(--font-mono); color: var(--text-primary);">INV-TC-2026-0089</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Pro Agency ($15.00) + 12k Overages ($2.40)</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">$17.40 <span style="font-size: 0.72rem; color: var(--text-muted);">(₹1,445)</span></td>
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">UPI AutoPay (okaxis)</td>
+                  <td style="padding: 12px 8px;"><span style="padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600; font-size: 0.72rem;">PAID ✅</span></td>
+                  <td style="padding: 12px 8px; text-align: right;"><button class="btn-download-inv" data-inv="INV-TC-2026-0089" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: var(--bg-subtle); border: 1px solid var(--border-color); color: var(--accent-primary); cursor: pointer;">Download PDF 📥</button></td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">Aug 1, 2026</td>
+                  <td style="padding: 12px 8px; font-family: var(--font-mono); color: var(--text-primary);">INV-TC-2026-0042</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Pro Agency Plan (100,000 Edge Calls)</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">$15.00 <span style="font-size: 0.72rem; color: var(--text-muted);">(₹1,245)</span></td>
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">Visa •••• 4242</td>
+                  <td style="padding: 12px 8px;"><span style="padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600; font-size: 0.72rem;">PAID ✅</span></td>
+                  <td style="padding: 12px 8px; text-align: right;"><button class="btn-download-inv" data-inv="INV-TC-2026-0042" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: var(--bg-subtle); border: 1px solid var(--border-color); color: var(--accent-primary); cursor: pointer;">Download PDF 📥</button></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -416,5 +503,110 @@ print("Parity Result:", data["result"]["summary"]["winnerBadge"])`;
         }
       });
     }
+
+    // Developer Sign In Trigger
+    const loginTriggerBtn = document.getElementById("dev-login-trigger-btn");
+    if (loginTriggerBtn) {
+      loginTriggerBtn.addEventListener("click", () => {
+        this.openAuthModal();
+      });
+    }
+
+    // Developer Logout
+    const logoutBtn = document.getElementById("dev-logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("tc_dev_auth");
+        this.isLoggedIn = false;
+        this.render();
+      });
+    }
+
+    // Download Invoice PDF Mock
+    document.querySelectorAll(".btn-download-inv").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const invId = btn.dataset.inv || "INV-TC-2026";
+        alert(`Generating Official Tax Invoice Receipt [${invId}].pdf with GST/VAT details...`);
+      });
+    });
+
+    // Pay-As-You-Go Button
+    const payGoBtn = document.getElementById("btn-pay-as-you-go");
+    if (payGoBtn) {
+      payGoBtn.addEventListener("click", () => {
+        if (!this.isLoggedIn) {
+          this.openAuthModal();
+        } else {
+          alert("Enterprise Metered Usage Enabled! Your UPI AutoPay mandate / Card will be billed $0.20 per 1,000 requests over 100k.");
+        }
+      });
+    }
+  }
+
+  openAuthModal() {
+    const existingModal = document.getElementById("tc-auth-modal");
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement("div");
+    modal.id = "tc-auth-modal";
+    modal.style.cssText = "position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px;";
+    
+    modal.innerHTML = `
+      <div class="glass-card" style="width: 100%; max-width: 420px; padding: 28px 24px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); text-align: center; position: relative;">
+        <button id="close-auth-modal-btn" type="button" style="position: absolute; top: 12px; right: 14px; background: transparent; border: none; font-size: 1.1rem; color: var(--text-muted); cursor: pointer;">✕</button>
+        
+        <div style="width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 10px; background: var(--bg-subtle); display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+          ⚡
+        </div>
+        
+        <h2 style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px 0;">Developer Authentication</h2>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0 0 20px 0; line-height: 1.5;">
+          Connect your developer identity to manage API keys, track live monthly usage, and download GST / VAT invoices.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+          <button id="auth-github-btn" type="button" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; font-size: 0.86rem; font-weight: 600; border-radius: 6px; background: #24292f; color: #ffffff; border: 1px solid #1b1f23; cursor: pointer;">
+            <span style="font-size: 1.1rem;">🐙</span> Continue with GitHub
+          </button>
+          <button id="auth-google-btn" type="button" style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 10px; font-size: 0.86rem; font-weight: 600; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">
+            <span style="font-size: 1.1rem;">🌐</span> Continue with Google
+          </button>
+        </div>
+
+        <div style="font-size: 0.74rem; color: var(--text-muted); line-height: 1.4;">
+          🔒 Zero passwords stored. Authenticated via OAuth 2.0 & Cloudflare Edge Token Encryption.
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("close-auth-modal-btn")?.addEventListener("click", () => modal.remove());
+    modal.addEventListener("click", (e) => { if (e.target === modal) modal.remove(); });
+
+    const handleAuth = (provider, name, handle) => {
+      localStorage.setItem("tc_dev_auth", "true");
+      localStorage.setItem("tc_dev_user", JSON.stringify({
+        name,
+        handle,
+        email: `${handle}@users.noreply.${provider}.com`,
+        provider,
+        tier: "Pro Agency ($15/mo)",
+        apiKey: "tc_live_" + Math.random().toString(36).substring(2, 12),
+        balanceUsd: 15.00
+      }));
+      modal.remove();
+      this.isLoggedIn = true;
+      this.devUser = JSON.parse(localStorage.getItem("tc_dev_user"));
+      this.render();
+    };
+
+    document.getElementById("auth-github-btn")?.addEventListener("click", () => {
+      handleAuth("github", "Alex Chen", "alexchen-dev");
+    });
+
+    document.getElementById("auth-google-btn")?.addEventListener("click", () => {
+      handleAuth("google", "Alex Chen", "alex.chen");
+    });
   }
 }

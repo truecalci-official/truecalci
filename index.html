@@ -84,21 +84,25 @@
     },
     {
       "@context": "https://schema.org",
-      "@type": ["MathSolver", "LearningResource"],
+      "@type": "MathSolver",
       "name": "TrueCalci Precision Math & Physics Solver",
       "url": "https://truecalci.com/engineering-formulas.html",
-      "usageInfo": "https://truecalci.com/privacy.html",
+      "usageInfo": "https://truecalci.com/terms.html",
       "inLanguage": "en",
-      "potentialAction": {
-        "@type": "SolveMathAction",
-        "target": "https://truecalci.com/engineering-formulas.html?q={math_expression_string}",
-        "mathExpression-input": "required name=math_expression_string"
-      },
-      "eduQuestionType": [
-        "Polynomial Equation",
-        "Quadratic Equation",
-        "Derivative",
-        "Integral"
+      "potentialAction": [
+        {
+          "@type": "SolveMathAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://truecalci.com/engineering-formulas.html?q={math_expression}",
+            "actionPlatform": [
+              "http://schema.org/DesktopWebPlatform",
+              "http://schema.org/MobileWebPlatform"
+            ]
+          },
+          "mathExpression-input": "required name=math_expression",
+          "eduQuestionType": "https://schema.org/Polynomial"
+        }
       ]
     },
     {
@@ -364,11 +368,10 @@
           <button class="region-btn active" data-region="india" title="India (₹ INR)" aria-label="India INR">🇮🇳 India</button>
         </div>
 
-        <!-- Theme Palette Switcher: Obsidian Lumina / Cyber Slate / Alabaster -->
+        <!-- Theme Palette Switcher: Alabaster Editorial (Default) / Obsidian Soft Dark -->
         <div class="theme-palette-picker" id="theme-palette-picker" title="Toggle Aesthetic Theme Palette" aria-label="Toggle Theme Palette">
-          <button class="palette-pill-btn active" data-theme="dark" title="Obsidian Lumina (Cosmic Indigo Glow)" aria-label="Obsidian Dark Theme">🌌 Obsidian</button>
-          <button class="palette-pill-btn" data-theme="cyber" title="Cyber Slate (Neon Precision)" aria-label="Cyber Slate Theme">⚡ Cyber</button>
-          <button class="palette-pill-btn" data-theme="light" title="Alabaster Precision (Porcelain Light)" aria-label="Alabaster Light Theme">🏛️ Alabaster</button>
+          <button class="palette-pill-btn active" data-theme="light" title="Alabaster Editorial (Swiss Minimalist Paper Light)" aria-label="Alabaster Light Theme">🏛️ Alabaster</button>
+          <button class="palette-pill-btn" data-theme="dark" title="Obsidian Stone (Warm Zinc Glare-Free Dark)" aria-label="Obsidian Dark Theme">🌌 Obsidian</button>
         </div>
 
         <a href="engineering-formulas.html" class="icon-btn" title="Engineering Formulas Portal" aria-label="Engineering Formulas Portal" style="text-decoration:none;">
