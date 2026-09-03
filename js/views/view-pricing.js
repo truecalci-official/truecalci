@@ -66,7 +66,7 @@ export class ViewPricing {
         <div style="text-align: center; margin-bottom: 40px;">
           <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent-primary); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Dodo Payments • Merchant of Record
+            Enterprise Compute • Instant Edge Activation
           </div>
           <h1 style="font-size: 2.2rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.03em; margin: 0 0 12px;">
             Deterministic Compute Plans
@@ -147,7 +147,6 @@ export class ViewPricing {
             <div>
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span style="font-size: 0.82rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.05em;">Developer Starter</span>
-                <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Dodo MoR</span>
               </div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 10px 0 2px;">
                 ${symbol}${starterPrice} <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">/ mo</span>
@@ -185,7 +184,6 @@ export class ViewPricing {
             <div>
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Pro Agency & Scale</span>
-                <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Dodo MoR</span>
               </div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 10px 0 2px;">
                 ${symbol}${proPrice} <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">/ mo</span>
@@ -223,7 +221,6 @@ export class ViewPricing {
             <div>
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span style="font-size: 0.82rem; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.05em;">Enterprise Pay-As-You-Go</span>
-                <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Dodo MoR</span>
               </div>
               <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary); margin: 10px 0 2px;">
                 ${symbol}${meteredBase}+ <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">base + usage</span>
@@ -243,7 +240,7 @@ export class ViewPricing {
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><polyline points="20 6 9 17 4 12"/></svg>
-                  <span>Dodo Payments: Cards, Apple Pay, UPI AutoPay</span>
+                  <span>Payment Rails: Cards, Apple Pay, UPI AutoPay</span>
                 </li>
                 <li style="display: flex; align-items: center; gap: 8px;">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><polyline points="20 6 9 17 4 12"/></svg>
@@ -289,8 +286,8 @@ export class ViewPricing {
           <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-muted); padding-top: 12px; border-top: 1px solid var(--border-color);">
             <span>● Base (10k calls): <strong>${symbol}${meteredBase}</strong></span>
             <span>● Extra calls: <strong id="pricing-extra-calls">${extraCalls.toLocaleString()}</strong></span>
-            <span>● Overage rate: <strong>${isIndia ? '₹15 / 1,000 calls' : '$0.20 / 1,000 calls'}</strong></span>
-            <span>● MoR Processor: <strong>Dodo Payments Inc.</strong></span>
+            <span>● Overage rate: <strong>${isIndia ? '₹80 / 1,000 calls' : '$1.00 / 1,000 calls'}</strong></span>
+            <span>● Direct Bank-Grade 256-Bit SSL Encryption</span>
           </div>
         </div>
 
@@ -307,15 +304,15 @@ export class ViewPricing {
                   <th style="padding: 10px 8px;">Anonymous</th>
                   <th style="padding: 10px 8px; color: var(--accent-primary);">Developer Starter</th>
                   <th style="padding: 10px 8px;">Pro Agency</th>
-                  <th style="padding: 10px 8px; color: #10b981;">Enterprise Metered</th>
+                  <th style="padding: 10px 8px; color: #10b981;">Enterprise Pay-As-You-Go</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid var(--border-color);">
-                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Monthly Included Requests</td>
-                  <td style="padding: 12px 8px; color: var(--text-secondary);">100</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: var(--accent-primary);">2,500</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">10,000</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Included Requests</td>
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">100 / mo</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--accent-primary);">${starterCallsText}</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">${proCallsText}</td>
                   <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">10,000 + Elastic</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
@@ -337,7 +334,7 @@ export class ViewPricing {
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">${isIndia ? '₹15 / 1k' : '$0.20 / 1k'}</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">${isIndia ? '₹80 / 1k' : '$1.00 / 1k'}</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Streamable HTTP MCP</td>
@@ -363,8 +360,8 @@ export class ViewPricing {
                 <tr>
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Tax Invoice (PDF)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">-</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included (Dodo MoR)</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included (Dodo MoR)</td>
+                  <td style="padding: 12px 8px; color: #10b981;">✓ Automated GST/VAT</td>
+                  <td style="padding: 12px 8px; color: #10b981;">✓ Automated GST/VAT</td>
                   <td style="padding: 12px 8px; color: #10b981;">✓ Automated Monthly GST/VAT</td>
                 </tr>
               </tbody>
@@ -387,19 +384,19 @@ export class ViewPricing {
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
               <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">What payment methods are supported for India vs Global?</h4>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                Payments are processed securely via <strong>Dodo Payments</strong> as our global Merchant of Record (MoR). We support all major Credit/Debit Cards, Apple Pay, Google Pay, and SEPA globally (USD $), as well as instant UPI AutoPay, Google Pay, PhonePe, and NetBanking in India (INR ₹). Invoices include automated local tax, GST, and VAT compliance.
+                Payments are processed securely via our encrypted PCI-DSS compliant global billing network. We support all major Credit/Debit Cards, Apple Pay, Google Pay, and SEPA globally (USD $), as well as instant UPI AutoPay, Google Pay, PhonePe, and NetBanking in India (INR ₹). Invoices include automated local tax, GST, and VAT compliance.
               </p>
             </div>
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
               <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">What happens if my agent exceeds the 100 free requests?</h4>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                Anonymous requests return HTTP 429 with a <code>Retry-After</code> header and a link to upgrade. Upgrading to Developer Starter ($5/mo annual or $7/mo monthly) instantly unlocks 2,500 requests with a personal API key.
+                Anonymous requests return HTTP 429 with a <code>Retry-After</code> header and a link to upgrade. Upgrading to Developer Starter instantly unlocks 2,500 requests/mo (or 30,000 upfront annually) with a personal API key.
               </p>
             </div>
             <div>
               <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">Can I cancel or change plans anytime?</h4>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                Yes, subscriptions can be managed or cancelled with 1 click via the Dodo Payments Customer Portal accessible from your profile. When cancelling, you retain access until the end of your billing cycle.
+                Yes, subscriptions can be managed or cancelled with 1 click via your Customer Billing Portal accessible from your profile. When cancelling, you retain access until the end of your billing cycle.
               </p>
             </div>
           </div>
@@ -544,10 +541,10 @@ export class ViewPricing {
         <div id="modal-step-form">
           <div style="margin: 16px 0; padding: 14px; border-radius: 8px; background: var(--bg-subtle); border: 1px solid var(--border-color); font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary);">
             <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-              <span>Dodo Payments Checkout (Merchant of Record)</span>
+              <span>Instant Activation & Secure Checkout</span>
               <span style="font-size: 0.68rem; padding: 1px 6px; border-radius: 4px; background: rgba(16,185,129,0.12); color: #10b981;">Active Rail</span>
             </div>
-            <div>${isIndia ? '🇮🇳 Instant UPI AutoPay, NetBanking & Cards via Dodo Payments' : '🌐 Cards, Apple Pay, Google Pay & SEPA via Dodo Payments'}</div>
+            <div>${isIndia ? '🇮🇳 Instant UPI AutoPay, NetBanking & Cards' : '🌐 Cards, Apple Pay, Google Pay & SEPA'}</div>
             <div style="margin-top: 4px; color: var(--text-muted); font-size: 0.75rem;">Includes automated GST/VAT invoices & 99.99% Edge SLA.</div>
           </div>
 
@@ -558,7 +555,7 @@ export class ViewPricing {
             </div>
 
             <button type="submit" id="checkout-submit-btn" style="width: 100%; padding: 12px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.3);">
-              <span>Proceed to Dodo Payments Checkout</span>
+              <span>Proceed to Secure Checkout</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </button>
           </form>
@@ -568,7 +565,7 @@ export class ViewPricing {
           <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">Dodo Payments Order Confirmed!</h4>
+          <h4 style="margin: 0 0 6px 0; font-size: 1.15rem; font-weight: 700; color: var(--text-primary);">Order Confirmed & Provisioned!</h4>
           <p style="margin: 0 0 16px 0; font-size: 0.82rem; color: var(--text-secondary);">Your personal API key has been provisioned at the Cloudflare Edge with <strong>${tierLimits[tier].toLocaleString()} requests/month</strong>.</p>
           
           <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-family: var(--font-mono); font-size: 0.84rem; color: var(--accent-primary); display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
@@ -630,7 +627,7 @@ export class ViewPricing {
       e.preventDefault();
       const submitBtn = modal.querySelector("#checkout-submit-btn");
       if (submitBtn) {
-        submitBtn.innerHTML = `<span>Redirecting to Dodo Secure Checkout...</span>`;
+        submitBtn.innerHTML = `<span>Redirecting to Secure Checkout...</span>`;
         submitBtn.style.opacity = "0.7";
       }
 

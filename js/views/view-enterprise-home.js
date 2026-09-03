@@ -202,16 +202,16 @@ export class ViewEnterpriseHome {
           </div>
         </section>
 
-        <!-- Pricing Exploration Banner (Dodo Payments MoR Callout) -->
-        <section id="pricing-section" style="margin-bottom: 64px;">
+        <!-- Pricing Exploration Banner -->
+        <section id="pricing-section" style="margin-bottom: 32px;">
           <div class="glass-card" style="padding: 36px 32px; border-radius: 16px; background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-subtle) 100%); border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 24px; box-shadow: var(--shadow-md);">
             <div style="max-width: 620px;">
               <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.06em;">Dodo Payments • Merchant of Record</span>
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.06em;">Global Compute & API Plans</span>
                 <span style="font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Automated GST & VAT Invoices</span>
               </div>
               <h2 style="font-size: 1.65rem; font-weight: 800; color: var(--text-primary); margin: 0 0 8px; letter-spacing: -0.02em;">Find a Plan to Power Your Autonomous Agents</h2>
-              <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">Access all 16+ verified engines with 100 free requests, $5/mo Developer Starter (2,500 requests), and flexible metered compute settled globally via Dodo Payments.</p>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">Access all 16+ verified engines with 100 free requests, $5/mo Developer Starter (2,500 requests), and flexible metered compute settled globally with automated tax and invoicing.</p>
             </div>
             <a href="#pricing" id="home-explore-plans-btn" style="padding: 12px 24px; font-size: 0.9rem; font-weight: 700; border-radius: 8px; background: var(--accent-primary); color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); transition: transform 0.15s ease;">
               <span>Explore Compute Plans</span>
@@ -219,69 +219,6 @@ export class ViewEnterpriseHome {
             </a>
           </div>
         </section>
-
-        <!-- Enterprise Compliance & Legal Footer (Tavily Style - Cleaned of Internal Specs) -->
-        <footer style="padding-top: 48px; border-top: 1px solid var(--border-color);">
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 40px;">
-            <!-- Col 1: Product -->
-            <div>
-              <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Product</div>
-              <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
-                <li><a href="#home" style="color: var(--text-secondary); text-decoration: none;">Overview</a></li>
-                <li><a href="#contractor_matrix" style="color: var(--text-secondary); text-decoration: none;">Workstation Studio</a></li>
-                <li><a href="#pricing" style="color: var(--text-secondary); text-decoration: none;">Pricing Plans</a></li>
-                <li><a href="#developer" style="color: var(--text-secondary); text-decoration: none;">Streamable MCP Server</a></li>
-              </ul>
-            </div>
-
-            <!-- Col 2: Solutions -->
-            <div>
-              <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Solutions</div>
-              <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
-                <li><a href="#contractor_matrix" style="color: var(--text-secondary); text-decoration: none;">Remote Contractor Parity</a></li>
-                <li><a href="#mortgage" style="color: var(--text-secondary); text-decoration: none;">Mortgage PITI & PMI</a></li>
-                <li><a href="#tax" style="color: var(--text-secondary); text-decoration: none;">Income Tax & Slabs</a></li>
-                <li><a href="#developer" style="color: var(--text-secondary); text-decoration: none;">Autonomous AI Agents</a></li>
-              </ul>
-            </div>
-
-            <!-- Col 3: Resources (Clean Public Resources Only) -->
-            <div>
-              <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Resources</div>
-              <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
-                <li><a href="engineering-formulas.html" style="color: var(--text-secondary); text-decoration: none;">Engineering Formulas</a></li>
-                <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Tax Slabs & Schedules</a></li>
-                <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy & Data Protection</a></li>
-                <li><a href="#developer" style="color: var(--text-secondary); text-decoration: none;">API Documentation</a></li>
-              </ul>
-            </div>
-
-            <!-- Col 4: Company & Compliance -->
-            <div>
-              <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px;">Company & Trust</div>
-              <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2;">
-                <li><a href="#admin" style="color: var(--text-secondary); text-decoration: none;">Admin Telemetry</a></li>
-                <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Service</a></li>
-                <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a></li>
-                <li><a href="terms.html#compliance" style="color: var(--text-secondary); text-decoration: none;">Trust Center & Slabs</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Bottom Legal & Compliance Strip (Tavily Format) -->
-          <div style="padding-top: 24px; border-top: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; font-size: 0.78rem; color: var(--text-muted);">
-            <div>© 2026 TrueCalci Inc. All rights reserved. Precision mathematical compute at Cloudflare Edge.</div>
-            <div style="display: flex; flex-wrap: wrap; gap: 14px;">
-              <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Website Terms</a>
-              <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Platform Terms</a>
-              <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
-              <a href="privacy.html#cookies" style="color: var(--text-secondary); text-decoration: none;">Cookie Notice</a>
-              <a href="terms.html#aup" style="color: var(--text-secondary); text-decoration: none;">Acceptable Use</a>
-              <a href="terms.html#trust" style="color: var(--text-secondary); text-decoration: none;">Trust Center</a>
-              <a href="terms.html#accessibility" style="color: var(--text-secondary); text-decoration: none;">Accessibility</a>
-            </div>
-          </div>
-        </footer>
 
       </div>
     `;

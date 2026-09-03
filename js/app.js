@@ -751,7 +751,7 @@ class CalculatorApp {
           <p style="margin: 0 0 22px 0; font-size: 0.83rem; color: var(--text-secondary); line-height: 1.5;">
             ${isSignUp 
               ? 'Sign up to provision your instant free API key, test 16+ deterministic math engines, and connect AI agents.' 
-              : 'Sign in to access your developer portal, inspect rate limits, and manage Dodo Payments subscriptions.'}
+              : 'Sign in to access your developer portal, inspect rate limits, and manage your active subscription plans.'}
           </p>
 
           <!-- Primary OAuth Providers: GitHub & Google -->
@@ -869,7 +869,7 @@ class CalculatorApp {
         Developer Portal & Keys →
       </button>
       <button id="account-go-pricing" type="button" style="width: 100%; text-align: left; padding: 8px; font-size: 0.82rem; font-weight: 500; color: var(--text-primary); background: transparent; border: none; border-radius: 6px; cursor: pointer;">
-        Manage Dodo Subscription →
+        Manage Subscription Plans →
       </button>
       <div style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
       <button id="account-logout" type="button" style="width: 100%; text-align: left; padding: 8px; font-size: 0.82rem; font-weight: 600; color: #ef4444; background: transparent; border: none; border-radius: 6px; cursor: pointer;">

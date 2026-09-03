@@ -146,71 +146,33 @@ export class ViewDeveloperPortal {
           </div>
         </div>
 
-        <!-- Two Columns: Interactive Sandbox (Left) & Copyable Integration Configs (Right) -->
-        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 24px; margin-bottom: 32px;">
-          
-          <!-- Column 1: Interactive Edge Sandbox -->
-          <div class="glass-card" style="padding: 24px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-              <h2 style="margin: 0; font-size: 1.05rem; font-weight: 600; color: var(--text-primary);">Interactive Edge Sandbox</h2>
-              <span id="dev-exec-badge" style="display: none; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Sub-10ms Edge Response</span>
+        <!-- Full Width: 1-Click Setup & Code Snippets -->
+        <div class="glass-card" style="padding: 24px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); margin-bottom: 28px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2 style="margin: 0 0 4px 0; font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">Integration & Client Setup</h2>
+              <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">Direct JSON-RPC 2.0 & REST connection for Claude Desktop, Cursor, Python, and cURL agents.</p>
             </div>
-
-            <!-- Tool Selector -->
-            <label style="display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px;" for="sandbox-tool-select">Select Computational Tool:</label>
-            <select id="sandbox-tool-select" style="width: 100%; padding: 8px 12px; font-size: 0.85rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color); margin-bottom: 16px;">
-              <option value="contractor_parity" selected>Remote Contractor Parity (W-2 vs 1099, QBI & SECA)</option>
-              <option value="mortgage_piti">Mortgage PITI & Amortization</option>
-              <option value="casio_991_solve">Casio 991 Scientific Solver & Integration</option>
-              <option value="beam_bending">Civil/Mechanical Beam Bending & Stress</option>
-              <option value="vat_sales_tax">European VAT & Sales Tax</option>
-              <option value="black_scholes">Black-Scholes Option Pricing & Greeks</option>
-              <option value="pipe_flow">Fluid Dynamics Pipe Flow & Pressure Drop</option>
-              <option value="rlc_circuit">Resonant RLC Circuit & AC Impedance</option>
-              <option value="rocket_deltav">Tsiolkovsky Rocket Equation & Delta-v</option>
-            </select>
-
-            <!-- Dynamic Input Container -->
-            <div id="sandbox-params-container" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
-              <!-- Populated dynamically -->
-            </div>
-
-            <button id="sandbox-run-btn" type="button" style="width: 100%; padding: 10px 16px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer; transition: opacity 0.2s;">
-              Execute Calculation at Edge
-            </button>
-
-            <!-- Response Viewer -->
-            <div style="margin-top: 16px;">
-              <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">Live Edge JSON Response:</div>
-              <pre id="sandbox-response-box" style="margin: 0; padding: 12px; border-radius: 6px; background: var(--bg-app); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-primary); max-height: 240px; overflow-y: auto; white-space: pre-wrap;">Click "Execute Calculation at Edge" to run test call...</pre>
-            </div>
-          </div>
-
-          <!-- Column 2: 1-Click Setup & Code Snippets -->
-          <div class="glass-card" style="padding: 24px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-            <h2 style="margin: 0 0 14px 0; font-size: 1.05rem; font-weight: 600; color: var(--text-primary);">Integration & Client Setup</h2>
-            
             <!-- Tabs -->
-            <div style="display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
-              <button class="code-tab-btn" data-tab="mcp_claude" style="padding: 5px 10px; font-size: 0.78rem; font-weight: 500; border-radius: 4px; background: var(--accent-light); color: var(--accent-primary); border: none; cursor: pointer;">Claude Desktop</button>
-              <button class="code-tab-btn" data-tab="mcp_cursor" style="padding: 5px 10px; font-size: 0.78rem; font-weight: 500; border-radius: 4px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">Cursor</button>
-              <button class="code-tab-btn" data-tab="curl" style="padding: 5px 10px; font-size: 0.78rem; font-weight: 500; border-radius: 4px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">cURL</button>
-              <button class="code-tab-btn" data-tab="python" style="padding: 5px 10px; font-size: 0.78rem; font-weight: 500; border-radius: 4px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">Python</button>
-            </div>
-
-            <!-- Snippet Box with Copy Button -->
-            <div style="position: relative;">
-              <button id="copy-snippet-btn" type="button" style="position: absolute; top: 8px; right: 8px; padding: 4px 8px; font-size: 0.72rem; border-radius: 4px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">
-                Copy
-              </button>
-              <pre id="code-snippet-box" style="margin: 0; padding: 14px 12px; border-radius: 6px; background: var(--bg-app); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-primary); max-height: 280px; overflow-y: auto; white-space: pre-wrap;"></pre>
-            </div>
-
-            <div style="margin-top: 16px; padding: 12px; border-radius: 6px; background: var(--accent-light); border: 1px solid var(--accent-border); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-              <strong style="color: var(--text-primary);">Streamable HTTP Protocol:</strong> Connects directly over HTTP POST to <code style="font-family: var(--font-mono); color: var(--accent-primary);">https://truecalci.com/api/v1/mcp</code> without requiring a local Node process or stdio bridge.
+            <div style="display: flex; gap: 6px; background: var(--bg-app); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
+              <button class="code-tab-btn" data-tab="mcp_claude" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; background: var(--accent-light); color: var(--accent-primary); border: none; cursor: pointer;">Claude Desktop</button>
+              <button class="code-tab-btn" data-tab="mcp_cursor" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 500; border-radius: 6px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">Cursor</button>
+              <button class="code-tab-btn" data-tab="curl" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 500; border-radius: 6px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">cURL</button>
+              <button class="code-tab-btn" data-tab="python" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 500; border-radius: 6px; background: transparent; color: var(--text-secondary); border: none; cursor: pointer;">Python</button>
             </div>
           </div>
 
+          <!-- Snippet Box with Copy Button -->
+          <div style="position: relative;">
+            <button id="copy-snippet-btn" type="button" style="position: absolute; top: 10px; right: 10px; padding: 5px 10px; font-size: 0.74rem; font-weight: 600; border-radius: 4px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">
+              Copy
+            </button>
+            <pre id="code-snippet-box" style="margin: 0; padding: 16px; border-radius: 8px; background: var(--bg-app); border: 1px solid var(--border-color); font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-primary); max-height: 280px; overflow-y: auto; white-space: pre-wrap; line-height: 1.5;"></pre>
+          </div>
+
+          <div style="margin-top: 14px; padding: 10px 14px; border-radius: 6px; background: var(--accent-light); border: 1px solid var(--accent-border); font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+            <strong style="color: var(--text-primary);">Streamable HTTP Protocol:</strong> Connects directly over HTTP POST to <code style="font-family: var(--font-mono); color: var(--accent-primary);">https://truecalci.com/api/v1/mcp</code> without requiring a local Node process or stdio bridge.
+          </div>
         </div>
 
         <!-- Pricing Callout Banner -->
@@ -221,7 +183,7 @@ export class ViewDeveloperPortal {
               <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Sub-1ms SLA</span>
             </div>
             <h3 style="margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">Need Higher Concurrency or Dedicated API Keys?</h3>
-            <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">Developer Starter ($5/mo for 2,500 calls) and Pro Agency ($15/mo for 10,000 calls) with UPI & Stripe support.</p>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">Developer Starter ($5/mo for 2,500 calls) and Pro Agency ($15/mo for 15,000 calls) with UPI & Stripe support.</p>
           </div>
           <a href="#pricing" style="padding: 10px 18px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;">
             <span>Explore Pricing Plans</span>
@@ -325,7 +287,7 @@ export class ViewDeveloperPortal {
                   <td style="padding: 12px 8px; font-family: var(--font-mono); color: var(--text-primary);">INV-TC-2026-0089</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">Pro Agency ($15.00) + 12k Overages ($2.40)</td>
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">$17.40</td>
-                  <td style="padding: 12px 8px; color: var(--text-secondary);">Dodo Payments (UPI AutoPay)</td>
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">UPI AutoPay / Bank Rail</td>
                   <td style="padding: 12px 8px;"><span style="padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> PAID</span></td>
                   <td style="padding: 12px 8px; text-align: right;"><button class="btn-download-inv" data-inv="INV-TC-2026-0089" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: var(--bg-subtle); border: 1px solid var(--border-color); color: var(--accent-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF</button></td>
                 </tr>
@@ -334,7 +296,7 @@ export class ViewDeveloperPortal {
                   <td style="padding: 12px 8px; font-family: var(--font-mono); color: var(--text-primary);">INV-TC-2026-0042</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">Developer Plan Base</td>
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">$15.00</td>
-                  <td style="padding: 12px 8px; color: var(--text-secondary);">Dodo Payments (Card)</td>
+                  <td style="padding: 12px 8px; color: var(--text-secondary);">Card / SEPA</td>
                   <td style="padding: 12px 8px;"><span style="padding: 3px 8px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600; font-size: 0.72rem; display: inline-flex; align-items: center; gap: 4px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> PAID</span></td>
                   <td style="padding: 12px 8px; text-align: right;"><button class="btn-download-inv" data-inv="INV-TC-2026-0042" style="padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; background: var(--bg-subtle); border: 1px solid var(--border-color); color: var(--accent-primary); cursor: pointer; display: inline-flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download PDF</button></td>
                 </tr>
