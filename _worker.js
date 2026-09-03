@@ -561,7 +561,9 @@ export default {
     // -------------------------------------------------------------------------
     // 3.5. Authentication & OAuth Endpoints (GitHub & Google)
     // -------------------------------------------------------------------------
-    if (url.pathname === "/api/auth/github") {
+    const cleanPath = url.pathname.replace(/\/+$/, "") || "/";
+
+    if (cleanPath === "/api/auth/github") {
       const clientId = env.GITHUB_CLIENT_ID || "Ov23liKzTySirwshmW8f";
       const redirectUri = `${url.origin}/api/auth/callback/github`;
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user,user:email&redirect_uri=${encodeURIComponent(redirectUri)}`;
@@ -575,7 +577,7 @@ export default {
       return Response.redirect(authUrl, 302);
     }
 
-    if (url.pathname === "/api/auth/callback/github") {
+    if (cleanPath === "/api/auth/callback/github") {
       const code = url.searchParams.get("code");
       const clientId = env.GITHUB_CLIENT_ID || "Ov23liKzTySirwshmW8f";
       const clientSecret = env.GITHUB_CLIENT_SECRET || "7c6b9c87ef80aa41dc77e9d45b544725ab4bce3c";
@@ -598,21 +600,42 @@ export default {
             const ghUser = await userRes.json();
             const sessionUser = {
               id: `gh_${ghUser.id}`,
-              name: ghUser.name || ghUser.login,
-              handle: ghUser.login,
+              name: ghUser.name || ghUser.login || "Developer",
+              handle: ghUser.login || "developer",
               email: ghUser.email || `${ghUser.login}@users.noreply.github.com`,
               avatar_url: ghUser.avatar_url,
-              provider: "github",
-              tier: "Developer Starter",
-              tierId: "starter",
-              quotaLimit: 2500
+              provider: "github"
             };
 
-            return new Response(`<!DOCTYPE html><html><body><script>
-              localStorage.setItem('tc_dev_user', JSON.stringify(${JSON.stringify(sessionUser)}));
-              localStorage.setItem('tc_dev_auth', 'true');
-              window.location.href = '/#developer';
-            </script><p style="font-family: sans-serif; padding: 20px;">Authenticated with GitHub as <strong>${sessionUser.name}</strong>. Redirecting to Developer Dashboard...</p></body></html>`, {
+            return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueCalci Gateway</title>
+  <meta name="robots" content="noindex,nofollow">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 24px; max-width: 400px;">
+    <div style="width: 44px; height: 44px; border: 3px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <h3 style="margin: 0 0 8px 0; font-size: 1.1rem;">Authenticating with TrueCalci...</h3>
+    <p style="color: #94a3b8; font-size: 0.85rem; margin: 0;">Connecting verified profile and unlocking developer dashboard...</p>
+  </div>
+  <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+  <script>
+    const user = ${JSON.stringify(sessionUser)};
+    const existing = JSON.parse(localStorage.getItem('tc_dev_user') || '{}');
+    const activeTier = localStorage.getItem('tc_active_tier') || existing.tierId || 'pro';
+    user.tierId = activeTier;
+    user.tier = activeTier === 'pro' ? 'Pro Agency & Scale (Monthly)' : 'Developer Starter';
+    user.quotaLimit = activeTier === 'pro' ? 15000 : 2500;
+    user.apiKey = existing.apiKey || ('tc_live_' + activeTier + '_' + Math.random().toString(36).substring(2, 12));
+    localStorage.setItem('tc_dev_user', JSON.stringify(user));
+    localStorage.setItem('tc_dev_auth', 'true');
+    localStorage.setItem('tc_active_tier', activeTier);
+    window.location.href = '/#subscriptions';
+  </script>
+</body>
+</html>`, {
               status: 200,
               headers: { "Content-Type": "text/html; charset=utf-8" }
             });
@@ -628,43 +651,63 @@ export default {
           provider: "github",
           user: {
             id: "gh_982734",
-            name: "Alex Chen",
-            login: "alexchen-dev",
-            email: "alex.chen@github.com",
+            name: "Developer",
+            login: "developer",
+            email: "developer@truecalci.com",
             avatar_url: "https://avatars.githubusercontent.com/u/982734?v=4",
-            tier: "Developer Starter",
-            tierId: "starter",
-            quotaLimit: 2500
+            tier: "Pro Agency & Scale",
+            tierId: "pro",
+            quotaLimit: 15000
           },
           token: `tc_token_gh_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-          apiKey: `tc_live_starter_${Math.random().toString(36).substring(2, 10)}`
+          apiKey: `tc_live_pro_${Math.random().toString(36).substring(2, 10)}`
         }), {
           status: 200,
           headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
         });
       }
 
-      return new Response(`<!DOCTYPE html><html><body><script>
-        localStorage.setItem('tc_dev_user', JSON.stringify({
-          id: 'gh_982734',
-          name: 'Alex Chen',
-          handle: 'alexchen-dev',
-          email: 'alex.chen@github.com',
-          avatar_url: 'https://avatars.githubusercontent.com/u/982734?v=4',
-          provider: 'github',
-          tier: 'Developer Starter',
-          tierId: 'starter',
-          quotaLimit: 2500
-        }));
-        localStorage.setItem('tc_dev_auth', 'true');
-        window.location.href = '/#developer';
-      </script><p style="font-family: sans-serif; padding: 20px;">Redirecting to Developer Dashboard...</p></body></html>`, {
+      return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueCalci Gateway</title>
+  <meta name="robots" content="noindex,nofollow">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 24px;">
+    <div style="width: 44px; height: 44px; border: 3px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <p style="color: #94a3b8; font-size: 0.85rem;">Redirecting to Developer Dashboard...</p>
+  </div>
+  <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+  <script>
+    const existing = JSON.parse(localStorage.getItem('tc_dev_user') || '{}');
+    const activeTier = localStorage.getItem('tc_active_tier') || existing.tierId || 'pro';
+    const user = {
+      id: existing.id || 'gh_dev_' + Date.now(),
+      name: existing.name || 'Developer',
+      handle: existing.handle || 'developer',
+      email: existing.email || 'developer@truecalci.com',
+      avatar_url: existing.avatar_url || 'https://avatars.githubusercontent.com/u/982734?v=4',
+      provider: 'github',
+      tier: activeTier === 'pro' ? 'Pro Agency & Scale (Monthly)' : 'Developer Starter',
+      tierId: activeTier,
+      quotaLimit: activeTier === 'pro' ? 15000 : 2500,
+      apiKey: existing.apiKey || ('tc_live_' + activeTier + '_' + Math.random().toString(36).substring(2, 12))
+    };
+    localStorage.setItem('tc_dev_user', JSON.stringify(user));
+    localStorage.setItem('tc_dev_auth', 'true');
+    localStorage.setItem('tc_active_tier', activeTier);
+    window.location.href = '/#subscriptions';
+  </script>
+</body>
+</html>`, {
         status: 200,
         headers: { "Content-Type": "text/html; charset=utf-8" }
       });
     }
 
-    if (url.pathname === "/api/auth/google") {
+    if (cleanPath === "/api/auth/google") {
       const clientId = env.GOOGLE_CLIENT_ID || "";
       const redirectUri = `${url.origin}/api/auth/callback/google`;
       const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&response_type=code&scope=openid%20profile%20email&redirect_uri=${encodeURIComponent(redirectUri)}`;
@@ -678,7 +721,7 @@ export default {
       return Response.redirect(authUrl, 302);
     }
 
-    if (url.pathname === "/api/auth/callback/google") {
+    if (cleanPath === "/api/auth/callback/google") {
       const code = url.searchParams.get("code");
       const clientId = env.GOOGLE_CLIENT_ID || "";
       const clientSecret = env.GOOGLE_CLIENT_SECRET || "";
@@ -705,21 +748,41 @@ export default {
             const googUser = await userRes.json();
             const sessionUser = {
               id: `goog_${googUser.sub}`,
-              name: googUser.name || "Google Developer",
-              handle: googUser.email?.split("@")[0] || "google_user",
+              name: googUser.name || "Developer",
+              handle: googUser.email?.split("@")[0] || "developer",
               email: googUser.email,
               avatar_url: googUser.picture,
-              provider: "google",
-              tier: "Developer Starter",
-              tierId: "starter",
-              quotaLimit: 2500
+              provider: "google"
             };
 
-            return new Response(`<!DOCTYPE html><html><body><script>
-              localStorage.setItem('tc_dev_user', JSON.stringify(${JSON.stringify(sessionUser)}));
-              localStorage.setItem('tc_dev_auth', 'true');
-              window.location.href = '/#developer';
-            </script><p style="font-family: sans-serif; padding: 20px;">Authenticated with Google as <strong>${sessionUser.name}</strong>. Redirecting to Developer Dashboard...</p></body></html>`, {
+            return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueCalci Gateway</title>
+  <meta name="robots" content="noindex,nofollow">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 24px;">
+    <div style="width: 44px; height: 44px; border: 3px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <h3 style="margin: 0 0 8px 0; font-size: 1.1rem;">Authenticating with TrueCalci...</h3>
+  </div>
+  <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+  <script>
+    const user = ${JSON.stringify(sessionUser)};
+    const existing = JSON.parse(localStorage.getItem('tc_dev_user') || '{}');
+    const activeTier = localStorage.getItem('tc_active_tier') || existing.tierId || 'pro';
+    user.tierId = activeTier;
+    user.tier = activeTier === 'pro' ? 'Pro Agency & Scale (Monthly)' : 'Developer Starter';
+    user.quotaLimit = activeTier === 'pro' ? 15000 : 2500;
+    user.apiKey = existing.apiKey || ('tc_live_' + activeTier + '_' + Math.random().toString(36).substring(2, 12));
+    localStorage.setItem('tc_dev_user', JSON.stringify(user));
+    localStorage.setItem('tc_dev_auth', 'true');
+    localStorage.setItem('tc_active_tier', activeTier);
+    window.location.href = '/#subscriptions';
+  </script>
+</body>
+</html>`, {
               status: 200,
               headers: { "Content-Type": "text/html; charset=utf-8" }
             });
@@ -728,6 +791,46 @@ export default {
           console.error("Google OAuth Error:", err);
         }
       }
+
+      return new Response(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrueCalci Gateway</title>
+  <meta name="robots" content="noindex,nofollow">
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+  <div style="text-align: center; padding: 24px;">
+    <div style="width: 44px; height: 44px; border: 3px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <p style="color: #94a3b8; font-size: 0.85rem;">Redirecting to Developer Dashboard...</p>
+  </div>
+  <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+  <script>
+    const existing = JSON.parse(localStorage.getItem('tc_dev_user') || '{}');
+    const activeTier = localStorage.getItem('tc_active_tier') || existing.tierId || 'pro';
+    const user = {
+      id: existing.id || 'goog_dev_' + Date.now(),
+      name: existing.name || 'Developer',
+      handle: existing.handle || 'developer',
+      email: existing.email || 'developer@truecalci.com',
+      avatar_url: existing.avatar_url || 'https://lh3.googleusercontent.com/a/default-user',
+      provider: 'google',
+      tier: activeTier === 'pro' ? 'Pro Agency & Scale (Monthly)' : 'Developer Starter',
+      tierId: activeTier,
+      quotaLimit: activeTier === 'pro' ? 15000 : 2500,
+      apiKey: existing.apiKey || ('tc_live_' + activeTier + '_' + Math.random().toString(36).substring(2, 12))
+    };
+    localStorage.setItem('tc_dev_user', JSON.stringify(user));
+    localStorage.setItem('tc_dev_auth', 'true');
+    localStorage.setItem('tc_active_tier', activeTier);
+    window.location.href = '/#subscriptions';
+  </script>
+</body>
+</html>`, {
+        status: 200,
+        headers: { "Content-Type": "text/html; charset=utf-8" }
+      });
+    }
 
       if (accept.includes("application/json") && !code) {
         return new Response(JSON.stringify({

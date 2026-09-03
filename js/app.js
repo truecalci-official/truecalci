@@ -14,6 +14,8 @@ import { ViewAdminPortal } from "./views/view-admin-portal.js";
 import { ViewDeveloperPortal } from "./views/view-developer-portal.js";
 import { ViewEnterpriseHome } from "./views/view-enterprise-home.js";
 import { ViewPricing } from "./views/view-pricing.js?v=20260904_live";
+import { ViewSubscriptions } from "./views/view-subscriptions.js";
+import { ViewProfile } from "./views/view-profile.js";
 import { CALCULATOR_DEFINITIONS } from "./data/definitions.js";
 import { analytics } from "./analytics.js";
 import { ContractorMatrixEngine } from "./engines/contractor-matrix.js";
@@ -27,20 +29,61 @@ class CalculatorApp {
       "tax", "gst", "sip", "fd", "gold", 
       "ppf", "ssy", "home_loan", "land", 
       "calci_991", "basic", "programmer",
-      "developer", "admin", "api", "pricing", "docs"
+      "developer", "admin", "api", "pricing", "docs",
+      "subscriptions", "subscription", "profile"
     ];
+
+    // Auto-detect Dodo checkout fulfillment or active Pro plan
+    try {
+      const hashQuery = window.location.hash.includes("?") ? window.location.hash.split("?")[1] : "";
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(hashQuery);
+      const isCheckoutSuccess = searchParams.get("status") === "success" || 
+                                hashParams.get("status") === "success" || 
+                                searchParams.get("payment") === "success" || 
+                                hashParams.get("payment") === "success" ||
+                                localStorage.getItem("tc_pending_checkout_tier") !== null;
+
+      const activeTier = searchParams.get("tier") || hashParams.get("tier") || localStorage.getItem("tc_pending_checkout_tier") || localStorage.getItem("tc_active_tier");
+      
+      let user = JSON.parse(localStorage.getItem("tc_dev_user") || '{}');
+      if (isCheckoutSuccess || activeTier === "pro") {
+        user = {
+          id: user.id || `usr_dodo_${Date.now()}`,
+          name: user.name && user.name !== "GitHub Developer" ? user.name : "Developer",
+          handle: user.handle && user.handle !== "github_developer" ? user.handle : "developer",
+          email: user.email || "developer@truecalci.com",
+          provider: user.provider || "github",
+          avatar_url: user.avatar_url || "https://avatars.githubusercontent.com/u/982734?v=4",
+          tier: "Pro Agency & Scale (Monthly)",
+          tierId: "pro",
+          quotaLimit: 15000,
+          apiKey: user.apiKey || `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`
+        };
+        localStorage.setItem("tc_dev_user", JSON.stringify(user));
+        localStorage.setItem("tc_dev_auth", "true");
+        localStorage.setItem("tc_active_tier", "pro");
+        localStorage.removeItem("tc_pending_checkout_tier");
+      }
+    } catch (e) {
+      console.warn("Could not check Dodo payment fulfillment:", e);
+    }
 
     // Read initial tool from Subdomain, body initialView, or URL hash
     const hostname = window.location.hostname.toLowerCase();
     const initialView = document.body.dataset.initialView || "";
-    const initialHash = window.location.hash.replace("#", "").trim();
+    const cleanHash = window.location.hash.replace("#", "").split("?")[0].trim();
 
-    if (hostname.startsWith("admin.") || initialHash === "admin" || initialView === "admin") {
+    if (hostname.startsWith("admin.") || cleanHash === "admin" || initialView === "admin") {
       this.currentTool = "admin";
-    } else if (hostname.startsWith("developer.") || hostname.startsWith("api.") || initialHash === "developer" || initialHash === "api" || initialView === "developer") {
+    } else if (hostname.startsWith("developer.") || hostname.startsWith("api.") || cleanHash === "developer" || cleanHash === "api" || initialView === "developer") {
       this.currentTool = "developer";
+    } else if (cleanHash === "subscriptions" || cleanHash === "subscription") {
+      this.currentTool = "subscriptions";
+    } else if (cleanHash === "profile") {
+      this.currentTool = "profile";
     } else {
-      this.currentTool = this.validTools.includes(initialHash) ? initialHash : "home";
+      this.currentTool = this.validTools.includes(cleanHash) ? cleanHash : "home";
     }
 
     this.currentAdminView = null;
@@ -617,6 +660,20 @@ class CalculatorApp {
       return;
     }
 
+    if (toolKey === "subscriptions" || toolKey === "subscription") {
+      this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
+      const mountEl = document.getElementById("tool-view-mount");
+      new ViewSubscriptions(mountEl, (nextTool) => this.loadTool(nextTool, true)).render();
+      return;
+    }
+
+    if (toolKey === "profile") {
+      this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
+      const mountEl = document.getElementById("tool-view-mount");
+      new ViewProfile(mountEl, () => this.updateAuthHeaderButton()).render();
+      return;
+    }
+
     this.workspaceEl.innerHTML = headerHtml;
 
     document.getElementById("workspace-info-btn")?.addEventListener("click", () => {
@@ -902,20 +959,23 @@ class CalculatorApp {
     popup.innerHTML = `
       <div style="padding-bottom: 10px; border-bottom: 1px solid var(--border-color); margin-bottom: 8px;">
         <div style="font-size: 0.88rem; font-weight: 700; color: var(--text-primary);">${user.name || 'Developer'}</div>
-        <div style="font-size: 0.74rem; color: var(--text-muted);">${user.handle || 'alex.dev'}</div>
-        <div style="margin-top: 6px; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: rgba(37,99,235,0.1); color: var(--accent-primary); font-weight: 600; display: inline-block;">
-          ${user.tier || 'Developer Starter'}
+        <div style="font-size: 0.74rem; color: var(--text-muted);">${user.email || '@' + (user.handle || 'developer')}</div>
+        <div style="margin-top: 6px; font-size: 0.72rem; padding: 2px 8px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600; display: inline-block;">
+          ● ${user.tier || 'Pro Agency & Scale'}
         </div>
       </div>
-      <button id="account-go-dev" type="button" style="width: 100%; text-align: left; padding: 8px; font-size: 0.82rem; font-weight: 500; color: var(--text-primary); background: transparent; border: none; border-radius: 6px; cursor: pointer;">
-        Developer Portal & Keys →
+      <button id="account-go-profile" type="button" style="width: 100%; text-align: left; padding: 9px 10px; font-size: 0.84rem; font-weight: 600; color: var(--text-primary); background: transparent; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span>Profile</span>
       </button>
-      <button id="account-go-pricing" type="button" style="width: 100%; text-align: left; padding: 8px; font-size: 0.82rem; font-weight: 500; color: var(--text-primary); background: transparent; border: none; border-radius: 6px; cursor: pointer;">
-        Manage Subscription Plans →
+      <button id="account-go-subscriptions" type="button" style="width: 100%; text-align: left; padding: 9px 10px; font-size: 0.84rem; font-weight: 600; color: var(--text-primary); background: transparent; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+        <span>Subscriptions</span>
       </button>
       <div style="height: 1px; background: var(--border-color); margin: 6px 0;"></div>
-      <button id="account-logout" type="button" style="width: 100%; text-align: left; padding: 8px; font-size: 0.82rem; font-weight: 600; color: #ef4444; background: transparent; border: none; border-radius: 6px; cursor: pointer;">
-        Sign Out
+      <button id="account-logout" type="button" style="width: 100%; text-align: left; padding: 9px 10px; font-size: 0.84rem; font-weight: 600; color: #ef4444; background: transparent; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+        <span>Sign Out</span>
       </button>
     `;
 
@@ -926,14 +986,14 @@ class CalculatorApp {
       document.addEventListener("click", closePopup, { once: true });
     }, 50);
 
-    popup.querySelector("#account-go-dev")?.addEventListener("click", () => {
+    popup.querySelector("#account-go-profile")?.addEventListener("click", () => {
       closePopup();
-      this.loadTool("developer", true);
+      this.loadTool("profile", true);
     });
 
-    popup.querySelector("#account-go-pricing")?.addEventListener("click", () => {
+    popup.querySelector("#account-go-subscriptions")?.addEventListener("click", () => {
       closePopup();
-      this.loadTool("pricing", true);
+      this.loadTool("subscriptions", true);
     });
 
     popup.querySelector("#account-logout")?.addEventListener("click", () => {

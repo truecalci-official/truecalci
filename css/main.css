@@ -1100,7 +1100,7 @@ body {
   background: var(--bg-subtle);
 }
 
-/* Full-Width Enterprise Homepage & Pricing Layout Override */
+/* Full-Width Enterprise Homepage, Subscriptions, Profile, Pricing Layout Override */
 body[data-view="home"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="home"] .app-sidebar-ad,
 body[data-view="pricing"] .app-sidebar-nav:not(.drawer-open),
@@ -1108,7 +1108,11 @@ body[data-view="pricing"] .app-sidebar-ad,
 body[data-view="developer"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="developer"] .app-sidebar-ad,
 body[data-view="admin"] .app-sidebar-nav:not(.drawer-open),
-body[data-view="admin"] .app-sidebar-ad {
+body[data-view="admin"] .app-sidebar-ad,
+body[data-view="subscriptions"] .app-sidebar-nav:not(.drawer-open),
+body[data-view="subscriptions"] .app-sidebar-ad,
+body[data-view="profile"] .app-sidebar-nav:not(.drawer-open),
+body[data-view="profile"] .app-sidebar-ad {
   display: none !important;
 }
 
@@ -1117,7 +1121,9 @@ body[data-view="admin"] .app-sidebar-ad {
 body[data-view="home"] .app-sidebar-nav.drawer-open,
 body[data-view="pricing"] .app-sidebar-nav.drawer-open,
 body[data-view="developer"] .app-sidebar-nav.drawer-open,
-body[data-view="admin"] .app-sidebar-nav.drawer-open {
+body[data-view="admin"] .app-sidebar-nav.drawer-open,
+body[data-view="subscriptions"] .app-sidebar-nav.drawer-open,
+body[data-view="profile"] .app-sidebar-nav.drawer-open {
   display: flex !important;
   position: fixed !important;
   top: 0 !important;
@@ -1351,7 +1357,9 @@ body[data-view="pricing"] .currency-dropdown-wrapper {
 body[data-view="home"] .app-layout-grid,
 body[data-view="pricing"] .app-layout-grid,
 body[data-view="developer"] .app-layout-grid,
-body[data-view="admin"] .app-layout-grid {
+body[data-view="admin"] .app-layout-grid,
+body[data-view="subscriptions"] .app-layout-grid,
+body[data-view="profile"] .app-layout-grid {
   grid-template-columns: 1fr !important;
   max-width: 1440px !important;
   padding: 0 1rem !important;
@@ -1360,7 +1368,9 @@ body[data-view="admin"] .app-layout-grid {
 body[data-view="home"] .app-workspace,
 body[data-view="pricing"] .app-workspace,
 body[data-view="developer"] .app-workspace,
-body[data-view="admin"] .app-workspace {
+body[data-view="admin"] .app-workspace,
+body[data-view="subscriptions"] .app-workspace,
+body[data-view="profile"] .app-workspace {
   max-width: 100% !important;
   width: 100% !important;
   padding: 0 !important;

@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Authenticating with GitHub...</title>
+  <title>TrueCalci Gateway</title>
+  <meta name="description" content="TrueCalci Official Edge Developer Gateway">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #090a0f; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
-  <div style="text-align: center; padding: 20px;">
-    <div style="width: 48px; height: 48px; border: 3px solid #10b981; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
-    <h2>Authenticating with GitHub...</h2>
-    <p style="color: #94a3b8; font-size: 0.9rem;">Verifying GitHub credentials and unlocking developer dashboard...</p>
+  <div style="text-align: center; padding: 24px; max-width: 420px;">
+    <div style="width: 44px; height: 44px; border: 3px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+    <h2 style="margin: 0 0 8px; font-size: 1.25rem;">TrueCalci Developer Gateway</h2>
+    <p style="color: #94a3b8; font-size: 0.88rem; margin: 0;">Verifying session credentials and provisioning compute workspace...</p>
   </div>
   <style>
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -16,22 +19,26 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
+    const existing = JSON.parse(localStorage.getItem('tc_dev_user') || '{}');
+    const activeTier = localStorage.getItem('tc_active_tier') || existing.tierId || 'pro';
 
     const sessionUser = {
-      id: 'gh_' + (code ? code.substring(0, 10) : Date.now()),
-      name: 'GitHub Developer',
-      handle: 'github_developer',
-      email: 'developer@truecalci.com',
-      avatar_url: 'https://avatars.githubusercontent.com/u/982734?v=4',
+      id: existing.id || ('gh_' + (code ? code.substring(0, 10) : Date.now())),
+      name: existing.name && existing.name !== 'GitHub Developer' ? existing.name : 'Developer',
+      handle: existing.handle && existing.handle !== 'github_developer' ? existing.handle : 'developer',
+      email: existing.email || 'developer@truecalci.com',
+      avatar_url: existing.avatar_url || 'https://avatars.githubusercontent.com/u/982734?v=4',
       provider: 'github',
-      tier: 'Developer Starter',
-      tierId: 'starter',
-      quotaLimit: 2500
+      tier: activeTier === 'pro' ? 'Pro Agency & Scale (Monthly)' : 'Developer Starter',
+      tierId: activeTier,
+      quotaLimit: activeTier === 'pro' ? 15000 : 2500,
+      apiKey: existing.apiKey || ('tc_live_' + activeTier + '_' + Math.random().toString(36).substring(2, 12))
     };
 
     localStorage.setItem('tc_dev_user', JSON.stringify(sessionUser));
     localStorage.setItem('tc_dev_auth', 'true');
-    window.location.href = '/#developer';
+    localStorage.setItem('tc_active_tier', activeTier);
+    window.location.href = '/#subscriptions';
   </script>
 </body>
 </html>

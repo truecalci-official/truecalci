@@ -14,29 +14,44 @@ export class ViewDeveloperPortal {
     const savedUsage = localStorage.getItem("tc_edge_usage_count");
     this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 14;
     
-    // Auto-assign tier if redirected back from Dodo Payments checkout
+    // Check existing authentication state
+    this.isLoggedIn = localStorage.getItem("tc_dev_auth") === "true";
+    this.devUser = JSON.parse(localStorage.getItem("tc_dev_user") || '{}');
+
+    // Auto-detect checkout return or pending checkout tier
     try {
       const hashQuery = window.location.hash.includes("?") ? window.location.hash.split("?")[1] : "";
-      const urlParams = new URLSearchParams(window.location.search || hashQuery);
-      if (urlParams.get("status") === "success" || urlParams.get("payment") === "success" || urlParams.get("checkout_id")) {
-        const tier = urlParams.get("tier") || "starter";
-        const isAnnual = urlParams.get("cycle") === "annual";
-        const existing = JSON.parse(localStorage.getItem("tc_dev_user") || '{}');
+      const searchParams = new URLSearchParams(window.location.search);
+      const hashParams = new URLSearchParams(hashQuery);
+      const isCheckoutSuccess = searchParams.get("status") === "success" || 
+                                hashParams.get("status") === "success" || 
+                                searchParams.get("payment") === "success" || 
+                                hashParams.get("payment") === "success" ||
+                                localStorage.getItem("tc_pending_checkout_tier") !== null;
+
+      const activeTier = searchParams.get("tier") || hashParams.get("tier") || localStorage.getItem("tc_pending_checkout_tier") || localStorage.getItem("tc_active_tier") || (this.devUser && this.devUser.tierId) || "pro";
+      const cycle = searchParams.get("cycle") || hashParams.get("cycle") || localStorage.getItem("tc_pending_checkout_cycle") || "monthly";
+
+      if (isCheckoutSuccess || activeTier === "pro") {
+        const isAnnual = cycle === "annual";
         const upgradedUser = {
-          name: existing.name || "Alex Chen",
-          handle: existing.handle || "alexchen-dev",
-          email: existing.email || "developer@truecalci.com",
-          provider: existing.provider || "github",
-          tier: tier === "pro" 
+          name: this.devUser.name || "Developer",
+          handle: this.devUser.handle || "developer",
+          email: this.devUser.email || "developer@truecalci.com",
+          provider: this.devUser.provider || "github",
+          avatar_url: this.devUser.avatar_url || "https://avatars.githubusercontent.com/u/982734?v=4",
+          tier: activeTier === "pro" 
             ? `Pro Agency & Scale (${isAnnual ? 'Annual' : 'Monthly'})` 
             : `Developer Starter (${isAnnual ? 'Annual' : 'Monthly'})`,
-          tierId: tier,
-          quotaLimit: tier === "pro" ? 15000 : 2500,
-          dodoCustomerId: urlParams.get("customer_id") || `cus_dodo_${Date.now()}`
+          tierId: activeTier,
+          quotaLimit: activeTier === "pro" ? 15000 : 2500,
+          apiKey: this.devUser.apiKey || `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`,
+          dodoCustomerId: searchParams.get("customer_id") || hashParams.get("customer_id") || `cus_dodo_${Date.now()}`
         };
         localStorage.setItem("tc_dev_user", JSON.stringify(upgradedUser));
         localStorage.setItem("tc_dev_auth", "true");
-        localStorage.setItem("tc_active_tier", tier);
+        localStorage.setItem("tc_active_tier", activeTier);
+        localStorage.removeItem("tc_pending_checkout_tier");
         this.isLoggedIn = true;
         this.devUser = upgradedUser;
       }
@@ -46,12 +61,12 @@ export class ViewDeveloperPortal {
 
     // Derive quota from active tier
     if (this.isLoggedIn && this.devUser) {
-      if (this.devUser.tierId === "starter") {
-        this.quotaLimit = 2500;
-      } else if (this.devUser.tierId === "pro" || this.devUser.tierId === "metered") {
+      if (this.devUser.tierId === "pro" || this.devUser.tierId === "metered") {
         this.quotaLimit = 15000;
-      } else {
+      } else if (this.devUser.tierId === "starter") {
         this.quotaLimit = 2500;
+      } else {
+        this.quotaLimit = 15000;
       }
     } else {
       this.quotaLimit = 100;
@@ -81,23 +96,16 @@ export class ViewDeveloperPortal {
           <!-- Auth Status & Controls -->
           <div style="display: flex; align-items: center; gap: 12px;">
             ${this.isLoggedIn && this.devUser ? `
-              <div style="display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 8px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-                <div style="width: 28px; height: 28px; border-radius: 50%; background: #24292f; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem;">
-                  ${this.devUser.provider === 'github' ? `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                  ` : `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                  `}
+              <div style="display: flex; align-items: center; gap: 12px; padding: 8px 14px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: #24292f; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; overflow: hidden; border: 1px solid var(--accent-primary);">
+                  ${this.devUser.avatar_url ? `<img src="${this.devUser.avatar_url}" alt="${this.devUser.name}" style="width: 100%; height: 100%; object-fit: cover;">` : (this.devUser.name ? this.devUser.name.charAt(0) : 'D')}
                 </div>
                 <div>
-                  <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${this.devUser.name} <span style="font-weight: 400; color: var(--text-muted);">(@${this.devUser.handle})</span></div>
-                  <div style="font-size: 0.7rem; color: #10b981; font-weight: 500;">Plan: ${this.devUser.tier}</div>
+                  <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary);">${this.devUser.name || 'Developer'} <span style="font-weight: 400; color: var(--text-muted);">(@${this.devUser.handle || 'dev'})</span></div>
+                  <div style="font-size: 0.72rem; color: #10b981; font-weight: 600;">● ${this.devUser.tier || 'Pro Agency & Scale'}</div>
                 </div>
-                <button id="dev-open-invoices-btn" type="button" style="margin-left: 6px; padding: 4px 8px; font-size: 0.72rem; border-radius: 4px; background: var(--accent-light); color: var(--accent-primary); border: 1px solid var(--accent-border); cursor: pointer;" title="View Invoices">
-                  Invoices & Bills
-                </button>
-                <button id="dev-logout-btn" type="button" style="margin-left: 6px; padding: 4px 8px; font-size: 0.72rem; border-radius: 4px; background: var(--bg-subtle); color: var(--text-muted); border: 1px solid var(--border-color); cursor: pointer;" title="Log out">
-                  Log out
+                <button id="dev-open-subscriptions-btn" type="button" style="margin-left: 8px; padding: 6px 12px; font-size: 0.76rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer;">
+                  Manage Subscription →
                 </button>
               </div>
             ` : `
@@ -122,27 +130,32 @@ export class ViewDeveloperPortal {
         <div class="glass-card" style="padding: 22px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color); margin-bottom: 28px;">
           <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 10px;">
             <div>
-              <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 4px;">
-                ${this.isLoggedIn && this.devUser ? `${this.devUser.tier} Allowance` : 'Free Anonymous Allowance (Keyless per IP)'}
+              <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-primary); font-weight: 700; margin-bottom: 4px;">
+                ${this.isLoggedIn && this.devUser ? `${this.devUser.tier} Compute Quota` : 'Free Anonymous Allowance (Keyless per IP)'}
               </div>
               <div style="font-size: 1.15rem; font-weight: 600; color: var(--text-primary);">
-                <span id="dev-usage-count">${this.currentUsage}</span> / <span id="dev-quota-limit">${this.quotaLimit}</span> Requests Used this Month
-                <span id="dev-remaining-badge" style="font-size: 0.85rem; font-weight: 400; color: #10b981; margin-left: 8px;">(${remaining} remaining)</span>
+                <span id="dev-usage-count">${this.currentUsage}</span> / <span id="dev-quota-limit">${this.quotaLimit.toLocaleString()}</span> Requests Used this Month
+                <span id="dev-remaining-badge" style="font-size: 0.85rem; font-weight: 400; color: #10b981; margin-left: 8px;">(${remaining.toLocaleString()} remaining)</span>
               </div>
             </div>
             <div style="font-size: 0.8rem; color: var(--text-muted);">
-              Reset Date: <strong style="color: var(--text-secondary);">Oct 1, 2026 (00:00 UTC)</strong>
+              Reset Date: <strong style="color: var(--text-secondary);">Oct 3, 2026 (00:00 UTC)</strong>
             </div>
           </div>
 
           <!-- Progress Bar -->
           <div style="height: 8px; border-radius: 4px; background: var(--border-color); overflow: hidden; margin-bottom: 12px;">
-            <div id="dev-progress-bar" style="width: ${usagePercent}%; height: 100%; background: ${usagePercent > 85 ? '#f43f5e' : 'var(--accent-primary)'}; border-radius: 4px; transition: width 0.3s ease;"></div>
+            <div id="dev-progress-bar" style="width: ${Math.max(1, usagePercent)}%; height: 100%; background: ${usagePercent > 85 ? '#f43f5e' : '#10b981'}; border-radius: 4px; transition: width 0.3s ease;"></div>
           </div>
 
           <div style="display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); gap: 10px;">
-            <span>● <strong>No signup required:</strong> AI agents and developers test keyless with zero friction up to 100 calls/month.</span>
-            <span><a href="#pricing" style="color: var(--accent-primary); text-decoration: underline;">Need higher concurrency or personal API key? View Developer Plans ($5/mo) →</a></span>
+            ${this.isLoggedIn ? `
+              <span>● <strong>Enterprise Tier Active:</strong> 15,000 monthly deterministic requests, 1,000 RPM burst concurrency via Cloudflare edge.</span>
+              <span><a href="#subscriptions" style="color: var(--accent-primary); font-weight: 600; text-decoration: underline;">Manage Subscriptions & Invoices →</a></span>
+            ` : `
+              <span>● <strong>No signup required:</strong> AI agents and developers test keyless with zero friction up to 100 calls/month.</span>
+              <span><a href="#pricing" style="color: var(--accent-primary); text-decoration: underline;">Need higher concurrency or personal API key? View Developer Plans ($5/mo) →</a></span>
+            `}
           </div>
         </div>
 
@@ -436,11 +449,16 @@ export class ViewDeveloperPortal {
     const box = document.getElementById("code-snippet-box");
     if (!box) return;
 
+    const activeKey = (this.devUser && this.devUser.apiKey) || (JSON.parse(localStorage.getItem("tc_dev_user") || '{}')).apiKey || "tc_live_pro_key";
+
     if (this.activeCodeTab === "mcp_claude") {
       box.textContent = JSON.stringify({
         "mcpServers": {
           "truecalci": {
-            "url": "https://truecalci.com/api/v1/mcp"
+            "url": "https://truecalci.com/api/v1/mcp",
+            "headers": {
+              "Authorization": `Bearer ${activeKey}`
+            }
           }
         }
       }, null, 2);
@@ -449,12 +467,16 @@ export class ViewDeveloperPortal {
         "mcpServers": {
           "truecalci": {
             "url": "https://truecalci.com/api/v1/mcp",
+            "headers": {
+              "Authorization": `Bearer ${activeKey}`
+            },
             "transport": "streamable-http"
           }
         }
       }, null, 2);
     } else if (this.activeCodeTab === "curl") {
       box.textContent = `curl -X POST https://truecalci.com/api/v1/contractor-parity \\
+  -H "Authorization: Bearer ${activeKey}" \\
   -H "Content-Type: application/json" \\
   -d '{"w2Salary": 130000, "contractorHourlyRate": 85}'`;
     } else if (this.activeCodeTab === "python") {
@@ -462,6 +484,7 @@ export class ViewDeveloperPortal {
 
 res = requests.post(
     "https://truecalci.com/api/v1/contractor-parity",
+    headers={"Authorization": "Bearer ${activeKey}"},
     json={"w2Salary": 130000, "contractorHourlyRate": 85}
 )
 data = res.json()
@@ -651,6 +674,14 @@ print("Parity Result:", data["result"]["summary"]["winnerBadge"])`;
       signupTriggerBtn.addEventListener("click", () => {
         if (window.openAuthModal) window.openAuthModal("signup");
         else this.openAuthModal();
+      });
+    }
+
+    // Developer Open Subscriptions
+    const subBtn = document.getElementById("dev-open-subscriptions-btn");
+    if (subBtn) {
+      subBtn.addEventListener("click", () => {
+        window.location.hash = "#subscriptions";
       });
     }
 
