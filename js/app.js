@@ -13,7 +13,7 @@ import { ViewProgrammer } from "./views/view-programmer.js";
 import { ViewAdminPortal } from "./views/view-admin-portal.js";
 import { ViewDeveloperPortal } from "./views/view-developer-portal.js";
 import { ViewEnterpriseHome } from "./views/view-enterprise-home.js";
-import { ViewPricing } from "./views/view-pricing.js";
+import { ViewPricing } from "./views/view-pricing.js?v=20260904_live";
 import { CALCULATOR_DEFINITIONS } from "./data/definitions.js";
 import { analytics } from "./analytics.js";
 import { ContractorMatrixEngine } from "./engines/contractor-matrix.js";
