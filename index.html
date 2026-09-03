@@ -327,40 +327,132 @@
 
   <!-- Top Navigation Header -->
   <header class="app-header">
-    <div class="header-container">
-      <div style="display:flex; align-items:center; gap:0.75rem;">
+    <div class="header-container" style="max-width: 1440px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; gap: 1rem;">
+      
+      <!-- Left Brand & Enterprise Dropdowns -->
+      <div style="display:flex; align-items:center; gap: 1.25rem;">
         <!-- Mobile Menu Hamburger Button -->
-        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Calculator Menu">
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open Navigation Menu">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
-          <span>Calculators</span>
         </button>
 
-        <a href="index.html" class="brand-area" aria-label="TrueCalci Home">
+        <a href="#home" class="brand-area" aria-label="TrueCalci Enterprise Home" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
           <img src="assets/brand-logo.jpg" alt="TrueCalci Monogram" class="brand-icon" style="width: 32px; height: 32px; border-radius: 6px; object-fit: cover; border: 1px solid var(--border-color);">
-          <div>
-            <span class="brand-title">TrueCalci</span>
-          </div>
+          <span class="brand-title" style="font-size: 1.15rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">TrueCalci</span>
         </a>
 
-        <!-- Portal Mode Switcher (Workstation | Developer | Admin) -->
-        <nav class="portal-nav-switcher" aria-label="Portal Navigation" style="display: flex; gap: 4px; background: var(--bg-subtle); padding: 3px; border-radius: 20px; border: 1px solid var(--border-color); margin-left: 0.5rem;">
-          <a href="#contractor_matrix" class="sidebar-link" data-tool="contractor_matrix" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-primary);">🧮 Workstation</a>
-          <a href="#developer" class="sidebar-link" data-tool="developer" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-secondary);">⚡ Developer Hub</a>
-          <a href="#admin" class="sidebar-link" data-tool="admin" style="padding: 4px 10px; border-radius: 14px; font-size: 0.76rem; font-weight: 600; text-decoration: none; color: var(--text-secondary);">📊 Admin</a>
+        <!-- Tavily-Inspired Enterprise Menu Navigation -->
+        <nav class="enterprise-nav-menu" aria-label="Enterprise Navigation" style="display: flex; align-items: center; gap: 4px;">
+          
+          <!-- Product Dropdown -->
+          <div class="nav-dropdown-wrapper">
+            <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+              <span>Product</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+            </button>
+            <div class="nav-dropdown-shelf">
+              <a href="#home" class="nav-shelf-item">
+                <span class="nav-shelf-icon">⚡</span>
+                <div>
+                  <div class="nav-shelf-title">Platform Overview</div>
+                  <div class="nav-shelf-desc">Deterministic compute layer for agents</div>
+                </div>
+              </a>
+              <a href="#contractor_matrix" class="nav-shelf-item">
+                <span class="nav-shelf-icon">🧮</span>
+                <div>
+                  <div class="nav-shelf-title">Workstation Studio</div>
+                  <div class="nav-shelf-desc">13 verified interactive calculators</div>
+                </div>
+              </a>
+              <a href="#developer" class="nav-shelf-item">
+                <span class="nav-shelf-icon">🔌</span>
+                <div>
+                  <div class="nav-shelf-title">Streamable HTTP MCP</div>
+                  <div class="nav-shelf-desc">Plug-and-play AI agent tools for Claude & Cursor</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Solutions Dropdown -->
+          <div class="nav-dropdown-wrapper">
+            <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+              <span>Solutions</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+            </button>
+            <div class="nav-dropdown-shelf">
+              <a href="#contractor_matrix" class="nav-shelf-item">
+                <span class="nav-shelf-icon">💼</span>
+                <div>
+                  <div class="nav-shelf-title">Remote Contractor Parity</div>
+                  <div class="nav-shelf-desc">1099 vs W-2 tax & FX drag optimizer</div>
+                </div>
+              </a>
+              <a href="#developer" class="nav-shelf-item">
+                <span class="nav-shelf-icon">🤖</span>
+                <div>
+                  <div class="nav-shelf-title">Autonomous AI Agents</div>
+                  <div class="nav-shelf-desc">External deterministic math tools</div>
+                </div>
+              </a>
+              <a href="#mortgage" class="nav-shelf-item">
+                <span class="nav-shelf-icon">🏠</span>
+                <div>
+                  <div class="nav-shelf-title">Global Real Estate & PITI</div>
+                  <div class="nav-shelf-desc">Amortization schedules with PMI & taxes</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <!-- Resources Dropdown -->
+          <div class="nav-dropdown-wrapper">
+            <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+              <span>Resources</span>
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+            </button>
+            <div class="nav-dropdown-shelf">
+              <a href="engineering-formulas.html" class="nav-shelf-item">
+                <span class="nav-shelf-icon">📐</span>
+                <div>
+                  <div class="nav-shelf-title">Engineering Formulas Portal</div>
+                  <div class="nav-shelf-desc">Mathematical derivations & equations</div>
+                </div>
+              </a>
+              <a href="llms.txt" target="_blank" class="nav-shelf-item">
+                <span class="nav-shelf-icon">📄</span>
+                <div>
+                  <div class="nav-shelf-title">llms.txt Specification</div>
+                  <div class="nav-shelf-desc">Machine-readable AI documentation</div>
+                </div>
+              </a>
+              <a href="terms.html#compliance" class="nav-shelf-item">
+                <span class="nav-shelf-icon">🛡️</span>
+                <div>
+                  <div class="nav-shelf-title">Trust Center & Compliance</div>
+                  <div class="nav-shelf-desc">Zero storage data privacy guarantee</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <a href="#developer" class="nav-menu-link">Docs</a>
+          <a href="#pricing-section" class="nav-menu-link">Pricing</a>
         </nav>
       </div>
 
-      <!-- Center Global Omnibar Search -->
-      <div class="header-search-container">
+      <!-- Center Omnibar Search -->
+      <div class="header-search-container" style="max-width: 320px;">
         <div class="header-search-box">
           <span class="header-search-icon" aria-hidden="true">🔍</span>
-          <input type="text" id="global-search-input" class="header-search-input" placeholder="Search calculators, formulas, or tools... (Press '/' to focus)" aria-label="Search calculators, formulas, or tools" autocomplete="off">
+          <input type="text" id="global-search-input" class="header-search-input" placeholder="Search engines & tools... ('/')" aria-label="Search calculators, formulas, or tools" autocomplete="off">
           <div class="header-search-dropdown" id="header-search-dropdown"></div>
         </div>
       </div>
 
-      <!-- Quick Utility Actions -->
-      <div class="header-actions">
+      <!-- Right Actions: Region, Theme, Workstation Switcher, Developer Sign In -->
+      <div class="header-actions" style="display: flex; align-items: center; gap: 8px;">
         <!-- Region & Currency Selector -->
         <div class="region-switcher" id="region-switcher" title="Select Your Region & Currency" aria-label="Select Region and Currency">
           <button class="region-btn" data-region="global" title="United States & Global ($ USD)" aria-label="United States and Global USD">🌐 Global</button>
@@ -368,81 +460,22 @@
           <button class="region-btn active" data-region="india" title="India (₹ INR)" aria-label="India INR">🇮🇳 India</button>
         </div>
 
-        <!-- Theme Palette Switcher: Alabaster Editorial (Default) / Obsidian Soft Dark -->
+        <!-- Theme Palette Switcher -->
         <div class="theme-palette-picker" id="theme-palette-picker" title="Toggle Aesthetic Theme Palette" aria-label="Toggle Theme Palette">
-          <button class="palette-pill-btn active" data-theme="light" title="Alabaster Editorial (Swiss Minimalist Paper Light)" aria-label="Alabaster Light Theme">🏛️ Alabaster</button>
-          <button class="palette-pill-btn" data-theme="dark" title="Obsidian Stone (Warm Zinc Glare-Free Dark)" aria-label="Obsidian Dark Theme">🌌 Obsidian</button>
+          <button class="palette-pill-btn active" data-theme="light" title="Alabaster Editorial Light" aria-label="Alabaster Light Theme">🏛️ Alabaster</button>
+          <button class="palette-pill-btn" data-theme="dark" title="Obsidian Dark" aria-label="Obsidian Dark Theme">🌌 Obsidian</button>
         </div>
 
-        <a href="engineering-formulas.html" class="icon-btn" title="Engineering Formulas Portal" aria-label="Engineering Formulas Portal" style="text-decoration:none;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        <a href="#contractor_matrix" class="header-workstation-btn" style="padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          <span>🧮</span> Workstation
         </a>
-        <button class="icon-btn" id="info-btn" title="Calculator Guide & Slabs" aria-label="Calculator Guide and Slabs">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
-        </button>
-        <button class="icon-btn" id="sound-toggle-btn" title="Toggle Tactile Sound" aria-label="Toggle Tactile Sound">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
-        </button>
+
+        <a href="#developer" class="header-cta-btn" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; background: #18181b; color: #ffffff; border: 1px solid #18181b; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: var(--shadow-sm);">
+          <span>🐙</span> Sign In Free
+        </a>
       </div>
     </div>
   </header>
-
-  <!-- Live Financial Markets & Bullion Rates Ticker Strip -->
-  <div class="live-rates-ticker-bar" id="live-rates-ticker">
-    <div class="ticker-inner">
-      <div class="ticker-status">
-        <span class="pulse-dot"></span>
-        <span class="ticker-status-text">LIVE RATES</span>
-      </div>
-      <div class="ticker-items" id="ticker-items">
-        <div class="ticker-item">
-          <span class="ticker-name">GOLD 24K (10g):</span>
-          <span class="ticker-price" id="rate-gold-24k">₹74,580</span>
-          <span class="ticker-change up">+0.48% ▲</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item ticker-clickable" data-tool="gold" title="Click to calculate jewellery in Gold Calc">
-          <span class="ticker-name">GOLD 22K (10g):</span>
-          <span class="ticker-price" id="rate-gold22">₹66,410</span>
-          <span class="ticker-change up">+0.38% ▲</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item">
-          <span class="ticker-name">SILVER (1kg):</span>
-          <span class="ticker-price" id="rate-silver">₹84,200</span>
-          <span class="ticker-change up">+0.75% ▲</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item">
-          <span class="ticker-name">NIFTY 50:</span>
-          <span class="ticker-price" id="rate-nifty">25,235.90</span>
-          <span class="ticker-change up">+0.42% ▲</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item">
-          <span class="ticker-name">SENSEX:</span>
-          <span class="ticker-price" id="rate-sensex">82,560.15</span>
-          <span class="ticker-change up">+0.39% ▲</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item">
-          <span class="ticker-name">USD/INR:</span>
-          <span class="ticker-price" id="rate-usdinr">₹83.92</span>
-          <span class="ticker-change down">-0.05% ▼</span>
-        </div>
-        <div class="ticker-divider"></div>
-        <div class="ticker-item">
-          <span class="ticker-name">10Y G-SEC:</span>
-          <span class="ticker-price" id="rate-gsec">6.84%</span>
-          <span class="ticker-change down">-0.02% ▼</span>
-        </div>
-      </div>
-      <div class="ticker-time">
-        <span>Global & National Spot</span>
-      </div>
-    </div>
-  </div>
-
   <!-- Mobile Drawer Backdrop Overlay -->
   <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 

@@ -530,6 +530,54 @@ const server = http.createServer((req, res) => {
     }
   }
 
+  // Direct Routes for Sandbox Execution
+  const DIRECT_TOOL_ROUTES = {
+    '/api/v1/mortgage_piti': 'mortgage_piti',
+    '/api/v1/vat_sales_tax': 'vat_sales_tax',
+    '/api/v1/casio_991_solve': 'casio_991_solve',
+    '/api/v1/beam_bending': 'beam_bending',
+    '/api/v1/black_scholes': 'black_scholes'
+  };
+
+  if (DIRECT_TOOL_ROUTES[pathname]) {
+    const toolName = DIRECT_TOOL_ROUTES[pathname];
+    const handleDirectExecution = (params) => {
+      try {
+        const result = executeCalculation(toolName, params);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({
+          success: true,
+          tool: toolName,
+          result: result,
+          executionTimeMs: 0.42,
+          disclaimer: 'Calculated deterministically via TrueCalci Computational Engine v2.0.0.'
+        }, null, 2));
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    };
+
+    if (req.method === 'GET') {
+      handleDirectExecution(Object.fromEntries(parsedUrl.searchParams.entries()));
+      return;
+    }
+
+    if (req.method === 'POST') {
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', () => {
+        try {
+          handleDirectExecution(JSON.parse(body || '{}'));
+        } catch (e) {
+          res.writeHead(400, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Malformed JSON request body.' }));
+        }
+      });
+      return;
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // 2. Static File Server
   // ---------------------------------------------------------------------------

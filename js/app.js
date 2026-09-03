@@ -12,6 +12,7 @@ import { ViewBasic } from "./views/view-basic.js";
 import { ViewProgrammer } from "./views/view-programmer.js";
 import { ViewAdminPortal } from "./views/view-admin-portal.js";
 import { ViewDeveloperPortal } from "./views/view-developer-portal.js";
+import { ViewEnterpriseHome } from "./views/view-enterprise-home.js";
 import { CALCULATOR_DEFINITIONS } from "./data/definitions.js";
 import { analytics } from "./analytics.js";
 import { ContractorMatrixEngine } from "./engines/contractor-matrix.js";
@@ -21,7 +22,7 @@ window.ContractorMatrixEngine = ContractorMatrixEngine;
 class CalculatorApp {
   constructor() {
     this.validTools = [
-      "contractor_matrix", "mortgage", "vat", "tip", "compound",
+      "home", "contractor_matrix", "mortgage", "vat", "tip", "compound",
       "tax", "gst", "sip", "fd", "gold", 
       "ppf", "ssy", "home_loan", "land", 
       "calci_991", "basic", "programmer",
@@ -38,7 +39,7 @@ class CalculatorApp {
     } else if (hostname.startsWith("developer.") || hostname.startsWith("api.") || initialHash === "developer" || initialHash === "api" || initialView === "developer") {
       this.currentTool = "developer";
     } else {
-      this.currentTool = this.validTools.includes(initialHash) ? initialHash : "contractor_matrix";
+      this.currentTool = this.validTools.includes(initialHash) ? initialHash : "home";
     }
 
     this.currentAdminView = null;
@@ -130,7 +131,7 @@ class CalculatorApp {
   }
 
   initTheme() {
-    const savedTheme = localStorage.getItem("calc_theme") || "dark";
+    const savedTheme = localStorage.getItem("calc_theme") || "light";
     this.setTheme(savedTheme, false);
 
     document.querySelectorAll(".palette-pill-btn").forEach(btn => {
@@ -318,7 +319,7 @@ class CalculatorApp {
 
     // Browser Back / Forward Hash Change Listener
     window.addEventListener("hashchange", () => {
-      const hashTool = window.location.hash.replace("#", "").trim();
+      const hashTool = window.location.hash.replace("#", "").trim() || "home";
       if (this.validTools.includes(hashTool) && hashTool !== this.currentTool) {
         this.loadTool(hashTool, false);
       }
@@ -471,6 +472,15 @@ class CalculatorApp {
     if (this.currentAdminView) {
       this.currentAdminView.destroy();
       this.currentAdminView = null;
+    }
+
+    document.body.dataset.view = toolKey;
+
+    if (toolKey === "home") {
+      this.workspaceEl.innerHTML = `<div id="tool-view-mount"></div>`;
+      const mountEl = document.getElementById("tool-view-mount");
+      new ViewEnterpriseHome(mountEl, (nextTool) => this.loadTool(nextTool, true)).render();
+      return;
     }
 
     if (toolKey === "admin") {

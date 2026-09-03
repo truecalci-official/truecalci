@@ -970,4 +970,148 @@ body {
   animation: pulseDot 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
 }
 
+/* Tavily-Style Enterprise Navigation Dropdowns */
+.enterprise-nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@media (max-width: 900px) {
+  .enterprise-nav-menu {
+    display: none !important;
+  }
+}
+
+.nav-dropdown-wrapper {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nav-dropdown-trigger:hover,
+.nav-dropdown-wrapper:hover .nav-dropdown-trigger {
+  color: var(--text-primary);
+  background: var(--bg-subtle);
+}
+
+.nav-dropdown-shelf {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 280px;
+  padding: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1000;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.nav-dropdown-wrapper:hover .nav-dropdown-shelf {
+  display: flex;
+  animation: fadeInDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.nav-shelf-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.nav-shelf-item:hover {
+  background: var(--bg-subtle);
+}
+
+.nav-shelf-icon {
+  font-size: 1.15rem;
+  margin-top: 1px;
+}
+
+.nav-shelf-title {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.nav-shelf-desc {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.nav-menu-link {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.nav-menu-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-subtle);
+}
+
+/* Full-Width Enterprise Homepage Layout Override */
+body[data-view="home"] .app-sidebar-nav,
+body[data-view="home"] .app-sidebar-ad,
+body[data-view="developer"] .app-sidebar-nav,
+body[data-view="developer"] .app-sidebar-ad,
+body[data-view="admin"] .app-sidebar-nav,
+body[data-view="admin"] .app-sidebar-ad {
+  display: none !important;
+}
+
+body[data-view="home"] .app-layout-grid,
+body[data-view="developer"] .app-layout-grid,
+body[data-view="admin"] .app-layout-grid {
+  grid-template-columns: 1fr !important;
+  max-width: 1440px !important;
+  padding: 0 1rem !important;
+}
+
+body[data-view="home"] .app-workspace,
+body[data-view="developer"] .app-workspace,
+body[data-view="admin"] .app-workspace {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 
