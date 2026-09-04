@@ -2,6 +2,7 @@
 # Production Host: https://truecalci.com
 
 User-agent: *
+Disallow: /api/
 Allow: /
 Allow: /llms.txt
 Allow: /llms-full.txt

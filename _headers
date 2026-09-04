@@ -3,6 +3,9 @@
   TDM-Reservation: 0
   Link: </.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </.well-known/mcp.json>; rel="describedby"
 
+/api/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
 /.well-known/api-catalog
   Content-Type: application/linkset+json; charset=utf-8
 

@@ -29,4 +29,8 @@ Thumbs.db
 # Python
 __pycache__/
 *.py[cod]
+.venv/
+
+# IDE
+.vscode/
 
