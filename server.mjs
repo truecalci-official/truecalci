@@ -378,6 +378,7 @@ function executeCalculation(toolName, params) {
         compoundingFrequency: Number(params.compoundingFrequency || params.compoundFrequency || 12)
       });
 
+    case 'tax_in':
     case 'indian_income_tax':
     case 'tax':
       return IndianFinanceEngine.calculateIncomeTax({
@@ -1102,8 +1103,17 @@ const server = http.createServer(async (req, res) => {
 
   // Direct Routes for Sandbox Execution
   const DIRECT_TOOL_ROUTES = {
-    '/api/v1/mortgage_piti': 'mortgage_piti',
+    '/api/v1/contractor-parity': 'contractor_takehome_matrix',
+    '/api/v1/contractor_parity': 'contractor_takehome_matrix',
+    '/api/v1/tax-in': 'tax_in',
+    '/api/v1/tax_in': 'tax_in',
+    '/api/v1/tax': 'tax_in',
+    '/api/v1/vat-sales-tax': 'vat_sales_tax',
     '/api/v1/vat_sales_tax': 'vat_sales_tax',
+    '/api/v1/mortgage-piti': 'mortgage_piti',
+    '/api/v1/mortgage_piti': 'mortgage_piti',
+    '/api/v1/compound-wealth': 'compound_wealth',
+    '/api/v1/compound_wealth': 'compound_wealth',
     '/api/v1/casio_991_solve': 'casio_991_solve',
     '/api/v1/beam_bending': 'beam_bending',
     '/api/v1/black_scholes': 'black_scholes',
@@ -1214,6 +1224,8 @@ const server = http.createServer(async (req, res) => {
   // ---------------------------------------------------------------------------
   if (pathname === '/' || pathname === '') {
     pathname = '/index.html';
+  } else if (pathname === '/pricing') {
+    pathname = '/pricing.html';
   }
 
   const filePath = path.join(__dirname, pathname);

@@ -493,7 +493,7 @@ function executeTool(toolName, params) {
     });
   }
 
-  if (t === "indian_income_tax" || t === "tax") {
+  if (t === "indian_income_tax" || t === "tax" || t === "tax_in") {
     return IndianFinanceEngine.calculateIncomeTax({
       grossIncome: Number(params.ctc || params.income || params.grossIncome),
       isSalaried: params.isSalaried !== false
@@ -736,6 +736,20 @@ export default {
     // 3.5. Authentication & OAuth Endpoints (GitHub & Google)
     // -------------------------------------------------------------------------
     const cleanPath = url.pathname.replace(/\/+$/, "") || "/";
+
+    // -------------------------------------------------------------------------
+    // 3.4. Dedicated Standalone Pricing Page Route (/pricing & /pricing.html)
+    // -------------------------------------------------------------------------
+    if (cleanPath === "/pricing" || cleanPath === "/pricing.html") {
+      const pageRes = await env.ASSETS.fetch(new Request(new URL("/pricing.html", request.url), request));
+      const newHeaders = new Headers(pageRes.headers);
+      newHeaders.set("Content-Type", "text/html; charset=utf-8");
+      newHeaders.set("Link", LINK_HEADER);
+      return new Response(pageRes.body, {
+        status: 200,
+        headers: newHeaders
+      });
+    }
 
     if (cleanPath === "/api/auth/github") {
       const clientId = env.GITHUB_CLIENT_ID || "Ov23liKzTySirwshmW8f";
@@ -1163,16 +1177,19 @@ export default {
       "/api/v1/contractor-parity": "contractor_parity",
       "/api/v1/contractor_parity": "contractor_parity",
       "/api/v1/contractor_takehome_matrix": "contractor_parity",
-      "/api/v1/mortgage_piti": "mortgage_piti",
-      "/api/v1/mortgage": "mortgage_piti",
+      "/api/v1/tax-in": "tax_in",
+      "/api/v1/tax_in": "tax_in",
+      "/api/v1/tax": "tax_in",
+      "/api/v1/indian_income_tax": "tax_in",
+      "/api/v1/vat-sales-tax": "vat_sales_tax",
       "/api/v1/vat_sales_tax": "vat_sales_tax",
       "/api/v1/vat": "vat_sales_tax",
-      "/api/v1/tip_splitter": "tip_splitter",
-      "/api/v1/tip": "tip_splitter",
+      "/api/v1/mortgage-piti": "mortgage_piti",
+      "/api/v1/mortgage_piti": "mortgage_piti",
+      "/api/v1/mortgage": "mortgage_piti",
+      "/api/v1/compound-wealth": "compound_wealth",
       "/api/v1/compound_wealth": "compound_wealth",
       "/api/v1/compound": "compound_wealth",
-      "/api/v1/indian_income_tax": "indian_income_tax",
-      "/api/v1/tax": "indian_income_tax",
       "/api/v1/sip_investment": "sip_investment",
       "/api/v1/sip": "sip_investment",
       "/api/v1/home_loan_emi": "home_loan_emi",

@@ -1,4 +1,6 @@
 {
+  "name": "truecalci",
+  "type": "module",
   "devDependencies": {
     "wrangler": "^4.128.0"
   }

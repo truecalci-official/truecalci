@@ -71,21 +71,21 @@ export class ViewEnterpriseHome {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 Contractor Parity
               </button>
-              <button class="hero-tool-tab" data-tool="casio_991_solve" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
-                Casio 991 Solver
+              <button class="hero-tool-tab" data-tool="tax_in" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Tax Year 2026-27 (ITA 2025)
+              </button>
+              <button class="hero-tool-tab" data-tool="vat_sales_tax" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                VAT & Sales Tax
               </button>
               <button class="hero-tool-tab" data-tool="mortgage_piti" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 US Mortgage PITI
               </button>
-              <button class="hero-tool-tab" data-tool="beam_bending" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
-                Beam Deflection
-              </button>
-              <button class="hero-tool-tab" data-tool="black_scholes" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                Black-Scholes Delta
+              <button class="hero-tool-tab" data-tool="compound_wealth" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                Compound Wealth
               </button>
             </div>
 
@@ -106,7 +106,24 @@ export class ViewEnterpriseHome {
                 <span style="font-size: 0.74rem; font-family: var(--font-mono); color: #a1a1aa;">Deterministic Edge Output</span>
                 <button id="hero-copy-output-btn" type="button" style="font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.1); color: #ffffff; border: 1px solid rgba(255,255,255,0.15); cursor: pointer;">Copy Result</button>
               </div>
-              <pre id="hero-sandbox-response" style="margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: #34d399; max-height: 180px; overflow-y: auto; white-space: pre-wrap;">Click "Run Query" to execute sub-millisecond calculation at Cloudflare edge...</pre>
+              <pre id="hero-sandbox-response" style="margin: 0; font-family: var(--font-mono); font-size: 0.8rem; color: #34d399; max-height: 180px; overflow-y: auto; white-space: pre-wrap;">{
+  "success": true,
+  "tool": "contractor_parity",
+  "executionTimeMs": 0.42,
+  "result": {
+    "equivalentHourlyRate": 92.45,
+    "netSpendable1099": 108420,
+    "netSpendableW2": 96540,
+    "parityAdvantage": "1099 (+12.3%)",
+    "ficaEffective": 15.3,
+    "qbiDeduction": 16400
+  },
+  "quota": {
+    "limit": 100,
+    "remaining": 99,
+    "resetsInSeconds": 2592000
+  }
+}</pre>
             </div>
           </div>
         </section>
@@ -245,9 +262,22 @@ export class ViewEnterpriseHome {
           <input id="hero-sb-crate" type="number" value="85" placeholder="1099 Hourly Rate ($/hr)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
         </div>
       `;
-    } else if (this.activeSandboxTool === "casio_991_solve") {
+    } else if (this.activeSandboxTool === "tax_in") {
       container.innerHTML = `
-        <input id="hero-sb-expr" type="text" value="2x + 8 = 24" placeholder="Algebraic Equation (e.g. 2x + 8 = 24)" style="width: 100%; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <input id="hero-sb-tax-income" type="number" value="1275000" placeholder="Gross Salary (₹)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+          <select id="hero-sb-tax-regime" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+            <option value="new" selected>New Regime (TY 2026-27 / ITA 2025)</option>
+            <option value="old">Old Regime (80C / 80D)</option>
+          </select>
+        </div>
+      `;
+    } else if (this.activeSandboxTool === "vat_sales_tax") {
+      container.innerHTML = `
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <input id="hero-sb-vat-amount" type="number" value="1000" placeholder="Amount ($/€)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+          <input id="hero-sb-vat-rate" type="number" value="20" placeholder="VAT Rate (%)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+        </div>
       `;
     } else if (this.activeSandboxTool === "mortgage_piti") {
       container.innerHTML = `
@@ -256,18 +286,11 @@ export class ViewEnterpriseHome {
           <input id="hero-sb-rate" type="number" step="0.1" value="6.75" placeholder="Interest Rate (%)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
         </div>
       `;
-    } else if (this.activeSandboxTool === "beam_bending") {
+    } else if (this.activeSandboxTool === "compound_wealth") {
       container.innerHTML = `
         <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <input id="hero-sb-load" type="number" value="5000" placeholder="Load (Newtons)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
-          <input id="hero-sb-len" type="number" value="4" placeholder="Length (Meters)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
-        </div>
-      `;
-    } else if (this.activeSandboxTool === "black_scholes") {
-      container.innerHTML = `
-        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
-          <input id="hero-sb-spot" type="number" value="100" placeholder="Spot Price ($)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
-          <input id="hero-sb-strike" type="number" value="100" placeholder="Strike Price ($)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+          <input id="hero-sb-cw-monthly" type="number" value="500" placeholder="Monthly Deposit ($)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
+          <input id="hero-sb-cw-rate" type="number" step="0.5" value="8" placeholder="Expected Return (%)" style="flex: 1; min-width: 140px; padding: 8px 12px; font-size: 0.84rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color);">
         </div>
       `;
     }
@@ -301,13 +324,13 @@ export class ViewEnterpriseHome {
 res = requests.post(
     "https://truecalci.com/api/v1/contractor-parity",
     json={"w2Salary": 130000, "contractorHourlyRate": 85},
-    headers={"Authorization": "Bearer tc_live_your_key"}
+    headers={"Authorization": "Bearer tc_live_sandbox_token"}
 )
 print(res.json())`;
     } else if (this.activeCodeTab === "curl") {
       box.textContent = `curl -X POST https://truecalci.com/api/v1/contractor-parity \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer tc_live_your_key" \\
+  -H "Authorization: Bearer tc_live_sandbox_token" \\
   -d '{"w2Salary": 130000, "contractorHourlyRate": 85}'`;
     }
   }
@@ -326,6 +349,11 @@ print(res.json())`;
         tab.style.color = "#ffffff";
         this.activeSandboxTool = tab.dataset.tool;
         this.renderSandboxInputs();
+        
+        // Auto-run query on tab switch so response is immediately live
+        setTimeout(() => {
+          document.getElementById("hero-sandbox-run-btn")?.click();
+        }, 50);
       });
     });
 
@@ -353,31 +381,39 @@ print(res.json())`;
         runBtn.style.opacity = "0.7";
 
         let endpoint = `/api/v1/${this.activeSandboxTool}`;
-        if (this.activeSandboxTool === "contractor_parity") endpoint = "/api/v1/contractor-parity";
-
         let body = {};
+
         if (this.activeSandboxTool === "contractor_parity") {
+          endpoint = "/api/v1/contractor-parity";
           body = {
             w2Salary: Number(document.getElementById("hero-sb-w2")?.value || 130000),
             contractorHourlyRate: Number(document.getElementById("hero-sb-crate")?.value || 85)
           };
-        } else if (this.activeSandboxTool === "casio_991_solve") {
-          body = { expression: document.getElementById("hero-sb-expr")?.value || "2x + 8 = 24" };
+        } else if (this.activeSandboxTool === "tax_in") {
+          endpoint = "/api/v1/tax-in";
+          const income = Number(document.getElementById("hero-sb-tax-income")?.value || 1275000);
+          const regime = document.getElementById("hero-sb-tax-regime")?.value || "new";
+          body = { grossIncome: income, regime, taxYear: "2026-27", deductions80C: 0, health80D: 0 };
+        } else if (this.activeSandboxTool === "vat_sales_tax") {
+          endpoint = "/api/v1/vat-sales-tax";
+          const amount = Number(document.getElementById("hero-sb-vat-amount")?.value || 1000);
+          const vatRate = Number(document.getElementById("hero-sb-vat-rate")?.value || 20);
+          body = { amount, vatRatePercent: vatRate, mode: "add" };
         } else if (this.activeSandboxTool === "mortgage_piti") {
+          endpoint = "/api/v1/mortgage-piti";
           body = {
             homePrice: Number(document.getElementById("hero-sb-price")?.value || 450000),
-            interestRate: Number(document.getElementById("hero-sb-rate")?.value || 6.75)
+            interestRate: Number(document.getElementById("hero-sb-rate")?.value || 6.75),
+            downPaymentPercent: 20,
+            tenureYears: 30
           };
-        } else if (this.activeSandboxTool === "beam_bending") {
+        } else if (this.activeSandboxTool === "compound_wealth") {
+          endpoint = "/api/v1/compound-wealth";
           body = {
-            loadNewtons: Number(document.getElementById("hero-sb-load")?.value || 5000),
-            lengthMeters: Number(document.getElementById("hero-sb-len")?.value || 4)
-          };
-        } else if (this.activeSandboxTool === "black_scholes") {
-          body = {
-            spotPrice: Number(document.getElementById("hero-sb-spot")?.value || 100),
-            strikePrice: Number(document.getElementById("hero-sb-strike")?.value || 100),
-            timeToExpiryYears: 1
+            principal: 10000,
+            monthlyDeposit: Number(document.getElementById("hero-sb-cw-monthly")?.value || 500),
+            annualRatePercent: Number(document.getElementById("hero-sb-cw-rate")?.value || 8),
+            tenureYears: 15
           };
         }
 
@@ -404,6 +440,11 @@ print(res.json())`;
           runBtn.style.opacity = "1";
         }
       });
+
+      // Automatically execute calculation on load so the box is verified live
+      setTimeout(() => {
+        runBtn.click();
+      }, 100);
     }
 
     // Copy Output Button

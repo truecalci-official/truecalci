@@ -5,18 +5,17 @@
 
 export const SITE_CONFIG = {
   appName: "TrueCalci",
-  tagline: "Precision Global, Household & Engineering Calculator Suite",
+  tagline: "The Deterministic Compute Engine for AI Agents & Enterprise Teams",
   
   // Replace with your live production domain once purchased (e.g., https://truecalci.com)
   productionDomain: "https://truecalci.com",
   
   // Google Analytics 4 (GA4) Measurement ID (format: G-XXXXXXXXXX)
   // Get this free from https://analytics.google.com using your personal Gmail
-  gaMeasurementId: "G-XXXXXXXXXX",
+  gaMeasurementId: "",
   
   // Google Search Console (GSC) Verification Token
-  // Get this free from https://search.google.com/search-console using your personal Gmail
-  gscVerificationToken: "YOUR_GSC_VERIFICATION_TOKEN",
+  gscVerificationToken: "",
   
   // Developer & Environment Flags
   isLocalhost: typeof window !== "undefined" && (

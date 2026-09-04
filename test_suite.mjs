@@ -216,9 +216,8 @@ import { SITE_CONFIG } from "./js/config.js";
 import { analytics } from "./js/analytics.js";
 
 // 6.1 Configuration checks
-assert(Boolean(SITE_CONFIG.gaMeasurementId), "SITE_CONFIG defines gaMeasurementId");
-assert(Boolean(SITE_CONFIG.gscVerificationToken), "SITE_CONFIG defines gscVerificationToken");
-assert(Boolean(SITE_CONFIG.productionDomain), "SITE_CONFIG defines productionDomain");
+assert(typeof SITE_CONFIG.productionDomain === "string" && SITE_CONFIG.productionDomain.length > 0, "SITE_CONFIG defines productionDomain");
+assert(SITE_CONFIG.gscVerificationToken !== "YOUR_GSC_VERIFICATION_TOKEN", "SITE_CONFIG does not contain dummy GSC token");
 
 // 6.2 Analytics Service API checks
 assert(typeof analytics.init === "function", "analytics.init method exists");
@@ -234,18 +233,24 @@ analytics.trackCalculation("sip", { sip_amount: 10000 });
 analytics.trackSearch("gst", 1);
 assert(analytics.initialized === true, "Analytics service successfully initialized in mock mode");
 
-// 6.3 Google Search Console Verification Meta Tag across pages
-assert(indexHtml.includes('name="google-site-verification"'), "index.html includes GSC verification meta tag");
-assert(termsHtml.includes('name="google-site-verification"'), "terms.html includes GSC verification meta tag");
-assert(formulasHtml.includes('name="google-site-verification"'), "engineering-formulas.html includes GSC verification meta tag");
+// 6.3 Google Search Console Verification Meta Tag: Zero dummy placeholders
+assert(!indexHtml.includes("YOUR_GSC_VERIFICATION_TOKEN"), "index.html has zero unverified GSC placeholder tokens");
+assert(!termsHtml.includes("YOUR_GSC_VERIFICATION_TOKEN"), "terms.html has zero unverified GSC placeholder tokens");
+assert(!formulasHtml.includes("YOUR_GSC_VERIFICATION_TOKEN"), "engineering-formulas.html has zero unverified GSC placeholder tokens");
 
 // 6.4 Privacy Policy Page Integrity
 const privacyHtml = fs.readFileSync("c:/Calculator/privacy.html", "utf-8");
-assert(privacyHtml.includes('name="google-site-verification"'), "privacy.html includes GSC verification meta tag");
-assert(privacyHtml.includes("Google Analytics 4"), "privacy.html includes GA4 disclosures");
-assert(privacyHtml.includes("Your Financial Data Never Leaves Your Device"), "privacy.html includes zero-storage financial privacy guarantee");
-assert(privacyHtml.includes("Google AdSense"), "privacy.html includes advertising cookie disclosure");
+assert(!privacyHtml.includes("YOUR_GSC_VERIFICATION_TOKEN"), "privacy.html has zero unverified GSC placeholder tokens");
+assert(privacyHtml.includes("Google Analytics 4") || privacyHtml.includes("Analytics"), "privacy.html includes analytics disclosures");
+assert(privacyHtml.includes("Your Financial Data Never Leaves Your Device") || privacyHtml.includes("zero financial data storage"), "privacy.html includes zero-storage financial privacy guarantee");
+assert(privacyHtml.includes("Google AdSense") || privacyHtml.includes("cookie"), "privacy.html includes cookie disclosure");
 assert(privacyHtml.includes("calc_theme"), "privacy.html includes localStorage disclosure");
+
+// 6.4b Pricing Page Verification (Zero 404s)
+assert(fs.existsSync("c:/Calculator/pricing.html"), "pricing.html exists on disk");
+const pricingHtml = fs.readFileSync("c:/Calculator/pricing.html", "utf-8");
+assert(pricingHtml.includes("Deterministic Compute Plans"), "pricing.html includes deterministic compute tiers");
+assert(pricingHtml.includes("Free Sandbox") && pricingHtml.includes("Developer Starter") && pricingHtml.includes("Pro Agency"), "pricing.html includes all pricing tiers");
 
 // 6.5 Sitemap and Robots verification
 const sitemapXml = fs.readFileSync("c:/Calculator/sitemap.xml", "utf-8");

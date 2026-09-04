@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing & Plans — TrueCalci Deterministic Compute Engine</title>
+  <meta name="description" content="Transparent pricing for TrueCalci deterministic statutory and financial compute. 100 free requests, $5/mo Developer Starter (2,500 calls), and $15/mo Pro Agency (15,000 calls). Zero data storage, sub-1ms latency.">
+  
+  <link rel="canonical" href="https://truecalci.com/pricing">
+  <link rel="alternate" type="text/plain" href="https://truecalci.com/llms.txt" title="LLM Context">
+  <link rel="service-desc" type="application/json" href="https://truecalci.com/openapi.json">
+  <link rel="model-context-protocol" type="application/json" href="https://truecalci.com/.well-known/mcp.json">
+
+  <!-- AI Agent Content Signals -->
+  <meta name="content-signal" content="ai-train=yes, ai-input=yes, search=yes">
+  <meta name="tdm-reservation" content="0">
+  <meta name="ai-agent-ready" content="true">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TrueCalci Pricing — Deterministic Compute for AI Agents & Enterprise Teams">
+  <meta property="og:description" content="Sub-millisecond mathematical execution, 16 verified computational engines, and native MCP streamable endpoints. Transparent plans with zero data storage.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://truecalci.com/pricing">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/main.css?v=20260904_m3">
+  <link rel="stylesheet" href="css/components.css?v=20260904_m3">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "TrueCalci Deterministic Compute API",
+    "description": "High-precision deterministic calculation engine for AI agents and enterprise financial teams.",
+    "brand": {
+      "@type": "Brand",
+      "name": "TrueCalci"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free Sandbox",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "100 requests per month with sub-millisecond edge latency and community support."
+      },
+      {
+        "@type": "Offer",
+        "name": "Developer Starter",
+        "price": "5",
+        "priceCurrency": "USD",
+        "description": "2,500 requests per month with Model Context Protocol (MCP) streamable HTTP and personal API key."
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro Agency & Scale",
+        "price": "15",
+        "priceCurrency": "USD",
+        "description": "15,000 requests per month with 50 req/sec concurrency, team seats, and priority support."
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Enterprise Global Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div style="display:flex; align-items:center; gap: 1.25rem;">
+        <a href="/" class="brand-area" aria-label="TrueCalci Home" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+          <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
+          <span class="brand-title" style="font-size: 1.18rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">TrueCalci</span>
+        </a>
+
+        <nav class="enterprise-nav-menu" aria-label="Enterprise Navigation" style="display: flex; align-items: center; gap: 4px;">
+          <a href="/#home" class="nav-menu-link">Platform</a>
+          <a href="/#contractor_matrix" class="nav-menu-link">Studio</a>
+          <a href="/#developer" class="nav-menu-link">Docs & MCP</a>
+          <a href="/pricing" class="nav-menu-link active" style="color: var(--accent-primary); font-weight: 600;">Pricing</a>
+        </nav>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="header-actions" style="display: flex; align-items: center; gap: 10px;">
+        <!-- Day / Night Theme Toggle -->
+        <button class="theme-icon-toggle-btn" id="theme-toggle-icon-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+
+        <a href="/#auth" class="btn btn-primary btn-sm" id="nav-get-started-btn" style="padding: 7px 14px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border-radius: 6px;">
+          Developer Sign In
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Pricing Page Content -->
+  <main class="pricing-view-root" style="max-width: 1280px; margin: 0 auto; padding: 48px 16px 80px;">
+    
+    <!-- Hero & Controls -->
+    <div style="text-align: center; margin-bottom: 44px;">
+      <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent-primary); font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Deterministic Compute • Instant Edge Activation
+      </div>
+      <h1 style="font-size: 2.4rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.03em; margin: 0 0 14px;">
+        Deterministic Compute Plans
+      </h1>
+      <p style="font-size: 1rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto 32px; line-height: 1.6;">
+        Sub-1ms mathematical execution, 16 verified statutory and financial engines, and native Model Context Protocol (MCP) streamable endpoints for autonomous AI agents and engineering platforms.
+      </p>
+
+      <!-- Toggle Bar: Currency & Billing Cycle -->
+      <div style="display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 18px; padding: 8px 20px; border-radius: 12px; background: var(--bg-surface); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+        
+        <!-- Currency Switcher -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Currency:</span>
+          <div style="display: flex; background: var(--bg-subtle); border-radius: 6px; padding: 2px;">
+            <button type="button" id="curr-btn-usd" class="pricing-curr-btn active" data-currency="usd" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: var(--accent-primary); color: #ffffff;">USD ($)</button>
+            <button type="button" id="curr-btn-inr" class="pricing-curr-btn" data-currency="inr" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">INR (₹)</button>
+          </div>
+        </div>
+
+        <div style="width: 1px; height: 20px; background: var(--border-color);"></div>
+
+        <!-- Annual Billing Switcher -->
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Billing:</span>
+          <div style="display: flex; background: var(--bg-subtle); border-radius: 6px; padding: 2px;">
+            <button type="button" id="cycle-btn-monthly" class="pricing-cycle-btn active" data-cycle="monthly" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: var(--accent-primary); color: #ffffff;">Monthly</button>
+            <button type="button" id="cycle-btn-annual" class="pricing-cycle-btn" data-cycle="annual" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">
+              Annual <span style="font-size: 0.68rem; padding: 1px 6px; border-radius: 4px; background: #10b981; color: #fff; margin-left: 3px;">Save up to 28%</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Card Transparent Pricing Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 56px;">
+      
+      <!-- Card 1: Free Sandbox -->
+      <div class="glass-card" style="padding: 32px 24px; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Evaluation</div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0 0 10px;">Free Sandbox</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 20px; min-height: 40px; line-height: 1.5;">Ideal for prototyping agent workflows and testing mathematical precision locally.</p>
+          
+          <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px;">
+            <span style="font-size: 2.4rem; font-weight: 800; color: var(--text-primary);" class="tier-price" data-usd-mo="0" data-usd-yr="0" data-inr-mo="0" data-inr-yr="0">$0</span>
+            <span style="font-size: 0.84rem; color: var(--text-muted);">/ month</span>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 24px;">Forever free, no credit card required</div>
+
+          <ul style="list-style: none; padding: 0; margin: 0 0 28px; font-size: 0.85rem; line-height: 2.1; color: var(--text-secondary);">
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <strong>100 free requests</strong> / month
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              All 16 deterministic engines
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Sub-1ms p50 edge latency
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Standard community support
+            </li>
+          </ul>
+        </div>
+        <a href="/#developer" class="btn btn-secondary" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; font-size: 0.88rem; border-radius: 8px;">
+          Start Free Sandbox
+        </a>
+      </div>
+
+      <!-- Card 2: Developer Starter -->
+      <div class="glass-card" style="padding: 32px 24px; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Individual Builders</div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0 0 10px;">Developer Starter</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 20px; min-height: 40px; line-height: 1.5;">For individual developers and production agent tools needing consistent monthly quota.</p>
+          
+          <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px;">
+            <span style="font-size: 2.4rem; font-weight: 800; color: var(--text-primary);" class="tier-price" id="starter-price-val" data-usd-mo="5" data-usd-yr="4" data-inr-mo="399" data-inr-yr="319">$5</span>
+            <span style="font-size: 0.84rem; color: var(--text-muted);">/ month</span>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 24px;" id="starter-billed-text">billed monthly</div>
+
+          <ul style="list-style: none; padding: 0; margin: 0 0 28px; font-size: 0.85rem; line-height: 2.1; color: var(--text-secondary);">
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <strong id="starter-calls-text">2,500 requests</strong> / month
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Personal API Key with zero expiry
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Native Streamable HTTP MCP
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              99.9% Global Edge SLA
+            </li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-secondary plan-checkout-btn" data-tier="starter" style="width: 100%; padding: 10px; font-weight: 600; font-size: 0.88rem; border-radius: 8px;">
+          Upgrade to Starter
+        </button>
+      </div>
+
+      <!-- Card 3: Pro Agency & Scale (Highlighted) -->
+      <div class="glass-card" style="padding: 32px 24px; border-radius: 14px; background: var(--bg-surface); border: 2px solid var(--accent-primary); position: relative; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-lg);">
+        <div style="position: absolute; top: -12px; right: 20px; background: var(--accent-primary); color: #fff; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; padding: 2px 10px; border-radius: 12px; letter-spacing: 0.05em;">
+          Most Popular
+        </div>
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Agencies & High Volume</div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0 0 10px;">Pro Agency & Scale</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 20px; min-height: 40px; line-height: 1.5;">Engineered for multi-agent platforms, payroll suites, and high-frequency production systems.</p>
+          
+          <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px;">
+            <span style="font-size: 2.4rem; font-weight: 800; color: var(--accent-primary);" class="tier-price" id="pro-price-val" data-usd-mo="15" data-usd-yr="12" data-inr-mo="1199" data-inr-yr="959">$15</span>
+            <span style="font-size: 0.84rem; color: var(--text-muted);">/ month</span>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 24px;" id="pro-billed-text">billed monthly</div>
+
+          <ul style="list-style: none; padding: 0; margin: 0 0 28px; font-size: 0.85rem; line-height: 2.1; color: var(--text-secondary);">
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <strong id="pro-calls-text">15,000 requests</strong> / month
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              50 req/sec edge concurrency
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Automated GST & European VAT tax invoicing
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Priority 2-hour engineering support
+            </li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-primary plan-checkout-btn" data-tier="pro" style="width: 100%; padding: 10px; font-weight: 600; font-size: 0.88rem; border-radius: 8px;">
+          Upgrade to Pro
+        </button>
+      </div>
+
+      <!-- Card 4: Enterprise Custom -->
+      <div class="glass-card" style="padding: 32px 24px; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">Mission-Critical</div>
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary); margin: 0 0 10px;">Enterprise Custom</h3>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0 0 20px; min-height: 40px; line-height: 1.5;">Dedicated compute pipelines, custom statutory rulesets, and contractual zero-retention SLAs.</p>
+          
+          <div style="display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px;">
+            <span style="font-size: 2.2rem; font-weight: 800; color: var(--text-primary);">Custom</span>
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 24px;">Annual invoicing & custom terms</div>
+
+          <ul style="list-style: none; padding: 0; margin: 0 0 28px; font-size: 0.85rem; line-height: 2.1; color: var(--text-secondary);">
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Unlimited requests & dedicated VPC egress
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Custom statutory slabs & jurisdiction rules
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              99.99% contractual uptime SLA
+            </li>
+            <li style="display:flex; align-items:center; gap:8px;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Dedicated Solutions Engineer & Slack channel
+            </li>
+          </ul>
+        </div>
+        <a href="mailto:truecalci.official@gmail.com?subject=Enterprise%20Compute%20Inquiry" class="btn btn-secondary" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-weight: 600; font-size: 0.88rem; border-radius: 8px;">
+          Contact Enterprise Sales
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Feature Comparison Matrix -->
+    <div class="glass-card" style="padding: 32px; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-color); margin-bottom: 56px;">
+      <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--text-primary); margin: 0 0 20px;">Feature Matrix</h2>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.86rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border-color);">
+              <th style="padding: 12px; color: var(--text-primary);">Capability</th>
+              <th style="padding: 12px; color: var(--text-secondary);">Free Sandbox</th>
+              <th style="padding: 12px; color: var(--text-secondary);">Developer Starter</th>
+              <th style="padding: 12px; color: var(--accent-primary);">Pro Agency</th>
+              <th style="padding: 12px; color: var(--text-secondary);">Enterprise</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Monthly Request Quota</td>
+              <td style="padding: 12px;">100</td>
+              <td style="padding: 12px;">2,500</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">15,000</td>
+              <td style="padding: 12px;">Custom / Unlimited</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Execution Latency (p50)</td>
+              <td style="padding: 12px;">&lt;1.0ms</td>
+              <td style="padding: 12px;">&lt;0.8ms</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">&lt;0.4ms</td>
+              <td style="padding: 12px;">Dedicated Edge Isolation</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Model Context Protocol (MCP)</td>
+              <td style="padding: 12px;">WebMCP</td>
+              <td style="padding: 12px;">Streamable HTTP</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">Streamable HTTP + SSE</td>
+              <td style="padding: 12px;">Custom Protocol Handlers</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Statutory Verification Guarantees</td>
+              <td style="padding: 12px;">✓ Standard</td>
+              <td style="padding: 12px;">✓ Standard</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">✓ Verified Rule Engine</td>
+              <td style="padding: 12px;">Custom Legal Sign-off</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Zero Data Retention Guarantee</td>
+              <td style="padding: 12px;">✓ 100% In-Memory</td>
+              <td style="padding: 12px;">✓ 100% In-Memory</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">✓ 100% In-Memory</td>
+              <td style="padding: 12px;">Signed DPA Agreement</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">SLA & Uptime</td>
+              <td style="padding: 12px;">Best Effort</td>
+              <td style="padding: 12px;">99.9%</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">99.95%</td>
+              <td style="padding: 12px;">99.99% Contractual</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Zero Storage Guarantee Banner -->
+    <div style="padding: 24px; border-radius: 12px; background: var(--bg-subtle); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 56px;">
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">Enterprise Zero-Storage Guarantee</div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary);">Calculations execute in ephemeral V8 memory isolates. Inputs are discarded immediately upon response generation.</div>
+        </div>
+      </div>
+      <a href="privacy.html" class="btn btn-secondary btn-sm" style="font-size: 0.82rem; text-decoration: none; padding: 6px 14px; border-radius: 6px;">View Trust Center →</a>
+    </div>
+
+    <!-- Pricing FAQ -->
+    <div style="margin-bottom: 60px;">
+      <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0 0 24px; text-align: center;">Frequently Asked Questions</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How are monthly calls counted?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Every successful HTTP POST to a `/api/v1/*` endpoint or MCP `tools/call` execution decrements your monthly quota by 1. Preflight OPTIONS and schema inspection queries do not consume quota.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Do you store any of my computational inputs?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">No. TrueCalci guarantees zero persistent storage for computational payloads. All statutory algorithms run inside transient Cloudflare V8 memory isolates and are wiped immediately.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Which payment methods do you accept?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">We accept global Visa, Mastercard, American Express, Apple Pay, and Google Pay. For Indian developers, we natively support UPI AutoPay and RuPay via Dodo Payments (Merchant of Record).</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Can I cancel or upgrade at any time?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Yes. Upgrades take effect immediately with prorated billing. You can cancel with a single click from your Subscriptions dashboard, and access continues until the end of your billing cycle.</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="app-footer" style="margin-top: 40px; border-top: 1px solid var(--border-color); background: var(--bg-surface); padding: 48px 0 24px;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 40px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+            <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" style="width: 26px; height: 26px; border-radius: 6px;">
+            <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary);">TrueCalci</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 14px;">
+            Deterministic statutory & financial compute engine for autonomous AI agents and enterprise financial systems.
+          </p>
+        </div>
+
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px; letter-spacing: 0.04em;">Product</div>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2.1;">
+            <li><a href="/#home" style="color: var(--text-secondary); text-decoration: none;">Overview</a></li>
+            <li><a href="/#mortgage" style="color: var(--text-secondary); text-decoration: none;">Workstation Studio</a></li>
+            <li><a href="/pricing" style="color: var(--text-secondary); text-decoration: none;">Pricing Plans</a></li>
+            <li><a href="/#developer" style="color: var(--text-secondary); text-decoration: none;">Streamable MCP Server</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px; letter-spacing: 0.04em;">Solutions</div>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2.1;">
+            <li><a href="/#contractor_matrix" style="color: var(--text-secondary); text-decoration: none;">Remote Contractor Parity</a></li>
+            <li><a href="/#mortgage" style="color: var(--text-secondary); text-decoration: none;">Mortgage PITI & PMI</a></li>
+            <li><a href="/#tax" style="color: var(--text-secondary); text-decoration: none;">Income Tax & Slabs</a></li>
+            <li><a href="/#developer" style="color: var(--text-secondary); text-decoration: none;">Autonomous AI Agents</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px; letter-spacing: 0.04em;">Resources</div>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2.1;">
+            <li><a href="engineering-formulas.html" style="color: var(--text-secondary); text-decoration: none;">Engineering Formulas</a></li>
+            <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Tax Slabs & Schedules</a></li>
+            <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy & Data Protection</a></li>
+            <li><a href="/#developer" style="color: var(--text-secondary); text-decoration: none;">API Documentation</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-primary); text-transform: uppercase; margin-bottom: 14px; letter-spacing: 0.04em;">Company & Trust</div>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: 0.84rem; line-height: 2.1;">
+            <li><a href="/#admin" style="color: var(--text-secondary); text-decoration: none;">Admin Telemetry</a></li>
+            <li><a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Service</a></li>
+            <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a></li>
+            <li><a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Trust Center & Compliance</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="padding-top: 18px; border-top: 1px solid var(--border-color); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; font-size: 0.78rem; color: var(--text-muted);">
+        <div>© 2026 TrueCalci Inc. All rights reserved. Precision deterministic compute at Cloudflare Edge.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px;">
+          <a href="terms.html" style="color: var(--text-secondary); text-decoration: none;">Terms of Service</a>
+          <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
+          <a href="privacy.html#cookies" style="color: var(--text-secondary); text-decoration: none;">Cookie Notice</a>
+          <a href="engineering-formulas.html" style="color: var(--text-secondary); text-decoration: none;">Formulas</a>
+          <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Trust Center</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Interactive Logic Script for Currency & Cycle -->
+  <script>
+    (function() {
+      let currentCurrency = localStorage.getItem("calc_region") === "india" ? "inr" : "usd";
+      let currentCycle = "monthly";
+
+      const currBtnUsd = document.getElementById("curr-btn-usd");
+      const currBtnInr = document.getElementById("curr-btn-inr");
+      const cycleBtnMonthly = document.getElementById("cycle-btn-monthly");
+      const cycleBtnAnnual = document.getElementById("cycle-btn-annual");
+
+      const starterPrice = document.getElementById("starter-price-val");
+      const starterBilled = document.getElementById("starter-billed-text");
+      const starterCalls = document.getElementById("starter-calls-text");
+
+      const proPrice = document.getElementById("pro-price-val");
+      const proBilled = document.getElementById("pro-billed-text");
+      const proCalls = document.getElementById("pro-calls-text");
+
+      function updatePricing() {
+        const isIndia = currentCurrency === "inr";
+        const isAnnual = currentCycle === "annual";
+        const symbol = isIndia ? "₹" : "$";
+
+        // Update active buttons
+        if (currBtnUsd && currBtnInr) {
+          currBtnUsd.style.background = !isIndia ? "var(--accent-primary)" : "transparent";
+          currBtnUsd.style.color = !isIndia ? "#ffffff" : "var(--text-secondary)";
+          currBtnInr.style.background = isIndia ? "var(--accent-primary)" : "transparent";
+          currBtnInr.style.color = isIndia ? "#ffffff" : "var(--text-secondary)";
+        }
+
+        if (cycleBtnMonthly && cycleBtnAnnual) {
+          cycleBtnMonthly.style.background = !isAnnual ? "var(--accent-primary)" : "transparent";
+          cycleBtnMonthly.style.color = !isAnnual ? "#ffffff" : "var(--text-secondary)";
+          cycleBtnAnnual.style.background = isAnnual ? "var(--accent-primary)" : "transparent";
+          cycleBtnAnnual.style.color = isAnnual ? "#ffffff" : "var(--text-secondary)";
+        }
+
+        // Rates:
+        // Starter: USD 5/mo ($4/mo billed $48/yr), INR 399/mo (₹319/mo billed ₹3,828/yr)
+        // Pro: USD 15/mo ($12/mo billed $144/yr), INR 1,199/mo (₹959/mo billed ₹11,508/yr)
+        if (starterPrice) {
+          const val = isAnnual 
+            ? (isIndia ? 319 : 4) 
+            : (isIndia ? 399 : 5);
+          starterPrice.textContent = `${symbol}${val.toLocaleString()}`;
+        }
+        if (starterBilled) {
+          starterBilled.textContent = isAnnual
+            ? (isIndia ? "billed ₹3,828/yr (-20%)" : "billed $48/yr (-20%)")
+            : "billed monthly";
+        }
+        if (starterCalls) {
+          starterCalls.textContent = isAnnual
+            ? "30,000 calls / year upfront"
+            : "2,500 calls / month";
+        }
+
+        if (proPrice) {
+          const val = isAnnual
+            ? (isIndia ? 959 : 12)
+            : (isIndia ? 1199 : 15);
+          proPrice.textContent = `${symbol}${val.toLocaleString()}`;
+        }
+        if (proBilled) {
+          proBilled.textContent = isAnnual
+            ? (isIndia ? "billed ₹11,508/yr (-20%)" : "billed $144/yr (-20%)")
+            : "billed monthly";
+        }
+        if (proCalls) {
+          proCalls.textContent = isAnnual
+            ? "180,000 calls / year upfront"
+            : "15,000 calls / month";
+        }
+      }
+
+      currBtnUsd?.addEventListener("click", () => {
+        currentCurrency = "usd";
+        localStorage.setItem("calc_region", "global");
+        updatePricing();
+      });
+
+      currBtnInr?.addEventListener("click", () => {
+        currentCurrency = "inr";
+        localStorage.setItem("calc_region", "india");
+        updatePricing();
+      });
+
+      cycleBtnMonthly?.addEventListener("click", () => {
+        currentCycle = "monthly";
+        updatePricing();
+      });
+
+      cycleBtnAnnual?.addEventListener("click", () => {
+        currentCycle = "annual";
+        updatePricing();
+      });
+
+      // Checkout handler
+      document.querySelectorAll(".plan-checkout-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const tier = btn.dataset.tier;
+          localStorage.setItem("tc_active_tier", tier);
+          window.location.href = `/#subscriptions?tier=${tier}&cycle=${currentCycle}&currency=${currentCurrency}`;
+        });
+      });
+
+      // Theme toggle
+      const themeBtn = document.getElementById("theme-toggle-icon-btn");
+      const sunIcon = themeBtn?.querySelector(".theme-icon-sun");
+      const moonIcon = themeBtn?.querySelector(".theme-icon-moon");
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        localStorage.setItem("calc_theme", theme);
+        if (sunIcon && moonIcon) {
+          sunIcon.style.display = theme === "dark" ? "none" : "block";
+          moonIcon.style.display = theme === "dark" ? "block" : "none";
+        }
+      }
+
+      const savedTheme = localStorage.getItem("calc_theme") || "light";
+      applyTheme(savedTheme);
+
+      themeBtn?.addEventListener("click", () => {
+        const nextTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(nextTheme);
+      });
+
+      updatePricing();
+    })();
+  </script>
+
+</body>
+</html>
