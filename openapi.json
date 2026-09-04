@@ -231,6 +231,123 @@
           }
         }
       }
+    },
+    "/api/v1/remote/scorp": {
+      "post": {
+        "summary": "S-Corp Reasonable Salary & Tax Optimization",
+        "description": "Calculates S-Corp reasonable salary split, FICA tax savings on distributions, and net in-pocket savings minus payroll and CPA fees under IRS Rev. Rul. 74-44.",
+        "operationId": "calculateSCorpSavings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["netProfit"],
+                "properties": {
+                  "netProfit": { "type": "number", "example": 150000 },
+                  "salaryPercent": { "type": "number", "example": 55 },
+                  "payrollAnnualFee": { "type": "number", "example": 600 },
+                  "cpaAnnualFee": { "type": "number", "example": 1500 },
+                  "stateAnnualFee": { "type": "number", "example": 200 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "S-Corp tax shield and net savings"
+          }
+        }
+      }
+    },
+    "/api/v1/remote/retirement": {
+      "post": {
+        "summary": "Solo 401(k) vs SEP-IRA Retirement Tax Shield",
+        "description": "Calculates Solo 401(k) vs. SEP-IRA maximum legal pre-tax retirement deductions and immediate marginal tax savings under IRS Notice 2023-75 caps ($69,000 / $76,500).",
+        "operationId": "calculateRetirementShield",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["netEarnings"],
+                "properties": {
+                  "netEarnings": { "type": "number", "example": 120000 },
+                  "entityType": { "type": "string", "enum": ["llc", "scorp"], "example": "llc" },
+                  "isAge50Plus": { "type": "boolean", "example": false },
+                  "marginalTaxRatePercent": { "type": "number", "example": 28 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Retirement tax shelter comparison"
+          }
+        }
+      }
+    },
+    "/api/v1/remote/fx": {
+      "post": {
+        "summary": "Cross-Border Contractor Invoicing & FX Drag Optimizer",
+        "description": "Calculates cross-border USD contractor invoicing fee drag and net landed local currency across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wire.",
+        "operationId": "calculateFXDrag",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["invoiceUsd"],
+                "properties": {
+                  "invoiceUsd": { "type": "number", "example": 10000 },
+                  "targetCurrency": { "type": "string", "enum": ["EUR", "GBP", "CAD", "AUD", "INR", "SGD", "BRL", "MXN", "PHP"], "example": "EUR" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "FX landed payouts and fee comparison"
+          }
+        }
+      }
+    },
+    "/api/v1/remote/billable": {
+      "post": {
+        "summary": "Billable Hourly Rate Floor Solver",
+        "description": "Solves the true minimum billable hourly rate needed to net a target spendable cash income, factoring in 47 working weeks, non-billable buffer drag, and SECA taxes.",
+        "operationId": "calculateBillableFloor",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["targetNetCash"],
+                "properties": {
+                  "targetNetCash": { "type": "number", "example": 120000 },
+                  "annualExpenses": { "type": "number", "example": 8000 },
+                  "healthInsuranceAnnual": { "type": "number", "example": 7200 },
+                  "vacationWeeks": { "type": "number", "example": 4 },
+                  "nonBillablePercent": { "type": "number", "example": 28 },
+                  "filingStatus": { "type": "string", "enum": ["single", "mfj"], "example": "single" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Optimal billing floor and economic breakdown"
+          }
+        }
+      }
     }
   }
 }

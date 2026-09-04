@@ -61,6 +61,26 @@
       "id": "truecalci_indian_income_tax",
       "name": "Indian Income Tax Engine (Budget 2025-26)",
       "description": "Computes statutory New Tax Regime slabs with standard deduction, Section 87A rebate, and HNI surcharges."
+    },
+    {
+      "id": "truecalci_scorp_optimizer",
+      "name": "S-Corporation Reasonable Salary vs Dividend FICA Shield Solver",
+      "description": "Computes statutory FICA/SECA tax savings, corporate tax drag, payroll compliance overhead, and Section 199A QBI interplay."
+    },
+    {
+      "id": "truecalci_solo_401k_shield",
+      "name": "Solo 401(k) vs SEP-IRA Tax Shield & Mega-Backdoor Capacity Solver",
+      "description": "Calculates employee elective deferrals ($23,500), 25% employer non-elective profit sharing, and Section 415(c) caps ($70,000)."
+    },
+    {
+      "id": "truecalci_fx_invoicing",
+      "name": "Cross-Border FX Invoicing Rail Drag & Net Retention Engine",
+      "description": "Quantifies wire fees, intermediary correspondent deductions, and FX markup spreads across SWIFT, Wise, Stripe, and PayPal."
+    },
+    {
+      "id": "truecalci_billable_floor",
+      "name": "Billable Hourly Rate Floor & Capacity Solver",
+      "description": "Calculates minimum hourly billing rate accounting for non-billable overhead, utilization rate, self-employment taxes, and health reserves."
     }
   ]
 }

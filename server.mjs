@@ -11,6 +11,10 @@ import { ProgrammerEngine, UnitConverterEngine } from './js/engines/programmer-e
 import { EngineeringPhysicsEngine } from './js/engines/engineering-physics.js';
 import { StatisticsOptionsEngine } from './js/engines/statistics-options.js';
 import { ContractorMatrixEngine } from './js/engines/contractor-matrix.js';
+import { SCorpEngine } from './js/engines/scorp-engine.js';
+import { RetirementEngine } from './js/engines/retirement-engine.js';
+import { BillableRateEngine } from './js/engines/billable-engine.js';
+import { FXInvoicingEngine } from './js/engines/fx-engine.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -339,6 +343,47 @@ function executeCalculation(toolName, params) {
           selectedRail: params.selectedRail || 'wise'
         }
       );
+
+    case 'scorp_optimizer':
+    case 'scorp':
+      return SCorpEngine.calculate({
+        netProfit: Number(params.netProfit ?? 150000),
+        salaryPercent: Number(params.salaryPercent ?? 55),
+        payrollAnnualFee: Number(params.payrollAnnualFee ?? 600),
+        cpaAnnualFee: Number(params.cpaAnnualFee ?? 1500),
+        stateAnnualFee: Number(params.stateAnnualFee ?? 200),
+        manualSalary: params.manualSalary ? Number(params.manualSalary) : undefined
+      });
+
+    case 'solo_401k_shield':
+    case 'retirement':
+      return RetirementEngine.calculate({
+        netEarnings: Number(params.netEarnings ?? 120000),
+        entityType: params.entityType || 'llc',
+        isAge50Plus: params.isAge50Plus === true || params.isAge50Plus === 'true',
+        marginalTaxRatePercent: Number(params.marginalTaxRatePercent ?? 28)
+      });
+
+    case 'fx_invoicing':
+    case 'fx':
+      return FXInvoicingEngine.calculate({
+        invoiceUsd: Number(params.invoiceUsd ?? 10000),
+        targetCurrency: params.targetCurrency || 'EUR'
+      });
+
+    case 'billable_floor':
+    case 'billable':
+      return BillableRateEngine.calculate({
+        targetNetCash: Number(params.targetNetCash ?? 120000),
+        annualExpenses: Number(params.annualExpenses ?? 8000),
+        healthInsuranceAnnual: Number(params.healthInsuranceAnnual ?? 7200),
+        vacationWeeks: Number(params.vacationWeeks ?? 4),
+        sickHolidayWeeks: Number(params.sickHolidayWeeks ?? 1.5),
+        nominalHoursPerWeek: Number(params.nominalHoursPerWeek ?? 40),
+        nonBillablePercent: Number(params.nonBillablePercent ?? 28),
+        filingStatus: params.filingStatus || 'single',
+        stateTaxRatePercent: Number(params.stateTaxRatePercent ?? 5.0)
+      });
 
     case 'mortgage_piti':
     case 'mortgage':
@@ -1105,6 +1150,15 @@ const server = http.createServer(async (req, res) => {
   const DIRECT_TOOL_ROUTES = {
     '/api/v1/contractor-parity': 'contractor_takehome_matrix',
     '/api/v1/contractor_parity': 'contractor_takehome_matrix',
+    '/api/v1/remote/parity': 'contractor_takehome_matrix',
+    '/api/v1/remote/scorp': 'scorp_optimizer',
+    '/api/v1/remote/scorp-optimizer': 'scorp_optimizer',
+    '/api/v1/remote/retirement': 'solo_401k_shield',
+    '/api/v1/remote/solo-401k': 'solo_401k_shield',
+    '/api/v1/remote/fx': 'fx_invoicing',
+    '/api/v1/remote/fx-invoicing': 'fx_invoicing',
+    '/api/v1/remote/billable': 'billable_floor',
+    '/api/v1/remote/billable-floor': 'billable_floor',
     '/api/v1/tax-in': 'tax_in',
     '/api/v1/tax_in': 'tax_in',
     '/api/v1/tax': 'tax_in',

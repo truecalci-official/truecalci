@@ -155,6 +155,10 @@ sendRpc({ jsonrpc: "2.0", id: 102, method: "tools/call", params: { name: "invali
 // 4.4 Rapid Fire Valid Calls
 sendRpc({ jsonrpc: "2.0", id: 103, method: "tools/call", params: { name: "truecalci_vat_sales_tax", arguments: { amount: 2500, vatRatePercent: 19, mode: "remove" } } });
 sendRpc({ jsonrpc: "2.0", id: 104, method: "tools/call", params: { name: "truecalci_black_scholes", arguments: { stockPrice: 150, strikePrice: 150, timeToExpiryYears: 0.5, riskFreeRatePercent: 4.5, volatilityPercent: 30 } } });
+sendRpc({ jsonrpc: "2.0", id: 105, method: "tools/call", params: { name: "truecalci_scorp_optimizer", arguments: { netProfit: 160000, salaryPercent: 50 } } });
+sendRpc({ jsonrpc: "2.0", id: 106, method: "tools/call", params: { name: "truecalci_solo_401k_shield", arguments: { netEarnings: 100000 } } });
+sendRpc({ jsonrpc: "2.0", id: 107, method: "tools/call", params: { name: "truecalci_fx_invoicing", arguments: { invoiceUsd: 15000, targetCurrency: "EUR" } } });
+sendRpc({ jsonrpc: "2.0", id: 108, method: "tools/call", params: { name: "truecalci_billable_floor", arguments: { targetNetCash: 120000, vacationWeeks: 4 } } });
 
 setTimeout(() => {
   mcpProc.kill();
@@ -175,6 +179,18 @@ setTimeout(() => {
 
   const bsSuccess = lines.find(l => l.includes('"id":104') && l.includes('callPrice'));
   assert(bsSuccess !== undefined, "Rapid-fire call 104 (Black-Scholes 150 strike) computed successfully");
+
+  const scorpSuccess = lines.find(l => l.includes('"id":105') && l.includes('grossFicaSavings'));
+  assert(scorpSuccess !== undefined, "Rapid-fire call 105 (SCorp optimizer) computed successfully");
+
+  const retSuccess = lines.find(l => l.includes('"id":106') && l.includes('solo401k'));
+  assert(retSuccess !== undefined, "Rapid-fire call 106 (Solo 401k shield) computed successfully");
+
+  const fxSuccess = lines.find(l => l.includes('"id":107') && l.includes('optimalRail'));
+  assert(fxSuccess !== undefined, "Rapid-fire call 107 (FX invoicing) computed successfully");
+
+  const billableSuccess = lines.find(l => l.includes('"id":108') && l.includes('optimalHourlyRate'));
+  assert(billableSuccess !== undefined, "Rapid-fire call 108 (Billable floor) computed successfully");
 
   console.log("\n================================================================================");
   console.log(`STRESS VERIFICATION COMPLETE: ${passed} PASSED, ${failed} FAILED.`);

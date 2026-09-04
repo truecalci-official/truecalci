@@ -224,7 +224,68 @@ export const CALCULATOR_DEFINITIONS = {
       { label: "Wise Business Cross-Border", rate: "0.55% transparent FX drag vs. 7.9% PayPal drag" }
     ],
     workedExample: "Evaluating $130,000 W-2 vs. $85/hr 1099 (48 wks × 40 hrs = 1,920 hrs = $163,200 gross). W-2 employee pays $9,945 FICA + $18,340 federal tax + $5,770 state tax → Net Cash = $92,220/yr ($7,685/mo) + $12,400 benefits. 1099 contractor writes off $6,000 expenses, pays $21,080 SECA, deducts 50% SECA + $7,200 health, claims $26,500 QBI 20% deduction, and pays $19,850 income taxes → Net Cash = $103,320/yr ($8,610/mo). The 1099 offer yields +$1,140/month (+12.4%) more spendable cash! Exact breakeven rate is $78.42/hr."
+  },
+
+  // 14. S-Corp Reasonable Salary & Tax Shield Optimizer
+  scorp: {
+    title: "S-Corp vs. LLC Tax Optimization & Reasonable Salary",
+    category: "Global Freelance, Tech & Remote Work",
+    disclaimer: "Disclaimer: S-Corporation tax savings depend on establishing an IRS-defensible 'Reasonable Salary' under Revenue Ruling 74-44. Failure to pay reasonable compensation can trigger recharacterization audits. Consult a CPA to establish entity-level filings.",
+    overview: "Calculates the exact FICA tax shield achieved by electing S-Corporation status (IRS Form 2553 / 1120-S) vs. remaining a Disregarded LLC. Distributions are 100% exempt from the 15.3% Self-Employment Tax (SECA). Subtracts typical annual corporate overhead ($600 payroll + $1,500 CPA 1120-S filing + state franchise taxes) to determine true net cash in-pocket savings and the exact mathematical breakeven profit threshold.",
+    formulas: [
+      { name: "LLC SECA Baseline", formula: "SECA = Net Profit × 0.9235 × [12.4% (SS to $168,600) + 2.9% (Medicare) + 0.9% (Addl. Med > $200k)]" },
+      { name: "S-Corp FICA (Salary Only)", formula: "FICA = W-2 Salary × [12.4% (SS to $168,600) + 2.9% (Medicare) + 0.9% (Addl. Med > $200k)]" },
+      { name: "K-1 Shareholder Distribution", formula: "Distribution = Net Business Profit - W-2 Reasonable Salary (0% SECA Tax)" },
+      { name: "Net In-Pocket Savings", formula: "Net Savings = (LLC SECA - S-Corp FICA) - Annual Payroll Fee - CPA 1120-S Fee - State Fees" }
+    ],
+    workedExample: "At $150,000 net profit with a 55% reasonable salary ($82,500 salary, $67,500 K-1 distribution): LLC pays $21,194 SECA. S-Corp pays $12,623 FICA on salary. Gross tax shield = $8,571. Subtracting $600 payroll + $1,500 CPA + $200 state fees ($2,300 overhead) yields +$6,271/year (+$523/month) in cold hard cash! Mathematical breakeven occurs at ~$41,000 profit; CPA-recommended entry is ~$80,000."
+  },
+
+  // 15. Solo 401(k) vs SEP-IRA Retirement Shield
+  retirement: {
+    title: "Solo 401(k) vs. SEP-IRA Tax Shield Maximizer",
+    category: "Global Freelance, Tech & Remote Work",
+    disclaimer: "Disclaimer: Contribution limits governed by IRS Notice 2023-75. Solo 401(k) plans require adoption by December 31st of the tax year and IRS Form 5500-EZ once plan assets exceed $250,000.",
+    overview: "Calculates maximum legal tax-deductible retirement contributions for solo business owners, LLCs, and S-Corps. Compares the two-part structure of Solo 401(k) (Employee Deferral + 20-25% Employer Profit Share) against employer-only SEP-IRAs, computing immediate federal and state tax savings.",
+    formulas: [
+      { name: "Solo 401(k) Employee Deferral", formula: "Min(Plan Compensation, $23,000 [$30,500 if Age 50+])" },
+      { name: "Employer Profit Sharing", formula: "Corporate W-2: 25% of Salary | Unincorporated LLC: 20% of Adjusted Net Profit" },
+      { name: "Total 2024 Plan Maximum Cap", formula: "$69,000 ($76,500 if Age 50+) or 100% of Compensation" },
+      { name: "Immediate Cash Tax Shield", formula: "Cash Saved = Total Deductible Contribution × Marginal Tax Rate %" }
+    ],
+    workedExample: "At $120,000 net earnings (single, 29% marginal tax rate): SEP-IRA allows 20% employer contribution = $22,304 (saves $6,468 in tax). Solo 401(k) allows $23,000 employee deferral + $22,304 employer share = $45,304 total deduction (saves $13,138 in tax). Solo 401(k) shields an extra $23,000, putting +$6,670 directly back into your checking account!"
+  },
+
+  // 16. Cross-Border FX Invoicing Rail Optimizer
+  fx: {
+    title: "Global Invoicing & Cross-Border FX Rail Optimizer",
+    category: "Global Freelance, Tech & Remote Work",
+    disclaimer: "Disclaimer: Exchange rate benchmarks reflect live institutional mid-market rates. Retail spreads and provider platform transaction fees are based on published fee schedules for business/commercial accounts.",
+    overview: "Evaluates the exact take-home amount landed in your local currency account when invoicing international US/global clients in USD. Deconstructs hidden currency conversion markups, fixed wire fees, and payment platform commissions across Wise Business, Deel, Payoneer, Stripe, and PayPal.",
+    formulas: [
+      { name: "Net USD After Platform Commission", formula: "USD_Net = (Invoice_USD - Fixed_Fee) × (1 - Percent_Fee)" },
+      { name: "Effective Exchange Rate", formula: "Effective_Rate = Mid_Market_Rate × (1 - FX_Markup_Spread)" },
+      { name: "Landed Local Currency Payout", formula: "Landed_Local = USD_Net × Effective_Rate" },
+      { name: "Total Dollar Fee Drag", formula: "Fee_Drag_USD = Invoice_USD - (Landed_Local / Mid_Market_Rate)" }
+    ],
+    workedExample: "On a $10,000 USD contractor invoice converted to EUR (mid-market 0.92 = €9,200 theoretical): Wise (0.55% transparent fee, 0% markup) lands €9,149 ($51 total drag). PayPal (4.49% transaction + 3.5% FX spread) lands €8,479 ($784 total drag). Using Wise saves +$729 on a single invoice (+$8,748/year on monthly billing)!"
+  },
+
+  // 17. Billable Hourly Rate Floor & Burn Rate Solver
+  billable: {
+    title: "Billable Hourly Rate Floor & Burn Rate Solver",
+    category: "Global Freelance, Tech & Remote Work",
+    disclaimer: "Disclaimer: Illustrates required gross billing rates needed to achieve desired net spendable cash after statutory taxes, business expenses, and working-time reductions. Does not guarantee market pricing viability.",
+    overview: "Solves the true minimum billing rate ($/hr) needed to achieve your target net take-home salary. Incorporates the harsh economic realities of freelancing: 47 working weeks (vacation, holidays, sickness), 25–35% non-billable overhead buffer (sales, invoicing, admin), self-funded healthcare ($7,200/yr), software/hardware expenses, and 15.3% SECA taxes.",
+    formulas: [
+      { name: "Realistic Annual Working Weeks", formula: "Weeks = 52 - Vacation_Weeks - Holiday_Sick_Weeks (typically 46–47 wks)" },
+      { name: "Billable Hours Per Week", formula: "Billable_Hours = Nominal_Hours × (1 - Non_Billable_Admin_Percent)" },
+      { name: "Total Annual Billable Capacity", formula: "Annual_Billable = Working_Weeks × Billable_Hours (typically 1,300–1,400 hrs vs naive 2,080 hrs)" },
+      { name: "True Rate Floor", formula: "Binary search solving Hourly_Rate where Net_Spendable_Cash(Rate) ≥ Target_Net_Salary" }
+    ],
+    workedExample: "To take home $120,000 in spendable cash with 4 weeks vacation, 28% administrative buffer, $8,000 expenses, and $7,200 health insurance: Naive calculation ($120k / 2,080 hrs = $57.69/hr) results in a disastrous -$73,284 cash deficit! The true required billing floor is $139.72/hr across 1,339 realistic billable hours."
   }
 };
+
 
 

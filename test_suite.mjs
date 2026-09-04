@@ -9,6 +9,10 @@ import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-e
 import { EngineeringPhysicsEngine } from "./js/engines/engineering-physics.js";
 import { StatisticsOptionsEngine } from "./js/engines/statistics-options.js";
 import { ContractorMatrixEngine } from "./js/engines/contractor-matrix.js";
+import { SCorpEngine } from "./js/engines/scorp-engine.js";
+import { RetirementEngine } from "./js/engines/retirement-engine.js";
+import { FXInvoicingEngine } from "./js/engines/fx-engine.js";
+import { BillableRateEngine } from "./js/engines/billable-engine.js";
 import { CALCULATOR_DEFINITIONS } from "./js/data/definitions.js";
 
 console.log("================================================================================");
@@ -500,6 +504,52 @@ assert(fxTest.savingsVsWorstUsd >= 7000, `Wise savings vs PayPal on $100k is >$7
 // 9.6 Definitions and Schema
 assert(CALCULATOR_DEFINITIONS.contractor_matrix !== undefined, "CALCULATOR_DEFINITIONS contains contractor_matrix");
 assert(CALCULATOR_DEFINITIONS.contractor_matrix.formulas.length >= 4, "contractor_matrix includes detailed tax & parity formulas");
+
+// -----------------------------------------------------------------------------
+// 10. RemoteParity Suite (S-Corp, Retirement, FX Invoicing, Billable Rate Floor)
+// -----------------------------------------------------------------------------
+console.log("\n[10] Testing RemoteParity 4 Additional Engines & Knowledge Base...");
+
+// 10.1 S-Corp Reasonable Salary Optimizer
+const scorp = SCorpEngine.calculate({ netProfit: 150000, salaryPercent: 55, payrollAnnualFee: 600, cpaAnnualFee: 1500, stateAnnualFee: 200 });
+assert(scorp.llc.totalSecaTax >= 21000 && scorp.llc.totalSecaTax <= 21500, `LLC SECA tax is ~$21,194 (got ${scorp.llc.totalSecaTax})`);
+assert(scorp.scorp.reasonableSalary === 82500, "S-Corp reasonable salary at 55% is $82,500");
+assert(scorp.scorp.k1Distribution === 67500, "S-Corp K-1 distribution is $67,500");
+assert(scorp.savings.grossFicaSavings >= 8500 && scorp.savings.grossFicaSavings <= 8600, `Gross FICA savings is ~$8,572 (got ${scorp.savings.grossFicaSavings})`);
+assert(scorp.savings.breakevenProfitThreshold >= 40000 && scorp.savings.breakevenProfitThreshold <= 45000, `Mathematical breakeven threshold is ~$41k (got ${scorp.savings.breakevenProfitThreshold})`);
+assert(scorp.savings.recommendedProfitThreshold === 80000, "CPA recommended threshold is $80,000");
+
+// 10.2 Solo 401(k) vs. SEP-IRA Shield
+const ret = RetirementEngine.calculate({ netEarnings: 120000, entityType: "llc", isAge50Plus: false, marginalTaxRatePercent: 29 });
+assert(ret.sepIra.maxContribution >= 22000 && ret.sepIra.maxContribution <= 22500, `SEP-IRA max deduction is ~$22,304 (got ${ret.sepIra.maxContribution})`);
+assert(ret.solo401k.maxContribution >= 45000 && ret.solo401k.maxContribution <= 46000, `Solo 401(k) max deduction is ~$45,304 (got ${ret.solo401k.maxContribution})`);
+assert(ret.comparison.extraShelter === 23000, "Solo 401(k) shields exact $23,000 employee deferral");
+assert(ret.comparison.extraTaxCashSaved >= 6600 && ret.comparison.extraTaxCashSaved <= 6700, `Extra cold cash tax saved is ~$6,670 (got ${ret.comparison.extraTaxCashSaved})`);
+
+// 10.3 Cross-Border FX Invoicing Rail Drag
+const fx = FXInvoicingEngine.calculate({ invoiceUsd: 10000, targetCurrency: "EUR" });
+assert(fx.midMarketBenchmarkRate === 0.92, "EUR mid-market benchmark is 0.92");
+assert(fx.optimalRail.key === "wise", "Optimal rail is Wise Business");
+assert(fx.optimalRail.landedLocalAmount >= 9100 && fx.optimalRail.landedLocalAmount <= 9200, `Wise lands ~9,149 EUR (got ${fx.optimalRail.landedLocalAmount})`);
+assert(fx.worstRail.key === "paypal", "Worst rail is PayPal");
+assert(fx.worstRail.landedLocalAmount <= 8600, `PayPal lands ~8,479 EUR (got ${fx.worstRail.landedLocalAmount})`);
+assert(fx.singleInvoiceSavingsUsd >= 600, `Wise saves >$600 per $10k invoice vs PayPal (got $${fx.singleInvoiceSavingsUsd})`);
+
+// 10.4 Billable Hourly Rate Floor Solver
+const billable = BillableRateEngine.calculate({ targetNetCash: 120000, annualExpenses: 8000, vacationWeeks: 4, nonBillablePercent: 28 });
+assert(billable.timeAllocation.workingWeeks >= 46 && billable.timeAllocation.workingWeeks <= 47, `Working weeks is ~46.5 (got ${billable.timeAllocation.workingWeeks})`);
+assert(billable.timeAllocation.annualBillableHours >= 1300 && billable.timeAllocation.annualBillableHours <= 1350, `Annual billable hours is ~1,339 hrs (got ${billable.timeAllocation.annualBillableHours})`);
+assert(billable.optimalHourlyRate >= 135 && billable.optimalHourlyRate <= 145, `True rate floor is ~$140/hr (got $${billable.optimalHourlyRate}/hr)`);
+
+// 10.5 Knowledge Base Definitions
+assert(CALCULATOR_DEFINITIONS.scorp !== undefined, "CALCULATOR_DEFINITIONS contains scorp");
+assert(CALCULATOR_DEFINITIONS.scorp.formulas.length >= 4, "scorp includes detailed FICA & QBI formulas");
+assert(CALCULATOR_DEFINITIONS.retirement !== undefined, "CALCULATOR_DEFINITIONS contains retirement");
+assert(CALCULATOR_DEFINITIONS.retirement.formulas.length >= 4, "retirement includes Solo 401(k) and SEP-IRA formulas");
+assert(CALCULATOR_DEFINITIONS.fx !== undefined, "CALCULATOR_DEFINITIONS contains fx");
+assert(CALCULATOR_DEFINITIONS.fx.formulas.length >= 3, "fx includes cross-border rail drag formulas");
+assert(CALCULATOR_DEFINITIONS.billable !== undefined, "CALCULATOR_DEFINITIONS contains billable");
+assert(CALCULATOR_DEFINITIONS.billable.formulas.length >= 4, "billable includes capacity and rate floor formulas");
 
 // -----------------------------------------------------------------------------
 // Summary

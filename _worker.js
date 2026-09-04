@@ -11,6 +11,10 @@
  */
 
 import { ContractorMatrixEngine } from "./js/engines/contractor-matrix.js";
+import { SCorpEngine } from "./js/engines/scorp-engine.js";
+import { RetirementEngine } from "./js/engines/retirement-engine.js";
+import { BillableRateEngine } from "./js/engines/billable-engine.js";
+import { FXInvoicingEngine } from "./js/engines/fx-engine.js";
 import { GlobalFinanceEngine } from "./js/engines/global-finance.js";
 import { IndianFinanceEngine } from "./js/engines/indian-finance.js";
 import { CasioCalciEngine } from "./js/engines/casio-engine.js";
@@ -43,6 +47,63 @@ const MCP_TOOL_DEFINITIONS = [
         selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
       },
       required: ["w2Salary", "contractorHourlyRate"]
+    }
+  },
+  {
+    name: "scorp_optimizer",
+    description: "Calculate S-Corporation reasonable salary split, FICA tax shield, overhead netting (CPA and payroll fees), and mathematical breakeven profit threshold under IRS Rev. Rul. 74-44.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        netProfit: { type: "number", default: 150000, description: "Annual net business profit in USD ($/yr)" },
+        salaryPercent: { type: "number", default: 55, description: "Reasonable salary percentage % (e.g. 50, 55, 60)" },
+        payrollAnnualFee: { type: "number", default: 600, description: "Annual payroll provider fee ($/yr)" },
+        cpaAnnualFee: { type: "number", default: 1500, description: "Annual CPA corporate Form 1120-S filing fee ($/yr)" },
+        stateAnnualFee: { type: "number", default: 200, description: "Annual state franchise tax / report fee ($/yr)" }
+      },
+      required: ["netProfit"]
+    }
+  },
+  {
+    name: "solo_401k_shield",
+    description: "Calculate Solo 401(k) vs. SEP-IRA maximum legal tax-deductible retirement shelter and immediate cash tax savings under IRS Notice 2023-75 caps ($69,000 / $76,500).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        netEarnings: { type: "number", default: 120000, description: "Annual net business profit or W-2 salary ($/yr)" },
+        entityType: { type: "string", enum: ["llc", "scorp"], default: "llc", description: "Entity structure: 'llc' or 'scorp'" },
+        isAge50Plus: { type: "boolean", default: false, description: "Eligible for $7,500 age 50+ catch-up" },
+        marginalTaxRatePercent: { type: "number", default: 28, description: "Combined federal and state marginal tax bracket %" }
+      },
+      required: ["netEarnings"]
+    }
+  },
+  {
+    name: "fx_invoicing",
+    description: "Deconstruct cross-border contractor invoicing fee drag, comparing landed local currency across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wire against mid-market benchmark rates.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        invoiceUsd: { type: "number", default: 10000, description: "Gross invoice amount in USD ($)" },
+        targetCurrency: { type: "string", enum: ["EUR", "GBP", "CAD", "AUD", "INR", "SGD", "BRL", "MXN", "PHP"], default: "EUR", description: "Target local payout currency code" }
+      },
+      required: ["invoiceUsd"]
+    }
+  },
+  {
+    name: "billable_floor",
+    description: "Solve the true minimum billable hourly rate required to achieve a target spendable cash income, factoring in 47 working weeks, non-billable buffer drag, business expenses, health insurance, and SECA taxes.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        targetNetCash: { type: "number", default: 120000, description: "Target annual net spendable cash take-home ($/yr)" },
+        annualExpenses: { type: "number", default: 8000, description: "Annual business operating expenses ($/yr)" },
+        healthInsuranceAnnual: { type: "number", default: 7200, description: "Annual out-of-pocket health insurance premium ($/yr)" },
+        vacationWeeks: { type: "number", default: 4, description: "Planned vacation weeks off per year" },
+        nonBillablePercent: { type: "number", default: 28, description: "Percentage of working hours lost to admin, sales, and invoicing %" },
+        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" }
+      },
+      required: ["targetNetCash"]
     }
   },
   {
@@ -453,6 +514,47 @@ function executeTool(toolName, params) {
         selectedRail: params.selectedRail || "wise"
       }
     );
+  }
+
+  if (t === "scorp_optimizer" || t === "scorp" || t === "remoteparity_scorp_optimizer") {
+    return SCorpEngine.calculate({
+      netProfit: Number(params.netProfit ?? 150000),
+      salaryPercent: Number(params.salaryPercent ?? 55),
+      payrollAnnualFee: Number(params.payrollAnnualFee ?? 600),
+      cpaAnnualFee: Number(params.cpaAnnualFee ?? 1500),
+      stateAnnualFee: Number(params.stateAnnualFee ?? 200),
+      manualSalary: params.manualSalary ? Number(params.manualSalary) : undefined
+    });
+  }
+
+  if (t === "solo_401k_shield" || t === "retirement" || t === "remoteparity_solo_401k_shield") {
+    return RetirementEngine.calculate({
+      netEarnings: Number(params.netEarnings ?? 120000),
+      entityType: params.entityType || "llc",
+      isAge50Plus: params.isAge50Plus === true || params.isAge50Plus === "true",
+      marginalTaxRatePercent: Number(params.marginalTaxRatePercent ?? 28)
+    });
+  }
+
+  if (t === "fx_invoicing" || t === "fx" || t === "remoteparity_fx_invoicing") {
+    return FXInvoicingEngine.calculate({
+      invoiceUsd: Number(params.invoiceUsd ?? 10000),
+      targetCurrency: params.targetCurrency || "EUR"
+    });
+  }
+
+  if (t === "billable_floor" || t === "billable" || t === "remoteparity_billable_floor") {
+    return BillableRateEngine.calculate({
+      targetNetCash: Number(params.targetNetCash ?? 120000),
+      annualExpenses: Number(params.annualExpenses ?? 8000),
+      healthInsuranceAnnual: Number(params.healthInsuranceAnnual ?? 7200),
+      vacationWeeks: Number(params.vacationWeeks ?? 4),
+      sickHolidayWeeks: Number(params.sickHolidayWeeks ?? 1.5),
+      nominalHoursPerWeek: Number(params.nominalHoursPerWeek ?? 40),
+      nonBillablePercent: Number(params.nonBillablePercent ?? 28),
+      filingStatus: params.filingStatus || "single",
+      stateTaxRatePercent: Number(params.stateTaxRatePercent ?? 5.0)
+    });
   }
 
   if (t === "mortgage_piti" || t === "mortgage") {
@@ -1177,6 +1279,19 @@ export default {
       "/api/v1/contractor-parity": "contractor_parity",
       "/api/v1/contractor_parity": "contractor_parity",
       "/api/v1/contractor_takehome_matrix": "contractor_parity",
+      "/api/v1/remote/parity": "contractor_parity",
+      "/api/v1/remote/scorp": "scorp_optimizer",
+      "/api/v1/remote/scorp-optimizer": "scorp_optimizer",
+      "/api/v1/remote/scorp_optimizer": "scorp_optimizer",
+      "/api/v1/remote/retirement": "solo_401k_shield",
+      "/api/v1/remote/solo-401k": "solo_401k_shield",
+      "/api/v1/remote/solo_401k": "solo_401k_shield",
+      "/api/v1/remote/fx": "fx_invoicing",
+      "/api/v1/remote/fx-invoicing": "fx_invoicing",
+      "/api/v1/remote/fx_invoicing": "fx_invoicing",
+      "/api/v1/remote/billable": "billable_floor",
+      "/api/v1/remote/billable-floor": "billable_floor",
+      "/api/v1/remote/billable_floor": "billable_floor",
       "/api/v1/tax-in": "tax_in",
       "/api/v1/tax_in": "tax_in",
       "/api/v1/tax": "tax_in",

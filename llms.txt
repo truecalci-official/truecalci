@@ -4,6 +4,10 @@
 
 ## Core Calculators
 - [Remote Contractor Take-Home Matrix](https://truecalci.com/#contractor_matrix): 1099 vs. W-2 tax parity, 15.3% Self-Employment Tax (SECA), 50% SE deduction, 20% Section 199A QBI deduction, corporate benefits valuation, and exact breakeven billing rate solver.
+- [S-Corporation Reasonable Salary Optimizer](https://truecalci.com/#scorp): Minimizes FICA tax drag while defending IRS reasonable salary guidelines; models salary vs distributions, payroll taxes, compliance overhead, and Section 199A QBI interplay.
+- [Solo 401(k) vs. SEP-IRA Shield](https://truecalci.com/#retirement): Maximizes pre-tax retirement tax shields; models $23,500 employee elective deferrals, 25% employer non-elective profit sharing, and Section 415(c) total contribution caps ($70,000) with Mega-Backdoor Roth.
+- [Cross-Border FX Invoicing Rail Drag](https://truecalci.com/#fx): Quantifies wire transfer fixed fees, intermediary bank deductions, and FX markup spreads across SWIFT, Wise, Stripe, and PayPal to compute true net retained income.
+- [Billable Hourly Rate Floor Solver](https://truecalci.com/#billable): Reverses target take-home pay, non-billable overhead, administrative drag, and realistic billable utilization hours to compute required hourly rates.
 - [US Mortgage PITI](https://truecalci.com/#mortgage): Calculates monthly principal, interest, property taxes, home insurance, and automated Private Mortgage Insurance (PMI) with full amortization schedules.
 - [European VAT & Sales Tax](https://truecalci.com/#vat): Instant Add and Remove VAT calculations across UK (20%), Germany (19%), France (20%), Spain (21%), Italy (22%), and global sales tax regions.
 - [Tip & Restaurant Bill Splitter](https://truecalci.com/#tip): Itemized restaurant bill splitting with custom tip percentage allocations.

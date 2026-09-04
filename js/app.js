@@ -7,6 +7,10 @@
 import { ViewIndianFinance } from "./views/view-indian-finance.js";
 import { ViewGlobalFinance } from "./views/view-global-finance.js";
 import { ViewContractorMatrix } from "./views/view-contractor-matrix.js";
+import { ViewSCorp } from "./views/view-scorp.js";
+import { ViewRetirement } from "./views/view-retirement.js";
+import { ViewBillable } from "./views/view-billable.js";
+import { ViewFX } from "./views/view-fx.js";
 import { ViewCasio } from "./views/view-casio.js";
 import { ViewBasic } from "./views/view-basic.js";
 import { ViewProgrammer } from "./views/view-programmer.js";
@@ -25,7 +29,8 @@ window.ContractorMatrixEngine = ContractorMatrixEngine;
 class CalculatorApp {
   constructor() {
     this.validTools = [
-      "home", "contractor_matrix", "mortgage", "vat", "tip", "compound",
+      "home", "contractor_matrix", "scorp", "retirement", "fx", "billable",
+      "mortgage", "vat", "tip", "compound",
       "tax", "gst", "sip", "fd", "gold", 
       "ppf", "ssy", "home_loan", "land", 
       "calci_991", "basic", "programmer",
@@ -580,6 +585,10 @@ class CalculatorApp {
 
     const titles = {
       contractor_matrix: { title: "Remote Contractor Take-Home Matrix (1099 vs. W-2)", subtitle: "Tax Parity, 15.3% SECA, 20% Section 199A QBI & Breakeven Simulator" },
+      scorp: { title: "S-Corp Tax Shield & Reasonable Salary Optimizer", subtitle: "IRS Rev. Rul. 74-44 FICA savings on distributions minus CPA & payroll fees" },
+      retirement: { title: "Solo 401(k) vs. SEP-IRA Tax Shield Maximizer", subtitle: "IRS Notice 2023-75 caps, employee deferrals, employer profit share & cash savings" },
+      fx: { title: "Cross-Border Contractor Invoicing & FX Drag Optimizer", subtitle: "Mid-market benchmark rates and real landed local currency across Wise, Deel, Stripe, PayPal" },
+      billable: { title: "Billable Hourly Rate Floor & Burn Rate Solver", subtitle: "Solves true minimum billing rate for 47 working weeks and non-billable buffer drag" },
       mortgage: { title: "US Mortgage Calculator (PITI & PMI)", subtitle: "Principal, Interest, Property Taxes, Home Insurance & PMI Amortization" },
       vat: { title: "VAT & Sales Tax Calculator", subtitle: "Instant Add Tax (Net → Gross) and Remove Tax (Gross → Net) with UK/EU/US presets" },
       tip: { title: "Tip & Restaurant Bill Splitter", subtitle: "Per-guest dining share, customizable tip percentages and bill splitting" },
@@ -688,6 +697,14 @@ class CalculatorApp {
     if (toolKey === "contractor_matrix") {
       const cmView = new ViewContractorMatrix(mountEl, () => this.openKnowledgeDrawer());
       cmView.setRegion(this.currentRegion);
+    } else if (toolKey === "scorp") {
+      new ViewSCorp(mountEl).render();
+    } else if (toolKey === "retirement") {
+      new ViewRetirement(mountEl).render();
+    } else if (toolKey === "fx") {
+      new ViewFX(mountEl).render();
+    } else if (toolKey === "billable") {
+      new ViewBillable(mountEl).render();
     } else if (globalTools.includes(toolKey)) {
       const gView = new ViewGlobalFinance(mountEl, () => this.openKnowledgeDrawer());
       gView.setRegion(this.currentRegion);

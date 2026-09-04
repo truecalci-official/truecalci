@@ -40,6 +40,7 @@
   <link rel="stylesheet" href="/css/casio-calci.css?v=20260904_perf">
   <link rel="stylesheet" href="/css/financial.css?v=20260904_perf">
   <link rel="stylesheet" href="/css/components.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/remoteparity.css?v=20260904_perf">
 
   <!-- Schema.org Structured Data for Google, Bing, Claude, ChatGPT & Gemini -->
   <script type="application/ld+json">
@@ -548,13 +549,53 @@
         <span class="sidebar-header-title">
           <img src="/assets/brand-logo.svg" alt="TrueCalci" style="width: 22px; height: 22px; border-radius: 6px;">
           <span>Calculators</span>
-          <span class="drawer-count-badge">15 Engines</span>
+          <span class="drawer-count-badge">19 Engines</span>
         </span>
         <button class="sidebar-close-btn" id="sidebar-close-btn" aria-label="Close Drawer">&times;</button>
       </div>
 
       <nav aria-label="Calculator Categories Navigation">
-      <!-- Section 0: Global & US Essentials -->
+      <!-- Section 0: Remote & Global Engineering Suite -->
+      <div class="nav-section">
+        <span class="nav-section-title">Remote & Global Work (🇺🇸 / 🌐)</span>
+        <button class="sidebar-link" data-tool="contractor_matrix">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            <span>1099 vs W-2 Parity</span>
+          </div>
+          <span class="sidebar-tag" style="background:#dbeafe; color:#1e40af;">Tax & Benefits</span>
+        </button>
+        <button class="sidebar-link" data-tool="scorp">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            <span>S-Corp Tax Shield</span>
+          </div>
+          <span class="sidebar-tag" style="background:#dcfce7; color:#166534;">FICA Shield</span>
+        </button>
+        <button class="sidebar-link" data-tool="retirement">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/></svg>
+            <span>Solo 401(k) Maximizer</span>
+          </div>
+          <span class="sidebar-tag" style="background:#ede9fe; color:#6b21a8;">$69k Cap</span>
+        </button>
+        <button class="sidebar-link" data-tool="fx">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            <span>Cross-Border FX Rails</span>
+          </div>
+          <span class="sidebar-tag" style="background:#fef3c7; color:#92400e;">Rail Drag</span>
+        </button>
+        <button class="sidebar-link" data-tool="billable">
+          <div class="sidebar-link-content">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Billable Rate Floor</span>
+          </div>
+          <span class="sidebar-tag" style="background:#fee2e2; color:#991b1b;">Burn Floor</span>
+        </button>
+      </div>
+
+      <!-- Section 1: Global & US Essentials -->
       <div class="nav-section">
         <span class="nav-section-title">Global & US Essentials (🌐)</span>
         <button class="sidebar-link active" data-tool="mortgage">
