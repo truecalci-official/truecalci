@@ -21,6 +21,7 @@ import { CasioCalciEngine } from "./js/engines/casio-engine.js";
 import { EngineeringPhysicsEngine } from "./js/engines/engineering-physics.js";
 import { StatisticsOptionsEngine } from "./js/engines/statistics-options.js";
 import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-engine.js";
+import { FinOpsEngine } from "./js/engines/finops-engines.js";
 
 // -----------------------------------------------------------------------------
 // Tool Definitions (MCP Schema & OpenAPI 3.1 Standards)
@@ -327,6 +328,74 @@ const MCP_TOOL_DEFINITIONS = [
         gravityMs2: { type: "number", default: 9.80665, description: "Standard gravity g0 in m/s^2" }
       },
       required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
+    }
+  },
+  {
+    name: "ai_token_arbitrage",
+    description: "Calculate multi-model LLM API token inference costs, prompt caching economics (up to 90% discount), batch discounts, and cost disparity across Claude 3.5 Sonnet, GPT-4o, DeepSeek V3/R1, and Gemini 1.5 Pro/Flash.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        promptTokens: { type: "number", default: 5000, description: "Input prompt token count per API request" },
+        completionTokens: { type: "number", default: 1000, description: "Output completion token count per API request" },
+        cacheHitRatio: { type: "number", default: 0.80, description: "Prompt cache hit ratio (0.0 to 1.0 or 0 to 100%)" },
+        isBatch: { type: "boolean", default: false, description: "Whether asynchronous batch API 50% discount applies" }
+      }
+    }
+  },
+  {
+    name: "startup_runway_dilution",
+    description: "Model startup net burn rate, cash runway calendar zero-cash date, Post-Money SAFE cap dilution, and Series A unallocated option pool shuffle dilution waterfall.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        cashOnHand: { type: "number", default: 750000, description: "Current cash in bank in USD ($)" },
+        monthlyGrossBurn: { type: "number", default: 65000, description: "Monthly operating cash outflows ($/mo)" },
+        monthlyRevenue: { type: "number", default: 15000, description: "Monthly recurring revenue MRR ($/mo)" },
+        safeInvestment: { type: "number", default: 1000000, description: "Post-money SAFE investment amount ($)" },
+        postMoneyCap: { type: "number", default: 10000000, description: "Post-money valuation cap ($)" },
+        seriesAInvestment: { type: "number", default: 3000000, description: "Series A new lead investment amount ($)" },
+        seriesAPreMoney: { type: "number", default: 15000000, description: "Series A pre-money agreed valuation ($)" },
+        optionPoolExpansionPercent: { type: "number", default: 10.0, description: "Required unallocated post-close option pool %" }
+      }
+    }
+  },
+  {
+    name: "b2b_withholding_risk",
+    description: "Compute cross-border B2B software/consulting invoice gross-up, statutory vs DTAA treaty withholding tax rates (Form W-8BEN/W-8BEN-E), and permanent establishment (183-day) tax audit triggers.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        invoiceNetRequired: { type: "number", default: 50000, description: "Net spendable cash payout required by exporter ($)" },
+        statutoryRatePercent: { type: "number", default: 30.0, description: "Source country statutory withholding tax % (default 30%)" },
+        treatyRatePercent: { type: "number", default: 15.0, description: "Bilateral tax treaty reduced WHT rate % (e.g. 15% or 0%)" },
+        daysInCountry: { type: "number", default: 195, description: "Cumulative physical presence days in client country over 12 months" }
+      }
+    }
+  },
+  {
+    name: "feie_nomad_tracker",
+    description: "Track IRS Form 2555 Foreign Earned Income Exclusion physical presence test (330 full foreign days in rolling 365-day period), statutory exclusion limits ($130k), and sticky domicile audit risks (CA, NY, VA, SC).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        foreignEarnedIncome: { type: "number", default: 160000, description: "Annual foreign earned compensation in USD ($)" },
+        daysOutsideUSInRollingPeriod: { type: "number", default: 334, description: "Full 24-hour days outside the US in rolling 365-day window" },
+        taxYear: { type: "number", default: 2025, description: "Applicable tax year (2024, 2025, or 2026)" },
+        stateDomicile: { type: "string", default: "CA", description: "State of former/current US domicile (e.g. CA, NY, TX, FL)" },
+        effectiveTaxBracketPercent: { type: "number", default: 24.0, description: "Estimated federal marginal tax rate %" }
+      }
+    }
+  },
+  {
+    name: "cloud_egress_finops",
+    description: "Analyze tiered public cloud data transfer egress fees vs Cloudflare Zero-Egress Bandwidth Alliance and edge caching proxy, calculating monthly and annual infrastructure cost savings.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        monthlyEgressGB: { type: "number", default: 50000, description: "Monthly internet outbound data transfer in GB (e.g. 50,000 for 50TB)" },
+        cacheHitRatio: { type: "number", default: 0.85, description: "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)" }
+      }
     }
   }
 ];
@@ -699,6 +768,26 @@ function executeTool(toolName, params) {
       specificImpulseSeconds: Number(params.specificImpulseSeconds),
       gravityMs2: Number(params.gravityMs2 || 9.80665)
     });
+  }
+
+  if (t === "ai_token_arbitrage" || t === "ai_tokens" || t === "token_arbitrage") {
+    return FinOpsEngine.calculateAiTokenArbitrage(params);
+  }
+
+  if (t === "startup_runway_dilution" || t === "startup_runway" || t === "dilution_solver") {
+    return FinOpsEngine.calculateStartupRunwayDilution(params);
+  }
+
+  if (t === "b2b_withholding_risk" || t === "b2b_wht" || t === "withholding_risk") {
+    return FinOpsEngine.calculateB2bWithholdingRisk(params);
+  }
+
+  if (t === "feie_nomad_tracker" || t === "feie" || t === "nomad_tracker") {
+    return FinOpsEngine.calculateFeieNomadTracker(params);
+  }
+
+  if (t === "cloud_egress_finops" || t === "cloud_egress" || t === "egress_finops") {
+    return FinOpsEngine.calculateCloudEgressFinOps(params);
   }
 
   throw new Error(`Tool '${toolName}' not found.`);
@@ -1238,21 +1327,43 @@ export default {
           if (method === "tools/call") {
             const toolName = body.params?.name;
             const args = body.params?.arguments || {};
-            const result = executeTool(toolName, args);
             
-            telemetry.sessionAllowed++;
-            if (telemetry.toolUsage[toolName] !== undefined) telemetry.toolUsage[toolName]++;
+            try {
+              const result = executeTool(toolName, args);
+              telemetry.sessionAllowed++;
+              if (telemetry.toolUsage[toolName] !== undefined) telemetry.toolUsage[toolName]++;
 
-            return new Response(JSON.stringify({
-              jsonrpc: "2.0",
-              id,
-              result: {
-                content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-              }
-            }), {
-              status: 200,
-              headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
-            });
+              return new Response(JSON.stringify({
+                jsonrpc: "2.0",
+                id,
+                result: {
+                  isError: false,
+                  content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+                }
+              }), {
+                status: 200,
+                headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+              });
+            } catch (calcErr) {
+              return new Response(JSON.stringify({
+                jsonrpc: "2.0",
+                id,
+                result: {
+                  isError: true,
+                  content: [{
+                    type: "text",
+                    text: JSON.stringify({
+                      error: calcErr.message,
+                      hint: "Check calculation input bounds against tool definition schema.",
+                      tool: toolName
+                    }, null, 2)
+                  }]
+                }
+              }), {
+                status: 200,
+                headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+              });
+            }
           }
 
           if (method === "ping") {
@@ -1319,7 +1430,22 @@ export default {
       "/api/v1/linear_regression": "linear_regression",
       "/api/v1/pipe_flow": "pipe_flow",
       "/api/v1/rlc_circuit": "rlc_circuit",
-      "/api/v1/rocket_deltav": "rocket_deltav"
+      "/api/v1/rocket_deltav": "rocket_deltav",
+      "/api/v1/ai_token_arbitrage": "ai_token_arbitrage",
+      "/api/v1/ai-token-arbitrage": "ai_token_arbitrage",
+      "/api/v1/finops/ai-tokens": "ai_token_arbitrage",
+      "/api/v1/startup_runway_dilution": "startup_runway_dilution",
+      "/api/v1/startup-runway-dilution": "startup_runway_dilution",
+      "/api/v1/finops/runway": "startup_runway_dilution",
+      "/api/v1/b2b_withholding_risk": "b2b_withholding_risk",
+      "/api/v1/b2b-withholding-risk": "b2b_withholding_risk",
+      "/api/v1/finops/b2b-wht": "b2b_withholding_risk",
+      "/api/v1/feie_nomad_tracker": "feie_nomad_tracker",
+      "/api/v1/feie-nomad-tracker": "feie_nomad_tracker",
+      "/api/v1/finops/feie": "feie_nomad_tracker",
+      "/api/v1/cloud_egress_finops": "cloud_egress_finops",
+      "/api/v1/cloud-egress-finops": "cloud_egress_finops",
+      "/api/v1/finops/egress": "cloud_egress_finops"
     };
 
     if (url.pathname === "/api/v1/calculate" || API_ROUTES[url.pathname]) {

@@ -25,6 +25,12 @@
       "skillPath": "skills/checkout-integration/SKILL.md",
       "computedHash": "ae0811ca4d3092eb3b206c83b03a201f9c0adcc4facbaaa32dec71faf4ea5c14"
     },
+    "code-review": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/code-review/SKILL.md",
+      "computedHash": "b4f17857c85ca60af1df7d0b623dd03c2a48419f6123e714f3d9748ca744a1bf"
+    },
     "credit-based-billing": {
       "source": "dodopayments/dodo-agent-plugin",
       "sourceType": "github",
@@ -36,6 +42,12 @@
       "sourceType": "github",
       "skillPath": "skills/customer-management/SKILL.md",
       "computedHash": "36ab6ff7cc1ff41d7efbedbe77bb66fa8e46416a71977f9995d444dcc1bfe83a"
+    },
+    "diagnosing-bugs": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/diagnosing-bugs/SKILL.md",
+      "computedHash": "dcaaa3eb81195329f65f27574d9a67dc776160dd2e4d7798d1afb1e4a5f3695a"
     },
     "discounts-and-promotions": {
       "source": "dodopayments/dodo-agent-plugin",
@@ -61,6 +73,30 @@
       "skillPath": "skills/frontend-design/SKILL.md",
       "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
     },
+    "git-commit": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/git-commit/SKILL.md",
+      "computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
+    },
+    "google-search-console": {
+      "source": "kostja94/marketing-skills",
+      "sourceType": "github",
+      "skillPath": "skills/analytics/seo/google-search-console/SKILL.md",
+      "computedHash": "69869587bff3a8cb988783f2aafe5a5ba64295364ab4e16312f053a023367b13"
+    },
+    "improve-codebase-architecture": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
+      "computedHash": "016f12709bff30a27419e8add978a9be70f5ca1fb6738b3be6793038e0aba631"
+    },
+    "legal-page-generator": {
+      "source": "kostja94/marketing-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pages/legal/legal/SKILL.md",
+      "computedHash": "8992f0416468003ba98909da04e8badd8575e1658c838cbe1280c61cc1208953"
+    },
     "license-keys": {
       "source": "dodopayments/dodo-agent-plugin",
       "sourceType": "github",
@@ -78,6 +114,12 @@
       "sourceType": "github",
       "skillPath": "skills/material-3/SKILL.md",
       "computedHash": "b675af544d7f335ca6dd2edb708930605484084354a4ef383362c9ec2b1717c7"
+    },
+    "math-olympiad": {
+      "source": "anthropics/claude-plugins-official",
+      "sourceType": "github",
+      "skillPath": "plugins/math-olympiad/skills/math-olympiad/SKILL.md",
+      "computedHash": "298af26317bec42b379fc00f10f51cee9bdefa62b1d6a07363da24e11ed4c69e"
     },
     "mcp-builder": {
       "source": "anthropics/skills",
@@ -103,6 +145,42 @@
       "skillPath": "skills/refunds-and-disputes/SKILL.md",
       "computedHash": "0a17f8fba7a1c66a0033a279e10d6b4925e7c1a1f8e1f3897f24de1ce3413917"
     },
+    "research": {
+      "source": "mattpocock/skills",
+      "sourceType": "github",
+      "skillPath": "skills/engineering/research/SKILL.md",
+      "computedHash": "2c8b768d5f0309eaea9f92ef740101e813645b39aef88fb82733a52eae23dc0b"
+    },
+    "research-synthesis": {
+      "source": "anthropics/knowledge-work-plugins",
+      "sourceType": "github",
+      "skillPath": "design/skills/research-synthesis/SKILL.md",
+      "computedHash": "85bbb7e21bc42e9d5fa05f25d27c5b7d50095f100f1eeef271fc23c81a61fd8d"
+    },
+    "schema": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/schema/SKILL.md",
+      "computedHash": "13693bae311fd444da31a82b3aa46003e12a21220aae98c77ee479fe34116067"
+    },
+    "secret-scanning": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "skillPath": "skills/secret-scanning/SKILL.md",
+      "computedHash": "cc7de79bee80775578227a370637d0a83aa0f2cbec28374058899859261d2081"
+    },
+    "security-and-hardening": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-and-hardening/SKILL.md",
+      "computedHash": "22d91d82a47263a9c8966afc475f0bf4cf437b90aadd5f46ffabd8de8a3fcb93"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/seo-audit/SKILL.md",
+      "computedHash": "71435fbaf3622f1a6b16e20fda15f19aa8e285c9914fdeb92ac0a7612d6317bb"
+    },
     "subscription-integration": {
       "source": "dodopayments/dodo-agent-plugin",
       "sourceType": "github",
@@ -127,6 +205,12 @@
       "skillPath": "skills/web-design-guidelines/SKILL.md",
       "computedHash": "f3bc47f890f42a44db1007ab390709ec368e4b8c089baee6b0007182236ac474"
     },
+    "web-search": {
+      "source": "skills-101/superpowers",
+      "sourceType": "github",
+      "skillPath": "tools/llm/web-search/SKILL.md",
+      "computedHash": "acb021df44d30dbcbd8b517dc2edffcc121c53ae485a136f59b1dbc71306f674"
+    },
     "webhook-integration": {
       "source": "dodopayments/dodo-agent-plugin",
       "sourceType": "github",
@@ -138,6 +222,12 @@
       "sourceType": "github",
       "skillPath": "skills/writing-guidelines/SKILL.md",
       "computedHash": "25aa3a33a97bddbcb1847ce4a6169106ec25e5b19b15b99c66e75ab383866ef2"
+    },
+    "writing-plans": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "skillPath": "skills/writing-plans/SKILL.md",
+      "computedHash": "27c75044e444a4fc68798c3f799dc23eaff3a6bfabff32e6ad75bb20f881c094"
     }
   }
 }

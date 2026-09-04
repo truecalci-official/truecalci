@@ -339,23 +339,26 @@ assert(sitemapXml.includes("#vat"), "sitemap.xml indexes #vat");
 // -----------------------------------------------------------------------------
 console.log("\n[8] Testing TrueCalci Open AI Agent API & MCP Server...");
 
+const TEST_PORT = process.env.TEST_PORT || process.env.PORT || 3000;
+const API_BASE = `http://localhost:${TEST_PORT}`;
+
 try {
-  const healthRes = await fetch("http://localhost:4000/api/v1/health").then(r => r.json());
+  const healthRes = await fetch(`${API_BASE}/api/v1/health`).then(r => r.json());
   assert(healthRes.status === "ok", "API Health check returns 'ok'");
   assert(healthRes.service.includes("TrueCalci Open AI Agent API"), "API service title is TrueCalci Open AI Agent API");
 
-  const toolsRes = await fetch("http://localhost:4000/api/v1/tools").then(r => r.json());
+  const toolsRes = await fetch(`${API_BASE}/api/v1/tools`).then(r => r.json());
   assert(toolsRes.tools.length >= 8, `API provides ${toolsRes.tools.length} computational tools (>= 8 expected)`);
   assert(toolsRes.tools.some(t => t.name === "mortgage_piti"), "API includes mortgage_piti tool");
   assert(toolsRes.tools.some(t => t.name === "vat_sales_tax"), "API includes vat_sales_tax tool");
 
   // REST API Calculation: US Mortgage
-  const apiMortgage = await fetch("http://localhost:4000/api/v1/calculate?tool=mortgage&homePrice=450000&downPaymentPercent=20&interestRate=6.8").then(r => r.json());
+  const apiMortgage = await fetch(`${API_BASE}/api/v1/calculate?tool=mortgage&homePrice=450000&downPaymentPercent=20&interestRate=6.8`).then(r => r.json());
   assert(apiMortgage.success === true, "API Mortgage calculation succeeds");
   assert(apiMortgage.result.monthlyTotalPITI >= 2900 && apiMortgage.result.monthlyTotalPITI <= 2930, `API Mortgage monthly PITI matches (~$2,914, got ${apiMortgage.result.monthlyTotalPITI})`);
 
   // REST API Calculation: European VAT
-  const apiVat = await fetch("http://localhost:4000/api/v1/calculate", {
+  const apiVat = await fetch(`${API_BASE}/api/v1/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ tool: "vat", params: { amount: 1000, vatRatePercent: 20, mode: "add" } })
@@ -364,7 +367,7 @@ try {
   assert(apiVat.result.grossAmount === 1200, "API VAT gross amount is $1200");
 
   // REST API Calculation: Casio 991 Quadratic Roots
-  const apiQuad = await fetch("http://localhost:4000/api/v1/calculate", {
+  const apiQuad = await fetch(`${API_BASE}/api/v1/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ tool: "calci991_solve", params: { type: "quadratic", a: 1, b: -5, c: 6 } })
@@ -373,7 +376,7 @@ try {
   assert(apiQuad.result[0] === "3.0000" && apiQuad.result[1] === "2.0000", "API quadratic roots are 3 and 2");
 
   // REST API Calculation: Engineering Beam Deflection
-  const apiBeam = await fetch("http://localhost:4000/api/v1/calculate", {
+  const apiBeam = await fetch(`${API_BASE}/api/v1/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -386,7 +389,7 @@ try {
   assert(apiBeam.result.maxBendingMomentNm === 5000, "Max bending moment is 5000 Nm");
 
   // REST API Calculation: 2D Projectile Motion
-  const apiProj = await fetch("http://localhost:4000/api/v1/calculate", {
+  const apiProj = await fetch(`${API_BASE}/api/v1/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -398,7 +401,7 @@ try {
   assert(apiProj.result.horizontalRangeMeters >= 254 && apiProj.result.horizontalRangeMeters <= 256, `Projectile range is ~255m (got ${apiProj.result.horizontalRangeMeters})`);
 
   // REST API Calculation: Black-Scholes Quantitative Options Pricing
-  const apiBs = await fetch("http://localhost:4000/api/v1/calculate", {
+  const apiBs = await fetch(`${API_BASE}/api/v1/calculate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

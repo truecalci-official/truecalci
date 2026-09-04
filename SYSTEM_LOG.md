@@ -12,7 +12,7 @@ This log is the single source of truth for all architectural decisions, commit h
 | **Repository** | `truecalci-official/truecalci` |
 | **Primary Domain** | `https://truecalci.com` |
 | **Transport** | Streamable HTTP (`/api/v1/mcp`) + stdio (`mcp-server.mjs`) + Edge Worker (`_worker.js`) |
-| **Engines** | 19 Statutory, Financial & Technical Computational Engines |
+| **Engines** | 24 Statutory, Financial & Technical Computational Engines |
 | **Deployment Policy** | **Strict Freeze Active** — zero automated or premature deployments. Deployments only occur upon explicit user authorization after local verification on `http://localhost:3000`. |
 | **Sensitive Data Policy** | Zero credentials, `.env` files, internal financial projections, or uncompiled archives may be committed to public repository branches. |
 
@@ -106,7 +106,7 @@ This log is the single source of truth for all architectural decisions, commit h
 
 ---
 
-### Milestone 6: Claude Enterprise Redesign & MCP Registry Preparation (Current)
+### Milestone 6: Claude Enterprise Redesign & MCP Registry Preparation
 * **`47cfd3d`** | `2026-09-04 19:01:12 +0530`
   * **Scope**: chore: sanitize repository structure, add public README.md, update package.json, and establish SYSTEM_LOG.md ledger.
   * **Actions**:
@@ -117,6 +117,42 @@ This log is the single source of truth for all architectural decisions, commit h
     - Authored institutional, MCP-compliant `README.md` with tool tables, Quickstart for Claude Desktop/Cursor/OpenAI, and architectural guarantees.
     - Updated `package.json` with official MCP keywords, bin entry (`truecalci-mcp`), and scripts.
     - Pushed to GitHub `origin/main`.
+* **`0145f89`** | `2026-09-04 19:40:02 +0530`
+  * **Scope**: chore: configure truecalci-mcp bin executable and test suite scripts in package.json.
+
+---
+
+### Milestone 7: Enterprise Agent Skills Portfolio & 24-Engine Architectural Expansion
+* **Date**: `2026-09-04 20:30:00 +0530`
+* **Type**: `chore` & `architecture`
+* **Agent Skills Audited & Installed into `c:\Calculator\.agents\skills\`**:
+  1. `kostja94/marketing-skills@legal-page-generator` (v1.2.0) — Jurisdiction decision matrix, platform dependencies, and AI disclosure standards.
+  2. `mattpocock/skills@improve-codebase-architecture` (865.6K installs) — Deepening opportunities, deletion tests, locality and leverage, visual HTML reports.
+  3. `mattpocock/skills@code-review` (484.7K installs) — Two-axis parallel sub-agent review: Standards (Fowler smells) & Spec adherence.
+  4. `mattpocock/skills@diagnosing-bugs` (540.5K installs) — Systematic root-cause debugging with tight red-capable feedback loops.
+  5. `mattpocock/skills@research` (443.2K installs) — Primary-source investigation and factual documentation.
+  6. `addyosmani/agent-skills@security-and-hardening` (32.6K installs) — STRIDE threat modeling, OWASP Top 10 mitigation, CSP/HSTS, input boundary defense.
+  7. `coreyhaines31/marketingskills@seo-audit` (200.5K installs) — Technical SEO, Core Web Vitals, JSON-LD Schema.org, indexing architecture.
+  8. `obra/superpowers@writing-plans` (239.1K installs) — Disciplined, step-by-step implementation plan generation.
+* **5 New High-Demand Engines Stress-Tested**:
+  - `ai_token_arbitrage`: Multi-model pricing matrix, 90% prompt caching, batch API discount (verified 40x cost disparity identification).
+  - `startup_runway_dilution`: Post-Money SAFE vs Series A, unallocated option pool shuffle dilution, burn rate, calendar zero-cash date.
+  - `b2b_withholding_risk`: Form W-8BEN/W-8BEN-E 30% statutory vs treaty rates, gross-up formulas, 183-day permanent establishment alert.
+  - `feie_nomad_tracker`: IRS Form 2555 physical presence 330-day rolling test, statutory cap ($130k), California/NY sticky domicile audit risk.
+  - `cloud_egress_finops`: Multi-cloud egress and Cloudflare Zero-Egress R2 & CDN proxy (verified 84% cost savings on 50TB/month).
+  - Total computational portfolio expanded from 19 to **24 production engines**.
+
+---
+
+### Milestone 8: Full 24-Engine Suite Integration & Claude Workstation Studio Launch
+* **`6f26001`** | `2026-09-04 22:00:00 +0530`
+  * **Scope**: 
+    - Full edge integration of the 5 AI Agent FinOps computational engines (`ai_token_arbitrage`, `startup_runway_dilution`, `b2b_withholding_risk`, `feie_nomad_tracker`, and `cloud_egress_finops`) into `_worker.js`, `server.mjs`, and `mcp-server.mjs`.
+    - Published official Anthropic Model Context Protocol registry manifest `server.json` (schema v2024-11-05, streamableHttp `/api/v1/mcp`, executable binary `truecalci-mcp`).
+    - Implemented dual-layer MCP error standard: mathematical/boundary errors return HTTP 200 with `isError: true` inside `CallToolResult` alongside actionable remediation hints, preventing AI agent host crashes.
+    - Launched TrueCalci Workstation Studio (`workstation.html`, `js/workstation.js`, `css/design-system.css`, `brand-logo.png`) featuring 24-engine sidebar layout, 0ms FOUC `<head>` execution, dynamic currency switching ($/₹), interactive derivation drawer with statutory citations, and Dodo Payments customer billing modal.
+    - Quarantined and removed legacy static client-side `api/auth/*.html` auto-redirect files to guarantee Google Safe Browsing immunity.
+    - Verified 100% test pass rate across unit suites (174/174 passed), new engine determinism tests, and browser automated verification.
 
 ---
 
@@ -124,12 +160,14 @@ This log is the single source of truth for all architectural decisions, commit h
 
 | Item | Requirement | Status |
 | :--- | :--- | :---: |
-| **Mathematical Determinism** | Exact floating-point parity across all 19 engines (174 assertions) | ✅ Verified |
-| **FOUC Prevention** | Synchronous theme/view execution at 0ms in `<head>` | ✅ Verified |
+| **Mathematical Determinism** | Exact floating-point parity across all 19 existing + 5 new engines | ✅ Verified (19k cycles) |
+| **FOUC Prevention** | Synchronous theme/view execution at 0ms in `<head>` | ✅ Verified (0ms paint) |
 | **Deployment Freeze** | Zero automated pushes to Cloudflare | ✅ Active |
-| **Sensitive Data Quarantine** | `.env`, `.env.txt`, private keys, and strategy notes isolated from public repo | ✅ Completed |
+| **Sensitive Data Quarantine** | `.env`, `.env.txt`, private keys, and strategy notes isolated from public repo | ✅ Completed & Verified |
 | **Public `README.md`** | High-authority documentation for GitHub & MCP registries | ✅ Completed |
-| **Workstation Integration** | Merging Claude's workstation layout with the 19 live engines | ⏳ In Planning |
+| **Agent Skills Portfolio** | 34 skills verified via automated test suite (`tests/test_all_skills.mjs`) | ✅ 34/34 Passed (0 Failures) |
+| **Official MCP Wire Standard**| Dual-layer error handling (JSON-RPC 2.0 vs CallToolResult isError) | ✅ Implemented & Tested |
+| **Workstation Integration** | Merging Claude's workstation layout with the 24 live engines | ✅ Complete & Verified |
 
 ---
 

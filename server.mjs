@@ -15,6 +15,7 @@ import { SCorpEngine } from './js/engines/scorp-engine.js';
 import { RetirementEngine } from './js/engines/retirement-engine.js';
 import { BillableRateEngine } from './js/engines/billable-engine.js';
 import { FXInvoicingEngine } from './js/engines/fx-engine.js';
+import { FinOpsEngine } from './js/engines/finops-engines.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,7 +48,7 @@ function loadEnv() {
 }
 loadEnv();
 
-const PORT = parseInt(process.env.PORT || '4000', 10);
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -88,6 +89,63 @@ const TOOL_DEFINITIONS = [
         selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
       },
       required: ["w2Salary", "contractorHourlyRate"]
+    }
+  },
+  {
+    name: "scorp_optimizer",
+    description: "Calculate S-Corporation reasonable salary split, FICA tax shield, overhead netting (CPA and payroll fees), and mathematical breakeven profit threshold under IRS Rev. Rul. 74-44.",
+    parameters: {
+      type: "object",
+      properties: {
+        netProfit: { type: "number", default: 150000, description: "Annual net business profit in USD ($/yr)" },
+        salaryPercent: { type: "number", default: 55, description: "Reasonable salary percentage % (e.g. 50, 55, 60)" },
+        payrollAnnualFee: { type: "number", default: 600, description: "Annual payroll provider fee ($/yr)" },
+        cpaAnnualFee: { type: "number", default: 1500, description: "Annual CPA corporate Form 1120-S filing fee ($/yr)" },
+        stateAnnualFee: { type: "number", default: 200, description: "Annual state franchise tax / report fee ($/yr)" }
+      },
+      required: ["netProfit"]
+    }
+  },
+  {
+    name: "solo_401k_shield",
+    description: "Calculate Solo 401(k) vs. SEP-IRA maximum legal tax-deductible retirement shelter and immediate cash tax savings under IRS Notice 2023-75 caps ($69,000 / $76,500).",
+    parameters: {
+      type: "object",
+      properties: {
+        netEarnings: { type: "number", default: 120000, description: "Annual net business profit or W-2 salary ($/yr)" },
+        entityType: { type: "string", enum: ["llc", "scorp"], default: "llc", description: "Entity structure: 'llc' or 'scorp'" },
+        isAge50Plus: { type: "boolean", default: false, description: "Eligible for $7,500 age 50+ catch-up" },
+        marginalTaxRatePercent: { type: "number", default: 28, description: "Combined federal and state marginal tax bracket %" }
+      },
+      required: ["netEarnings"]
+    }
+  },
+  {
+    name: "fx_invoicing",
+    description: "Deconstruct cross-border contractor invoicing fee drag, comparing landed local currency across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wire against mid-market benchmark rates.",
+    parameters: {
+      type: "object",
+      properties: {
+        invoiceUsd: { type: "number", default: 10000, description: "Gross invoice amount in USD ($)" },
+        targetCurrency: { type: "string", enum: ["EUR", "GBP", "CAD", "AUD", "INR", "SGD", "BRL", "MXN", "PHP"], default: "EUR", description: "Target local payout currency code" }
+      },
+      required: ["invoiceUsd"]
+    }
+  },
+  {
+    name: "billable_floor",
+    description: "Solve the true minimum billable hourly rate required to achieve a target spendable cash income, factoring in 47 working weeks, non-billable buffer drag, business expenses, health insurance, and SECA taxes.",
+    parameters: {
+      type: "object",
+      properties: {
+        targetNetCash: { type: "number", default: 120000, description: "Target annual net spendable cash take-home ($/yr)" },
+        annualExpenses: { type: "number", default: 8000, description: "Annual business operating expenses ($/yr)" },
+        healthInsuranceAnnual: { type: "number", default: 7200, description: "Annual out-of-pocket health insurance premium ($/yr)" },
+        vacationWeeks: { type: "number", default: 4, description: "Planned vacation weeks off per year" },
+        nonBillablePercent: { type: "number", default: 28, description: "Percentage of working hours lost to admin, sales, and invoicing %" },
+        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" }
+      },
+      required: ["targetNetCash"]
     }
   },
   {
@@ -312,6 +370,74 @@ const TOOL_DEFINITIONS = [
       },
       required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
     }
+  },
+  {
+    name: "ai_token_arbitrage",
+    description: "Calculate multi-model LLM API token inference costs, prompt caching economics (up to 90% discount), batch discounts, and cost disparity across Claude 3.5 Sonnet, GPT-4o, DeepSeek V3/R1, and Gemini 1.5 Pro/Flash.",
+    parameters: {
+      type: "object",
+      properties: {
+        promptTokens: { type: "number", default: 5000, description: "Input prompt token count per API request" },
+        completionTokens: { type: "number", default: 1000, description: "Output completion token count per API request" },
+        cacheHitRatio: { type: "number", default: 0.80, description: "Prompt cache hit ratio (0.0 to 1.0 or 0 to 100%)" },
+        isBatch: { type: "boolean", default: false, description: "Whether asynchronous batch API 50% discount applies" }
+      }
+    }
+  },
+  {
+    name: "startup_runway_dilution",
+    description: "Model startup net burn rate, cash runway calendar zero-cash date, Post-Money SAFE cap dilution, and Series A unallocated option pool shuffle dilution waterfall.",
+    parameters: {
+      type: "object",
+      properties: {
+        cashOnHand: { type: "number", default: 750000, description: "Current cash in bank in USD ($)" },
+        monthlyGrossBurn: { type: "number", default: 65000, description: "Monthly operating cash outflows ($/mo)" },
+        monthlyRevenue: { type: "number", default: 15000, description: "Monthly recurring revenue MRR ($/mo)" },
+        safeInvestment: { type: "number", default: 1000000, description: "Post-money SAFE investment amount ($)" },
+        postMoneyCap: { type: "number", default: 10000000, description: "Post-money valuation cap ($)" },
+        seriesAInvestment: { type: "number", default: 3000000, description: "Series A new lead investment amount ($)" },
+        seriesAPreMoney: { type: "number", default: 15000000, description: "Series A pre-money agreed valuation ($)" },
+        optionPoolExpansionPercent: { type: "number", default: 10.0, description: "Required unallocated post-close option pool %" }
+      }
+    }
+  },
+  {
+    name: "b2b_withholding_risk",
+    description: "Compute cross-border B2B software/consulting invoice gross-up, statutory vs DTAA treaty withholding tax rates (Form W-8BEN/W-8BEN-E), and permanent establishment (183-day) tax audit triggers.",
+    parameters: {
+      type: "object",
+      properties: {
+        invoiceNetRequired: { type: "number", default: 50000, description: "Net spendable cash payout required by exporter ($)" },
+        statutoryRatePercent: { type: "number", default: 30.0, description: "Source country statutory withholding tax % (default 30%)" },
+        treatyRatePercent: { type: "number", default: 15.0, description: "Bilateral tax treaty reduced WHT rate % (e.g. 15% or 0%)" },
+        daysInCountry: { type: "number", default: 195, description: "Cumulative physical presence days in client country over 12 months" }
+      }
+    }
+  },
+  {
+    name: "feie_nomad_tracker",
+    description: "Track IRS Form 2555 Foreign Earned Income Exclusion physical presence test (330 full foreign days in rolling 365-day period), statutory exclusion limits ($130k), and sticky domicile audit risks (CA, NY, VA, SC).",
+    parameters: {
+      type: "object",
+      properties: {
+        foreignEarnedIncome: { type: "number", default: 160000, description: "Annual foreign earned compensation in USD ($)" },
+        daysOutsideUSInRollingPeriod: { type: "number", default: 334, description: "Full 24-hour days outside the US in rolling 365-day window" },
+        taxYear: { type: "number", default: 2025, description: "Applicable tax year (2024, 2025, or 2026)" },
+        stateDomicile: { type: "string", default: "CA", description: "State of former/current US domicile (e.g. CA, NY, TX, FL)" },
+        effectiveTaxBracketPercent: { type: "number", default: 24.0, description: "Estimated federal marginal tax rate %" }
+      }
+    }
+  },
+  {
+    name: "cloud_egress_finops",
+    description: "Analyze tiered public cloud data transfer egress fees vs Cloudflare Zero-Egress Bandwidth Alliance and edge caching proxy, calculating monthly and annual infrastructure cost savings.",
+    parameters: {
+      type: "object",
+      properties: {
+        monthlyEgressGB: { type: "number", default: 50000, description: "Monthly internet outbound data transfer in GB (e.g. 50,000 for 50TB)" },
+        cacheHitRatio: { type: "number", default: 0.85, description: "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)" }
+      }
+    }
   }
 ];
 
@@ -533,6 +659,31 @@ function executeCalculation(toolName, params) {
         specificImpulseSeconds: Number(params.specificImpulseSeconds),
         gravityMs2: Number(params.gravityMs2 || 9.80665)
       });
+
+    case 'ai_token_arbitrage':
+    case 'ai_tokens':
+    case 'token_arbitrage':
+      return FinOpsEngine.calculateAiTokenArbitrage(params);
+
+    case 'startup_runway_dilution':
+    case 'startup_runway':
+    case 'dilution_solver':
+      return FinOpsEngine.calculateStartupRunwayDilution(params);
+
+    case 'b2b_withholding_risk':
+    case 'b2b_wht':
+    case 'withholding_risk':
+      return FinOpsEngine.calculateB2bWithholdingRisk(params);
+
+    case 'feie_nomad_tracker':
+    case 'feie':
+    case 'nomad_tracker':
+      return FinOpsEngine.calculateFeieNomadTracker(params);
+
+    case 'cloud_egress_finops':
+    case 'cloud_egress':
+    case 'egress_finops':
+      return FinOpsEngine.calculateCloudEgressFinOps(params);
 
     default:
       throw new Error(`Unsupported tool: "${toolName}". Call /api/v1/tools for full directory.`);
@@ -1019,20 +1170,45 @@ const server = http.createServer(async (req, res) => {
           if (method === 'tools/call') {
             const toolName = payload.params?.name;
             const args = payload.params?.arguments || {};
-            const result = executeCalculation(toolName, args);
-            res.writeHead(200, {
-              'Content-Type': 'application/json',
-              'X-RateLimit-Limit': '100',
-              'X-RateLimit-Remaining': '95'
-            });
-            res.end(JSON.stringify({
-              jsonrpc: '2.0',
-              id,
-              result: {
-                content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
-              }
-            }));
-            return;
+            try {
+              const result = executeCalculation(toolName, args);
+              res.writeHead(200, {
+                'Content-Type': 'application/json',
+                'X-RateLimit-Limit': '100',
+                'X-RateLimit-Remaining': '95'
+              });
+              res.end(JSON.stringify({
+                jsonrpc: '2.0',
+                id,
+                result: {
+                  isError: false,
+                  content: [{ type: 'text', text: JSON.stringify(result, null, 2) }]
+                }
+              }));
+              return;
+            } catch (calcErr) {
+              res.writeHead(200, {
+                'Content-Type': 'application/json',
+                'X-RateLimit-Limit': '100',
+                'X-RateLimit-Remaining': '95'
+              });
+              res.end(JSON.stringify({
+                jsonrpc: '2.0',
+                id,
+                result: {
+                  isError: true,
+                  content: [{
+                    type: 'text',
+                    text: JSON.stringify({
+                      error: calcErr.message,
+                      hint: 'Check calculation input bounds against tool definition schema.',
+                      tool: toolName
+                    }, null, 2)
+                  }]
+                }
+              }));
+              return;
+            }
           }
 
           if (method === 'ping') {

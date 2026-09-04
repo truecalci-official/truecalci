@@ -109,44 +109,56 @@
       </div>
 
       <div>
-        <h2 class="legal-section-title">1. Information We Do Not Collect</h2>
+        <h2 class="legal-section-title">1. Information We Do Not Collect (Zero Retention Policy)</h2>
         <p>
-          TrueCalci provides open computational tools. We never collect or store:
+          TrueCalci operates on a strict <strong>Zero Calculation Data Retention</strong> architecture. We never collect, store, log, or persist:
         </p>
         <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-          <li>Your salary, CTC, contractor rates, or tax filing details.</li>
-          <li>Your mortgage balances, bank credentials, or credit scores.</li>
-          <li>Your gold purchases, jewellery bills, or property dimensions.</li>
-          <li>Personal identification information (PII) beyond OAuth session tokens for API billing.</li>
+          <li>Your salaries, contractor billings, revenue figures, or tax bracket inputs.</li>
+          <li>Your prompt tokens, completion tokens, or AI model optimization payloads.</li>
+          <li>Your mortgage balances, bank credentials, or credit figures.</li>
+          <li>Your polynomial coefficients, engineering matrices, or mathematical formulas.</li>
+        </ul>
+        <p style="margin-top: 0.5rem;">
+          All numerical calculations execute strictly in volatile, transient memory (ephemeral client-side JavaScript or stateless Cloudflare Worker V8 isolates). The moment your JSON calculation output is rendered, the data ceases to exist on our infrastructure.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="legal-section-title">2. Information Collected Strictly for Account & API Operations</h2>
+        <p>
+          We only collect and store the minimum data strictly necessary to maintain your developer account and enforce fair usage:
+        </p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li><strong>Authentication Identity:</strong> Your email address and account ID (retrieved via Google or GitHub OAuth SSO) to authenticate your access.</li>
+          <li><strong>API Rate Limiting & Token Counters:</strong> Ephemeral token buckets and request timestamps associated with your API key to enforce rate limits and track monthly request quotas.</li>
         </ul>
       </div>
 
       <div>
-        <h2 class="legal-section-title">2. Google Analytics 4 (GA4) & Aggregated Performance Telemetry</h2>
+        <h2 class="legal-section-title">3. Account Deletion & Statutory Data Retention Schedule</h2>
         <p>
-          We use Google Analytics 4 (GA4) solely to understand aggregated system performance, engine usage volume (e.g. contractor parity vs. mortgage calculator), and browser compatibility.
-        </p>
-        <p style="margin-top: 0.5rem;">
-          Google Analytics uses standard cookies to collect anonymized telemetry such as page views and session duration. IP anonymization is active by default. You can prevent tracking by using browser privacy shields or installing the official Google Analytics Opt-out Browser Add-on.
-        </p>
-      </div>
-
-      <div>
-        <h2 class="legal-section-title">3. Local Storage (Browser Preferences)</h2>
-        <p>
-          We use standard browser <code>localStorage</code> solely to save your local UI preferences:
+          You have the absolute right to delete your TrueCalci account at any time. Our data lifecycle upon deletion follows strict international privacy laws (GDPR Art. 17, CCPA, India DPDP Act 2023):
         </p>
         <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
-          <li><code>calc_theme</code>: Remembers your Light or Dark Mode visual preference.</li>
-          <li><code>calc_region</code>: Remembers your currency preference (USD $ / INR ₹).</li>
+          <li><strong>Immediate Revocation:</strong> Your API keys, authentication sessions, and quota counters are immediately revoked and permanently deleted from active edge caches within <strong>30 days</strong>.</li>
+          <li><strong>Statutory Tax & Financial Records:</strong> As required by international tax and anti-money laundering laws (e.g., US IRS Code § 6001, UK HMRC regulations, EU VAT Directive, Indian Income Tax Act 1961 § 44AA), historical payment transactions and tax invoices processed via our Merchant of Record (Dodo Payments) are retained for the statutory period of <strong>7 years</strong> solely for legal, audit, and tax compliance.</li>
         </ul>
-        <p style="margin-top: 0.5rem;">
-          This data remains strictly stored on your personal device and is never transmitted to external servers. You can clear this anytime by clearing your browser cache.
-        </p>
       </div>
 
       <div>
-        <h2 class="legal-section-title">4. Zero Third-Party Advertising Policy (No Google AdSense)</h2>
+        <h2 class="legal-section-title">4. Local Storage (Browser Preferences)</h2>
+        <p>
+          We use standard browser <code>localStorage</code> solely on your device to save your local UI preferences without transmitting them to our servers:
+        </p>
+        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+          <li><code>calc_theme</code>: Remembers your Light or Dark Mode visual appearance preference.</li>
+          <li><code>calc_region</code>: Remembers your selected currency display standard (USD $ / INR ₹).</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="legal-section-title">5. Zero Third-Party Advertising Policy (No Google AdSense)</h2>
         <p>
           TrueCalci is a premium, distraction-free enterprise platform supported by developer API subscriptions. We do not display third-party ad networks (such as Google AdSense), ad trackers, or sponsor banners. Your calculation workflow is 100% ad-free.
         </p>

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schema/server.json",
+  "name": "io.github.truecalci-official/truecalci",
+  "title": "TrueCalci — Deterministic Compute Engine for AI Agents & Enterprise Teams",
+  "description": "24 sub-millisecond, zero-retention statutory, financial, and technical calculation engines over the Model Context Protocol (MCP). Covers US 1099/W-2 parity, S-Corp salaries, multi-model AI token arbitrage, DTAA cross-border withholding tax, and FEIE expat physical presence.",
+  "version": "2.6.1",
+  "homepage": "https://truecalci.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/truecalci-official/truecalci"
+  },
+  "license": "MIT",
+  "packages": [
+    {
+      "registry": "npm",
+      "name": "truecalci",
+      "version": "2.6.1"
+    }
+  ],
+  "endpoints": {
+    "streamableHttp": "https://truecalci.com/api/v1/mcp"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    }
+  }
+}

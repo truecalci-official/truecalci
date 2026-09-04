@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en" data-view="app" data-theme="dark" data-currency="USD">
+<head>
+<meta charset="utf-8">
+<script>
+  (function() {
+    try {
+      var savedTheme = localStorage.getItem('calc_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      var savedCur = localStorage.getItem('calc_region') || 'USD';
+      document.documentElement.setAttribute('data-currency', savedCur);
+    } catch (e) {}
+  })();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TrueCalci Workstation Studio — 24 Deterministic Computational Engines</title>
+<meta name="description" content="Twenty-four deterministic computational engines in one unified workstation: contractor parity, S-Corp salary optimizer, AI token arbitrage, startup runway, cloud egress, global finance, and statutory tax solvers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/css/design-system.css">
+</head>
+<body>
+
+<!-- ======================================================================
+     HEADER
+     ====================================================================== -->
+<header class="site-header" id="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href="/" id="brand">
+      <img class="brand__mark" src="/brand-logo.png" alt="TrueCalci" width="32" height="32" style="border-radius:6px;">
+      <span class="brand__word">TRUECALCI</span>
+      <span class="brand__sub">Deterministic compute platform</span>
+    </a>
+
+    <nav class="site-nav" id="primary-nav" aria-label="Primary">
+      <a href="/#home">Platform</a>
+      <a href="/workstation.html" aria-current="page">Workstation</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#developer">MCP &amp; API</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="btn btn-secondary" id="currency-toggle" aria-label="Switch currency">
+        <span class="cur-long">USD ($) — Global</span>
+        <span class="cur-short">USD $</span>
+      </button>
+
+      <a class="btn btn-primary" href="#signin" id="signin-trigger">Sign In</a>
+
+      <button class="avatar-chip" id="account-trigger" hidden aria-expanded="false" aria-controls="account-popover">
+        <span class="avatar">TC</span>
+        <span style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">Developer</span>
+      </button>
+
+      <div class="account-popover" id="account-popover" hidden>
+        <div class="account-popover__id">
+          <div class="account-popover__avatar">TC</div>
+          <div style="padding:14px 16px;border-left:2px solid var(--color-text);">
+            <div style="font-family:var(--font-heading);font-weight:800;font-size:17px;letter-spacing:-0.02em;">Developer Account</div>
+            <div style="font-size:11.5px;opacity:0.6;margin:2px 0 8px;">developer@truecalci.com</div>
+            <div class="row" style="gap:6px;">
+              <span class="tag tag-accent">Pro Agency</span>
+              <span class="tag tag-outline">Verified</span>
+              <span class="tag tag-neutral" id="region-tag">Global ($)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- quota meter -->
+        <div style="border-top:2px solid var(--color-text);padding:12px 16px;">
+          <div class="quota">
+            <div class="quota__row"><span>Requests this cycle</span><span class="num">7,412 / 180,000</span></div>
+            <div class="quota__meter"><span style="width:4%;"></span></div>
+            <div class="quota__reset">172,588 left · resets 1 October 2026</div>
+          </div>
+        </div>
+
+        <!-- key management row -->
+        <div style="padding:0 16px 12px;">
+          <div class="key-row">
+            <span class="key-row__masked">tc_live_9f42••••••••e1c7</span>
+            <span class="rail-card__meta">Active</span>
+            <button class="btn btn-ghost t-sm" data-action="rotate-key">Rotate</button>
+          </div>
+        </div>
+
+        <div class="account-popover__links">
+          <a href="#account" data-action="open-billing">Manage subscription</a>
+          <a href="#account" data-action="open-billing">Invoices &amp; receipts</a>
+          <a href="/workstation.html">Saved scenarios</a>
+          <a href="#signout" id="signout">Sign out</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ======================================================================
+     WORKSTATION STUDIO MAIN
+     ====================================================================== -->
+<main id="view-app">
+
+<div class="ws-head">
+  <div>
+    <div class="kicker" style="margin-bottom:10px;">Workstation Studio · <span id="engine-code">CTR-18</span></div>
+    <h1 style="font-size:var(--text-3xl);letter-spacing:var(--tracking-tight);margin:0;" id="engine-title">1099 vs W-2 Parity &amp; S-Corp Optimizer</h1>
+  </div>
+  <div class="row" style="gap:8px;">
+    <span class="badge-status"><span class="badge-status__dot"></span>Deterministic · sub-millisecond</span>
+    <span class="tag tag-neutral" id="engine-version-tag">engine contractor.parity@2.6.1</span>
+    <button class="btn btn-secondary" id="drawer-open">Show derivation</button>
+  </div>
+</div>
+
+<div class="ws" id="ws-shell">
+
+  <!-- ------------------------------------------------------------------
+       LEFT NAVIGATION DRAWER (24 Deterministic Engines)
+       ------------------------------------------------------------------ -->
+  <aside class="ws-rail" id="ws-rail" aria-label="Engines">
+    <div class="caps" style="opacity:0.5;margin-bottom:12px;">Engines · 24 Production</div>
+
+    <!-- Suite 1: Remote & Contractor -->
+    <div class="ws-rail__group">
+      <button class="ws-rail__head" aria-expanded="true" data-group="remote">
+        <span class="ws-rail__chev" aria-hidden="true"></span>
+        Remote &amp; contractor suite
+        <span class="ws-rail__count">5</span>
+      </button>
+      <div class="ws-rail__list">
+        <button class="ws-tool" aria-current="true" data-code="CTR-18" data-title="1099 vs W-2 Parity &amp; S-Corp Optimizer" data-slug="contractor.parity">
+          <span>1099 vs W-2 Parity</span><span class="ws-tool__code">CTR-18</span>
+        </button>
+        <button class="ws-tool" data-code="SCP-19" data-title="S-Corp Reasonable Salary Optimizer" data-slug="scorp.optimize">
+          <span>S-Corp Salary Optimizer</span><span class="ws-tool__code">SCP-19</span>
+        </button>
+        <button class="ws-tool" data-code="SLO-20" data-title="Solo 401(k) Maximizer" data-slug="solo401k.max">
+          <span>Solo 401(k) Maximizer</span><span class="ws-tool__code">SLO-20</span>
+        </button>
+        <button class="ws-tool" data-code="FXR-21" data-title="Cross-Border FX Rail Drag" data-slug="fx.raildrag">
+          <span>FX Rail Drag</span><span class="ws-tool__code">FXR-21</span>
+        </button>
+        <button class="ws-tool" data-code="BHF-22" data-title="Billable Hourly Floor Solver" data-slug="billable.floor">
+          <span>Billable Hourly Floor</span><span class="ws-tool__code">BHF-22</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suite 2: AI Agent & Cloud FinOps (NEW 5 Engines) -->
+    <div class="ws-rail__group">
+      <button class="ws-rail__head" aria-expanded="true" data-group="finops">
+        <span class="ws-rail__chev" aria-hidden="true"></span>
+        AI agent &amp; Cloud FinOps
+        <span class="ws-rail__count">5</span>
+      </button>
+      <div class="ws-rail__list">
+        <button class="ws-tool" data-code="AIT-20" data-title="AI Token Arbitrage &amp; Cache Solver" data-slug="ai.tokens">
+          <span>AI Token Arbitrage</span><span class="ws-tool__code">AIT-20</span>
+        </button>
+        <button class="ws-tool" data-code="SRD-21" data-title="Startup Runway &amp; Option Pool Shuffle" data-slug="startup.runway">
+          <span>Startup Runway Dilution</span><span class="ws-tool__code">SRD-21</span>
+        </button>
+        <button class="ws-tool" data-code="B2B-22" data-title="B2B Cross-Border Withholding &amp; PE Risk" data-slug="b2b.wht">
+          <span>B2B Withholding &amp; PE Risk</span><span class="ws-tool__code">B2B-22</span>
+        </button>
+        <button class="ws-tool" data-code="FEI-23" data-title="IRS Form 2555 FEIE Nomad Tracker" data-slug="feie.nomad">
+          <span>FEIE Nomad Tracker</span><span class="ws-tool__code">FEI-23</span>
+        </button>
+        <button class="ws-tool" data-code="CEF-24" data-title="Cloud Egress &amp; Interconnect FinOps" data-slug="cloud.egress">
+          <span>Cloud Egress FinOps</span><span class="ws-tool__code">CEF-24</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suite 3: Global Finance & Real Estate -->
+    <div class="ws-rail__group">
+      <button class="ws-rail__head" aria-expanded="true" data-group="global">
+        <span class="ws-rail__chev" aria-hidden="true"></span>
+        Global finance &amp; real estate
+        <span class="ws-rail__count">4</span>
+      </button>
+      <div class="ws-rail__list">
+        <button class="ws-tool" data-code="MTG-01" data-title="Mortgage — PITI &amp; PMI" data-slug="mortgage.piti">
+          <span>Mortgage PITI &amp; PMI</span><span class="ws-tool__code">MTG-01</span>
+        </button>
+        <button class="ws-tool" data-code="VAT-02" data-title="VAT &amp; Sales Tax Solver" data-slug="vat.compute">
+          <span>VAT &amp; Sales Tax</span><span class="ws-tool__code">VAT-02</span>
+        </button>
+        <button class="ws-tool" data-code="TIP-03" data-title="Tip &amp; Bill Splitter" data-slug="tip.split">
+          <span>Tip &amp; Split</span><span class="ws-tool__code">TIP-03</span>
+        </button>
+        <button class="ws-tool" data-code="CMP-04" data-title="Compound Wealth &amp; 401(k)" data-slug="compound.401k">
+          <span>Compound Wealth</span><span class="ws-tool__code">CMP-04</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suite 4: Statutory & Taxation -->
+    <div class="ws-rail__group">
+      <button class="ws-rail__head" aria-expanded="false" data-group="india">
+        <span class="ws-rail__chev" aria-hidden="true"></span>
+        Statutory &amp; tax slabs
+        <span class="ws-rail__count">8</span>
+      </button>
+      <div class="ws-rail__list">
+        <button class="ws-tool" data-code="ITX-05" data-title="Income Tax — Section 115BAC (ITA 2025)" data-slug="incometax.115bac">
+          <span>Income Tax (115BAC)</span><span class="ws-tool__code">ITX-05</span>
+        </button>
+        <button class="ws-tool" data-code="GST-06" data-title="GST Calculator (CGST / SGST / IGST)" data-slug="gst.split">
+          <span>GST Calculator</span><span class="ws-tool__code">GST-06</span>
+        </button>
+        <button class="ws-tool" data-code="SIP-09" data-title="Mutual Fund SIP &amp; Step-Up" data-slug="sip.stepup">
+          <span>SIP Step-Up</span><span class="ws-tool__code">SIP-09</span>
+        </button>
+        <button class="ws-tool" data-code="FXD-10" data-title="Fixed Deposit Maturity" data-slug="fd.maturity">
+          <span>Fixed Deposit</span><span class="ws-tool__code">FXD-10</span>
+        </button>
+        <button class="ws-tool" data-code="GLD-11" data-title="Gold &amp; Jewellery Invoice" data-slug="gold.invoice">
+          <span>Gold Invoice</span><span class="ws-tool__code">GLD-11</span>
+        </button>
+        <button class="ws-tool" data-code="PPF-13" data-title="Public Provident Fund (PPF)" data-slug="ppf.growth">
+          <span>PPF Calculator</span><span class="ws-tool__code">PPF-13</span>
+        </button>
+        <button class="ws-tool" data-code="SSY-14" data-title="Sukanya Samriddhi (SSY)" data-slug="ssy.growth">
+          <span>Sukanya Samriddhi</span><span class="ws-tool__code">SSY-14</span>
+        </button>
+        <button class="ws-tool" data-code="HLN-07" data-title="Home Loan EMI &amp; Prepayment" data-slug="homeloan.emi">
+          <span>Home Loan EMI</span><span class="ws-tool__code">HLN-07</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Suite 5: Engineering & Bitwise -->
+    <div class="ws-rail__group">
+      <button class="ws-rail__head" aria-expanded="false" data-group="engineering">
+        <span class="ws-rail__chev" aria-hidden="true"></span>
+        Engineering &amp; bitwise
+        <span class="ws-rail__count">2</span>
+      </button>
+      <div class="ws-rail__list">
+        <button class="ws-tool" data-code="SCI-15" data-title="Scientific 991 — V.P.A.M. Standard" data-slug="sci991.eval">
+          <span>Scientific 991</span><span class="ws-tool__code">SCI-15</span>
+        </button>
+        <button class="ws-tool" data-code="PRG-17" data-title="Programmer — 64-bit Bitboard" data-slug="programmer.bitwise">
+          <span>Programmer 64-bit</span><span class="ws-tool__code">PRG-17</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid var(--color-divider);">
+      <div class="quota">
+        <div class="quota__row"><span>Live Edge Gateway</span><span class="num">0.056ms</span></div>
+        <div class="quota__meter"><span style="width:100%;background:var(--color-success);"></span></div>
+        <div class="quota__reset">Deterministic IEEE 754 precision</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ------------------------------------------------------------------
+       CALCULATION CANVAS (Dynamic Stage)
+       ------------------------------------------------------------------ -->
+  <section class="ws-stage" id="ws-stage" aria-live="polite">
+
+    <!-- Flagship View: 1099 vs W-2 Parity & S-Corp -->
+    <div id="stage-contractor">
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Engagement inputs</h4>
+          <span class="t-sm" style="opacity:0.6;">Values computed in ephemeral RAM (zero data retention)</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="in-revenue">Gross contract revenue</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="in-revenue" type="number" value="285000" step="1000" data-calc>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-w2">Comparable W-2 salary</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="in-w2" type="number" value="215000" step="1000" data-calc>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-expenses">Deductible business expenses</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="in-expenses" type="number" value="24000" step="500" data-calc>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-retirement">Solo 401(k) deferral</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="in-retirement" type="number" value="23500" step="500" data-calc>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-health">Healthcare buffer — annual</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="in-health" type="number" value="18600" step="300" data-calc>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-hours">Billable hours / year</label>
+            <div class="input-group">
+              <input class="input num" id="in-hours" type="number" value="1700" step="25" data-calc>
+              <span class="input-suffix">hrs</span>
+            </div>
+          </div>
+
+          <div class="field" style="grid-column:span 2;">
+            <label for="in-salary-split">Reasonable salary split</label>
+            <div class="range">
+              <div class="range__row">
+                <input id="in-salary-split" type="range" min="20" max="80" step="1" value="34" data-calc>
+                <span class="range__val" id="out-salary-split">34%</span>
+              </div>
+              <span class="t-sm" style="opacity:0.6;">Under IRS Rev. Rul. 74-44, salary must reflect market value for services rendered.</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="in-state">State / jurisdiction</label>
+            <select class="input" id="in-state" data-calc>
+              <option>California (FTB sticky audit)</option>
+              <option selected>Texas — zero state income tax</option>
+              <option>New York (DTF domicile)</option>
+              <option>Washington</option>
+            </select>
+          </div>
+
+          <div class="field" style="align-content:end;">
+            <label class="switch" for="in-scorp">
+              <input type="checkbox" id="in-scorp" checked data-calc>
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Elect S-Corp treatment</span>
+            </label>
+          </div>
+
+          <div class="field" style="align-content:end;">
+            <label class="switch" for="in-qbi">
+              <input type="checkbox" id="in-qbi" checked data-calc>
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Apply QBI deduction (§199A)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- result -->
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label">Net annual cash — contractor route</div>
+          <div class="result__value num" id="out-net">$196,480</div>
+          <div class="result__delta result__delta--up" id="out-delta">+$18,240 against the W-2 offer</div>
+          <div class="row" style="gap:8px;margin-top:4px;">
+            <span class="badge-status"><span class="badge-status__dot"></span>Deterministic</span>
+            <span class="badge-status badge-status--info"><span class="badge-status__dot"></span>IRC §1402 · §199A</span>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric__value num" id="out-floor">$139</div>
+            <div class="metric__label">Billable floor / hr</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="out-se-tax">$14,688</div>
+            <div class="metric__label">FICA / SE tax</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="out-savings">$7,344</div>
+            <div class="metric__label">S-Corp FICA saved</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="out-eff-rate">24.8%</div>
+            <div class="metric__label">Effective rate</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- cash split -->
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Cash split — salary vs distribution</h4>
+          <button class="btn btn-ghost t-sm" id="drawer-open-2">How this is derived</button>
+        </div>
+
+        <div class="split-bar" id="split-bar">
+          <div class="split-bar__seg" style="width:34%;background:var(--color-accent);color:var(--color-bg);"><span>Salary</span></div>
+          <div class="split-bar__seg" style="width:44%;background:var(--color-accent-300);"><span>Distribution</span></div>
+          <div class="split-bar__seg" style="width:14%;background:var(--color-neutral-500);color:var(--color-bg);"><span>Tax</span></div>
+          <div class="split-bar__seg" style="width:8%;background:var(--color-success);color:var(--color-bg);"><span>401(k)</span></div>
+        </div>
+        <div class="split-legend">
+          <span class="split-legend__key"><span class="split-legend__swatch" style="background:var(--color-accent);"></span>Reasonable salary <span class="num" id="leg-salary">$96,900</span></span>
+          <span class="split-legend__key"><span class="split-legend__swatch" style="background:var(--color-accent-300);"></span>Distribution <span class="num" id="leg-dist">$125,400</span></span>
+          <span class="split-legend__key"><span class="split-legend__swatch" style="background:var(--color-neutral-500);"></span>Tax withheld <span class="num" id="leg-tax">$39,900</span></span>
+          <span class="split-legend__key"><span class="split-legend__swatch" style="background:var(--color-success);"></span>Retirement <span class="num" id="leg-ret">$23,500</span></span>
+        </div>
+      </div>
+
+      <!-- route comparison -->
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Route comparison — net cash to you</h4>
+          <span class="t-sm" style="opacity:0.6;">Same revenue, four treatments</span>
+        </div>
+
+        <div class="compare" id="compare-rows">
+          <div class="compare__row">
+            <span class="compare__name">S-Corp + 401(k)</span>
+            <div class="compare__track"><div class="compare__fill compare__fill--good" style="width:100%;"></div></div>
+            <span class="compare__amount" data-cmp="196480">$196,480</span>
+          </div>
+          <div class="compare__row">
+            <span class="compare__name">S-Corp, no deferral</span>
+            <div class="compare__track"><div class="compare__fill" style="width:91%;"></div></div>
+            <span class="compare__amount" data-cmp="178790">$178,790</span>
+          </div>
+          <div class="compare__row">
+            <span class="compare__name">Sole proprietor 1099</span>
+            <div class="compare__track"><div class="compare__fill compare__fill--alt" style="width:86%;"></div></div>
+            <span class="compare__amount" data-cmp="169120">$169,120</span>
+          </div>
+          <div class="compare__row">
+            <span class="compare__name">W-2 employee</span>
+            <div class="compare__track"><div class="compare__fill compare__fill--tax" style="width:81%;"></div></div>
+            <span class="compare__amount" data-cmp="158240">$158,240</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- payout rails -->
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Payout rails — ranked by annual drag</h4>
+          <span class="t-sm" style="opacity:0.6;">On <span class="num cur-symbol-inline">$</span><span class="num" id="rail-base">285,000</span> routed monthly</span>
+        </div>
+
+        <div id="rail-list">
+          <div class="rail-card rail-card--best">
+            <span class="rail-card__rank">01</span>
+            <span><span class="rail-card__name">Cross-Border Mid-Market FX Rail</span><span class="rail-card__meta">0.41% spread · mid-market reference</span></span>
+            <span class="rail-card__cost" data-rail="0.0041">$1,168</span>
+          </div>
+          <div class="rail-card">
+            <span class="rail-card__rank">02</span>
+            <span><span class="rail-card__name">Fintech Multi-Currency Balance</span><span class="rail-card__meta">0.68% spread · card load</span></span>
+            <span class="rail-card__cost" data-rail="0.0068">$1,938</span>
+          </div>
+          <div class="rail-card">
+            <span class="rail-card__rank">03</span>
+            <span><span class="rail-card__name">Interbank SWIFT Wire</span><span class="rail-card__meta">$28 flat + 1.05% spread</span></span>
+            <span class="rail-card__cost" data-rail="0.0105">$3,329</span>
+          </div>
+          <div class="rail-card">
+            <span class="rail-card__rank">04</span>
+            <span><span class="rail-card__name">Retail Banking Cross-Border Wire</span><span class="rail-card__meta">2.30% spread + fixed fee</span></span>
+            <span class="rail-card__cost" data-rail="0.023">$6,555</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Token Arbitrage Panel -->
+    <div id="stage-ai-tokens" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">AI Token Inference &amp; Prompt Cache Parameters</h4>
+          <span class="t-sm" style="opacity:0.6;">Statutory provider pricing matrices (Claude, OpenAI, DeepSeek, Gemini)</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="ai-prompt-tokens">Input prompt tokens / request</label>
+            <div class="input-group">
+              <input class="input num" id="ai-prompt-tokens" type="number" value="5000" step="500" data-calc-ai>
+              <span class="input-suffix">tokens</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="ai-comp-tokens">Output completion tokens / request</label>
+            <div class="input-group">
+              <input class="input num" id="ai-comp-tokens" type="number" value="1000" step="250" data-calc-ai>
+              <span class="input-suffix">tokens</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="ai-cache-ratio">Prompt cache hit ratio (%)</label>
+            <div class="input-group">
+              <input class="input num" id="ai-cache-ratio" type="number" value="80" min="0" max="100" step="5" data-calc-ai>
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+
+          <div class="field" style="align-content:end;">
+            <label class="switch" for="ai-batch">
+              <input type="checkbox" id="ai-batch" data-calc-ai>
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Batch API 50% discount</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-section">
+        <div class="result" style="margin-bottom:16px;">
+          <div class="result__label">Cost disparity across frontier models</div>
+          <div class="result__value num" id="ai-disparity-val">42.7x cheaper</div>
+          <div class="result__delta result__delta--up" id="ai-savings-summary">$1,875/mo saved at 100k requests</div>
+        </div>
+
+        <div class="table-responsive">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;" id="ai-matrix-table">
+            <thead>
+              <tr style="border-bottom:2px solid var(--color-divider);text-align:left;">
+                <th style="padding:8px;">Model</th>
+                <th style="padding:8px;">Cost / Request</th>
+                <th style="padding:8px;">Cost / 1k Calls</th>
+                <th style="padding:8px;">Cost / 1M Calls</th>
+                <th style="padding:8px;">Cache Savings</th>
+              </tr>
+            </thead>
+            <tbody id="ai-matrix-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Startup Runway & Dilution Panel -->
+    <div id="stage-startup" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Startup Runway &amp; Option Pool Shuffle Parameters</h4>
+          <span class="t-sm" style="opacity:0.6;">Post-Money SAFE &amp; Series A Dilution Waterfall</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="st-cash">Cash in bank</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-cash" type="number" value="750000" step="25000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-gross-burn">Monthly gross burn</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-gross-burn" type="number" value="65000" step="5000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-revenue">Monthly recurring revenue (MRR)</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-revenue" type="number" value="15000" step="2500" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-safe-inv">Post-money SAFE investment</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-safe-inv" type="number" value="1000000" step="100000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-safe-cap">SAFE post-money cap</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-safe-cap" type="number" value="10000000" step="500000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-series-a-inv">Series A investment</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-series-a-inv" type="number" value="3000000" step="250000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-series-a-pre">Series A pre-money valuation</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="st-series-a-pre" type="number" value="15000000" step="1000000" data-calc-st>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="st-option-pool">Unallocated option pool %</label>
+            <div class="input-group">
+              <input class="input num" id="st-option-pool" type="number" value="10" step="1" data-calc-st>
+              <span class="input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label">Cash runway remaining</div>
+          <div class="result__value num" id="st-runway-val">15.0 Months</div>
+          <div class="result__delta result__delta--up" id="st-zero-cash-date">Zero Cash: Oct 2027</div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric__value num" id="st-founder-ret">67.50%</div>
+            <div class="metric__label">Founder Retained %</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="st-safe-own">10.00%</div>
+            <div class="metric__label">SAFE Ownership %</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="st-series-own">16.67%</div>
+            <div class="metric__label">Series A Ownership %</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="st-net-burn">$50,000</div>
+            <div class="metric__label">Monthly Net Burn</div>
+          </div>
+        </div>
+      </div>
+    <!-- B2B Withholding & PE Risk Panel -->
+    <div id="stage-b2b" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Cross-Border B2B Invoicing &amp; Permanent Establishment Risk</h4>
+          <span class="t-sm" style="opacity:0.6;">Bilateral DTAA Treaty Matrices, IRC §861 / §882, and 183-Day PE Thresholds</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="b2b-invoice">Invoice amount</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="b2b-invoice" type="number" value="50000" step="5000" data-calc-b2b>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="b2b-service">Nature of services rendered</label>
+            <select class="input" id="b2b-service" data-calc-b2b>
+              <option value="software_license_saas" selected>Software License / SaaS Subscription</option>
+              <option value="technical_consulting">Technical Consulting / Engineering</option>
+              <option value="digital_marketing">Digital Marketing / Lead Generation</option>
+              <option value="management_services">Management &amp; Administrative Services</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="b2b-payer">Client / Payer jurisdiction</label>
+            <select class="input" id="b2b-payer" data-calc-b2b>
+              <option value="US" selected>United States (IRS)</option>
+              <option value="IN">India (CBDT)</option>
+              <option value="DE">Germany (BZSt)</option>
+              <option value="GB">United Kingdom (HMRC)</option>
+              <option value="AU">Australia (ATO)</option>
+              <option value="SG">Singapore (IRAS)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="b2b-provider">Contractor / Provider tax domicile</label>
+            <select class="input" id="b2b-provider" data-calc-b2b>
+              <option value="US">United States</option>
+              <option value="IN" selected>India (DTAA Treaty Partner)</option>
+              <option value="DE">Germany</option>
+              <option value="GB">United Kingdom</option>
+              <option value="SG">Singapore</option>
+              <option value="EE">Estonia (e-Residency)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="b2b-days">On-site presence in client country (rolling 365 days)</label>
+            <div class="input-group">
+              <input class="input num" id="b2b-days" type="number" value="45" min="0" max="365" step="5" data-calc-b2b>
+              <span class="input-suffix">days</span>
+            </div>
+          </div>
+
+          <div class="field" style="align-content:end;">
+            <label class="switch" for="b2b-trc">
+              <input type="checkbox" id="b2b-trc" checked data-calc-b2b>
+              <span class="switch__track" aria-hidden="true"></span>
+              <span>Valid Tax Residency Certificate (TRC) + Form 10F</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label">Net cash collected after statutory withholding</div>
+          <div class="result__value num" id="b2b-net-val">$42,500</div>
+          <div class="result__delta result__delta--down" id="b2b-wht-drag">Withholding Drag: -$7,500 (15.00%)</div>
+          <div class="row" style="gap:8px;margin-top:4px;">
+            <span class="badge-status" id="b2b-pe-badge"><span class="badge-status__dot"></span>No PE Risk (&lt;183 Days)</span>
+            <span class="badge-status badge-status--info" id="b2b-treaty-badge">DTAA Article 12 Active</span>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric__value num" id="b2b-statutory-rate">30.00%</div>
+            <div class="metric__label">Statutory Rate (No TRC)</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="b2b-treaty-rate">15.00%</div>
+            <div class="metric__label">Applicable Treaty Rate</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="b2b-pe-days-rem">138 days</div>
+            <div class="metric__label">Safe Days Before PE Trigger</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="b2b-remediation-flag">W-8BEN-E</div>
+            <div class="metric__label">Mandatory Form</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEIE Nomad Tracker Panel -->
+    <div id="stage-feie" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">IRS Form 2555 Foreign Earned Income Exclusion (FEIE)</h4>
+          <span class="t-sm" style="opacity:0.6;">IRC §911 Statutory Physical Presence Test (330 Full Days Abroad)</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="feie-income">Foreign earned income (USD)</label>
+            <div class="input-group">
+              <span class="input-group__pill cur-symbol">$</span>
+              <input class="input num" id="feie-income" type="number" value="145000" step="5000" data-calc-feie>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="feie-days">Full days abroad in 365-day window</label>
+            <div class="input-group">
+              <input class="input num" id="feie-days" type="number" value="340" min="0" max="365" step="1" data-calc-feie>
+              <span class="input-suffix">days</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="feie-us-days">Days physically present in the United States</label>
+            <div class="input-group">
+              <input class="input num" id="feie-us-days" type="number" value="25" min="0" max="365" step="1" data-calc-feie>
+              <span class="input-suffix">days</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="feie-year">Taxation statutory calendar year</label>
+            <select class="input" id="feie-year" data-calc-feie>
+              <option value="2026" selected>2026 (Statutory Cap: $130,000)</option>
+              <option value="2025">2025 (Statutory Cap: $126,500)</option>
+              <option value="2024">2024 (Statutory Cap: $120,000)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label">FEIE Qualified Exclusion Amount</div>
+          <div class="result__value num" id="feie-excluded-val">$130,000</div>
+          <div class="result__delta result__delta--up" id="feie-tax-saved-delta">Estimated Federal Tax Saved: $31,200</div>
+          <div class="row" style="gap:8px;margin-top:4px;">
+            <span class="badge-status" id="feie-status-pill"><span class="badge-status__dot"></span>PPT Met (340/330 Days)</span>
+            <span class="badge-status badge-status--info">IRC §911 Compliant</span>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric__value num" id="feie-statutory-cap">$130,000</div>
+            <div class="metric__label">Maximum Statutory Cap</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="feie-taxable-excess">$15,000</div>
+            <div class="metric__label">Taxable Excess Income</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="feie-buffer-days">10 days</div>
+            <div class="metric__label">Safe Buffer Over 330 Days</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="feie-audit-risk">Low</div>
+            <div class="metric__label">IRS Audit Scrutiny Risk</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Egress FinOps Panel -->
+    <div id="stage-egress" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;">Multi-Cloud Egress &amp; Zero-Egress Transit Optimizer</h4>
+          <span class="t-sm" style="opacity:0.6;">Hyperscaler Tiered Pricing vs Direct Interconnect &amp; R2 CDN Transit</span>
+        </div>
+
+        <div class="ws-fields">
+          <div class="field">
+            <label for="egress-gb">Monthly outbound internet egress</label>
+            <div class="input-group">
+              <input class="input num" id="egress-gb" type="number" value="100000" step="10000" data-calc-egress>
+              <span class="input-suffix">GB (100 TB)</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="egress-provider">Primary Hyperscaler Cloud</label>
+            <select class="input" id="egress-provider" data-calc-egress>
+              <option value="AWS" selected>Amazon Web Services (AWS EC2/S3)</option>
+              <option value="GCP">Google Cloud Platform (GCP Compute/GCS)</option>
+              <option value="Azure">Microsoft Azure (Azure VMs/Blob)</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="egress-dest">Destination Network Topology</label>
+            <select class="input" id="egress-dest" data-calc-egress>
+              <option value="internet" selected>Public Internet (Standard Tier)</option>
+              <option value="direct_connect">Dedicated Interconnect / Direct Connect</option>
+              <option value="inter_region">Cross-Region VPC Peering</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="egress-commit">Dedicated Interconnect Port Speed</label>
+            <div class="input-group">
+              <input class="input num" id="egress-commit" type="number" value="10" min="1" max="100" step="5" data-calc-egress>
+              <span class="input-suffix">Gbps</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label">Optimized Monthly Architecture Cost</div>
+          <div class="result__value num" id="egress-opt-val">$2,450</div>
+          <div class="result__delta result__delta--up" id="egress-savings-delta">Monthly Savings: -$6,550 (72.8% reduction)</div>
+          <div class="row" style="gap:8px;margin-top:4px;">
+            <span class="badge-status"><span class="badge-status__dot"></span>Zero Egress Transit Active</span>
+            <span class="badge-status badge-status--info" id="egress-arch-pill">Cloudflare R2 + Worker Proxy</span>
+          </div>
+        </div>
+
+        <div class="metric-strip">
+          <div class="metric">
+            <div class="metric__value num" id="egress-std-cost">$9,000</div>
+            <div class="metric__label">Unoptimized Standard Egress</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="egress-annual-savings">$78,600</div>
+            <div class="metric__label">Annualized Infrastructure Savings</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="egress-effective-rate">$0.0245</div>
+            <div class="metric__label">Blended Cost / GB</div>
+          </div>
+          <div class="metric">
+            <div class="metric__value num" id="egress-roi-multiplier">3.67x</div>
+            <div class="metric__label">Cost Efficiency Factor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Engine Canvas (For Classical & Statutory Suite Engines) -->
+    <div id="stage-generic" hidden>
+      <div class="ws-section">
+        <div class="ws-section__head">
+          <h4 style="margin:0;" id="gen-engine-heading">Mathematical Parameter Inputs</h4>
+          <span class="t-sm" style="opacity:0.6;" id="gen-engine-sub">Deterministic calculation in RAM</span>
+        </div>
+        <div class="ws-fields" id="gen-fields-container"></div>
+      </div>
+
+      <div class="ws-section grid cols-2" style="gap:24px;">
+        <div class="result">
+          <div class="result__label" id="gen-result-label">Computed Value</div>
+          <div class="result__value num" id="gen-result-val">—</div>
+          <div class="result__delta result__delta--up" id="gen-result-sub">Precision validated</div>
+          <div class="row" style="gap:8px;margin-top:4px;">
+            <span class="badge-status"><span class="badge-status__dot"></span>Deterministic</span>
+            <span class="badge-status badge-status--info" id="gen-statute-tag">IEEE 754 Standard</span>
+          </div>
+        </div>
+
+        <div class="metric-strip" id="gen-metrics-container"></div>
+      </div>
+    </div>
+
+    <!-- Actions Footer -->
+    <div class="ws-section row" style="gap:12px;padding-top:8px;border-top:2px solid var(--color-divider);">
+      <button class="btn btn-primary" id="copy-derivation">Copy derivation</button>
+      <button class="btn btn-secondary" id="export-pdf">Export PDF</button>
+      <button class="btn btn-secondary" id="save-scenario">Save scenario</button>
+      <button class="btn btn-ghost" id="copy-api">Copy as API call</button>
+      <span class="t-sm" style="margin-left:auto;opacity:0.6;">Engine <span class="num" id="engine-slug">contractor.parity</span> · 0.056ms · 0 bytes stored</span>
+    </div>
+
+  </section>
+</div>
+
+<!-- ------------------------------------------------------------------
+     RIGHT-HAND DERIVATION DRAWER
+     ------------------------------------------------------------------ -->
+<aside class="drawer" id="derivation-drawer" data-open="false" aria-label="Derivation" aria-hidden="true">
+  <div class="drawer__head">
+    <span class="drawer__title">Mathematical Derivation</span>
+    <span class="tag tag-neutral num" id="drawer-code">CTR-18</span>
+    <button class="drawer__close" id="drawer-close" aria-label="Close derivation">✕</button>
+  </div>
+
+  <div class="drawer__body" id="drawer-body-content">
+    <div class="caps" style="opacity:0.5;margin-bottom:8px;">Self-employment tax base</div>
+    <div class="formula">SE<sub>base</sub> = (R − E) × 0.9235<br>
+SE<sub>tax</sub> = SE<sub>base</sub> × 0.153 &nbsp;up to OASDI cap ($176,100)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;+ (SE<sub>base</sub> − cap) × 0.029</div>
+
+    <div class="caps" style="opacity:0.5;margin:22px 0 8px;">S-Corp split</div>
+    <div class="formula">S = (R − E) × s &nbsp;&nbsp;(s = salary share)<br>
+D = (R − E) − S − D<sub>401k</sub><br>
+FICA = S × 0.153 &nbsp;⇒&nbsp; saving = (SE<sub>tax</sub> − FICA)</div>
+
+    <div class="caps" style="opacity:0.5;margin:22px 0 8px;">Billable floor</div>
+    <div class="formula">floor = (T + SE<sub>tax</sub> + H + B) ÷ h<br>
+where T = target take-home, H = healthcare buffer,<br>
+B = benefits load, h = billable hours</div>
+
+    <div class="caps" style="opacity:0.5;margin:26px 0 8px;">Statutory references</div>
+    <a class="statute" href="https://www.law.cornell.edu/uscode/text/26/1402" target="_blank" rel="noopener">
+      Self-employment income and the 92.35% base
+      <span class="statute__ref">IRC § 1402(a)</span>
+    </a>
+    <a class="statute" href="https://www.law.cornell.edu/uscode/text/26/199A" target="_blank" rel="noopener">
+      Qualified business income deduction
+      <span class="statute__ref">IRC § 199A</span>
+    </a>
+
+    <div class="alert alert--good" style="margin-top:22px;">
+      <div>
+        <div class="alert__title">Deterministic, not advisory</div>
+        <div class="alert__body">Every constant is governed by official statutory publications. This is computational verification, not accounting advice.</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+</main>
+
+<!-- ======================================================================
+     DODO PAYMENTS — CHECKOUT / PLAN SUMMARY MODAL
+     ====================================================================== -->
+<div class="sheet-backdrop" id="billing-modal" hidden role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+  <div class="checkout" id="checkout">
+    <div class="checkout__head">
+      <span class="kicker">Subscription</span>
+      <span class="drawer__title" id="checkout-title" style="margin-left:8px;">Pro Agency &amp; Scale</span>
+      <button class="drawer__close" id="billing-close" aria-label="Close" style="margin-left:auto;">✕</button>
+    </div>
+
+    <div class="checkout__body">
+      <div class="checkout__line"><span>Pro Agency &amp; Scale — annual</span><span class="num cur-amount" data-usd="$144.00" data-inr="₹11,520">$144.00</span></div>
+      <div class="checkout__line"><span id="tax-label">Sales tax / VAT</span><span class="num cur-amount" data-usd="$0.00" data-inr="₹0.00">$0.00</span></div>
+      <div class="checkout__line checkout__line--total"><span>Due today</span><span class="num cur-amount" data-usd="$144.00" data-inr="₹11,520">$144.00</span></div>
+
+      <div class="caps" style="opacity:0.5;margin:20px 0 8px;">Payment method</div>
+      <div class="pay-methods">
+        <label class="pay-method">
+          <input type="radio" name="pay" checked>
+          <span>Credit / Debit Card</span>
+          <span class="pay-method__meta">Global</span>
+        </label>
+        <label class="pay-method">
+          <input type="radio" name="pay">
+          <span>UPI / NetBanking</span>
+          <span class="pay-method__meta">India</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="checkout__foot">
+      <a class="btn btn-primary btn-block" id="dodo-checkout" href="https://checkout.dodopayments.com/buy/pdt_0Nq4T64vUf1g69B2t6R0U?quantity=1" target="_blank" rel="noopener">Continue to Dodo checkout</a>
+      <p class="checkout__mor">
+        Dodo Payments is the authorized Merchant of Record. Invoices, tax, and refunds are handled in the customer portal; TrueCalci never accesses your card details.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================================
+     APPLE-LANGUAGE SIGN-IN SHEET
+     ====================================================================== -->
+<div class="sheet-backdrop" id="signin-sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet" id="sheet">
+    <button class="sheet__close" id="sheet-close" aria-label="Close">✕</button>
+    <div class="sheet__head">
+      <img class="sheet__mark" src="/brand-logo.png" alt="" width="36" height="36" style="border-radius:6px;">
+      <div class="sheet__title" id="sheet-title">Sign in to TrueCalci</div>
+      <div class="sheet__sub" id="sheet-sub">Your API keys, saved scenarios and regional defaults, in one place.</div>
+    </div>
+
+    <div class="sheet__seg" id="sheet-seg" role="tablist">
+      <button role="tab" aria-selected="true" data-mode="signin">Sign in</button>
+      <button role="tab" aria-selected="false" data-mode="create">Create account</button>
+    </div>
+
+    <div class="sso">
+      <button class="sso__plain" data-auth="google" id="google-auth-btn">
+        <svg width="17" height="17" viewBox="0 0 18 18" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.91c1.7-1.57 2.69-3.88 2.69-6.62Z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.91-2.26c-.81.54-1.84.86-3.05.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.34A8.99 8.99 0 0 0 9 18Z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.94H.96a9 9 0 0 0 0 8.12l3.01-2.34Z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.46 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A8.99 8.99 0 0 0 .96 4.94l3.01 2.34C4.68 5.16 6.66 3.58 9 3.58Z"/></svg>
+        Continue with Google
+      </button>
+      <button class="sso__plain" data-auth="github" id="github-auth-btn">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 0 0-2.53 15.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.23 1.88.88 2.34.67.07-.52.28-.88.51-1.08-1.78-.2-3.65-.89-3.65-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.66 3.95.29.24.54.72.54 1.45v2.15c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+        Continue with GitHub
+      </button>
+    </div>
+
+    <div class="sheet__or"><span></span><span>or</span><span></span></div>
+
+    <input class="sheet__input" id="sheet-email" type="email" placeholder="developer@company.com" autocomplete="email">
+    <button class="sheet__cta" id="sheet-cta">Continue with email</button>
+    <div class="sheet__note">One-time magic link. Zero passwords to manage.</div>
+
+    <div class="sheet__legal">
+      Calculations execute in volatile memory. Continuing confirms acceptance of our
+      <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.
+    </div>
+  </div>
+</div>
+
+<!-- Toast for notifications -->
+<div id="toast" hidden style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:95;background:var(--color-text);color:var(--color-bg);padding:12px 18px;font-size:13px;letter-spacing:0.04em;box-shadow:var(--shadow-lg);"></div>
+
+<script src="/js/workstation.js"></script>
+</body>
+</html>
