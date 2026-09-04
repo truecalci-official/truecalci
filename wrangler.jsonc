@@ -1,6 +1,9 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "truecalci",
+  "main": "public_deploy/_worker.js",
   "compatibility_date": "2024-09-01",
-  "pages_build_output_dir": "./public_deploy"
+  "assets": {
+    "directory": "./public_deploy"
+  }
 }
