@@ -1309,34 +1309,55 @@ export default {
     }
 
     // -------------------------------------------------------------------------
-    // 7. Static Asset Fetching with Headers
+    // 7. Static Asset Fetching with Cache Control & Optimization
     // -------------------------------------------------------------------------
-    const response = await env.ASSETS.fetch(request);
-    const contentType = response.headers.get("Content-Type") || "";
+    try {
+      const response = await env.ASSETS.fetch(request);
+      const contentType = response.headers.get("Content-Type") || "";
 
-    if (contentType.includes("text/html") || url.pathname === "/" || url.pathname === "") {
-      const newHeaders = new Headers(response.headers);
-      newHeaders.set("Link", LINK_HEADER);
-      newHeaders.set("Content-Signal", "ai-train=yes, ai-input=yes, search=yes");
-      newHeaders.set("TDM-Reservation", "0");
-      newHeaders.set("Vary", "Accept");
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: newHeaders
-      });
+      if (contentType.includes("text/html") || url.pathname === "/" || url.pathname === "") {
+        const newHeaders = new Headers(response.headers);
+        newHeaders.set("Link", LINK_HEADER);
+        newHeaders.set("Content-Signal", "ai-train=yes, ai-input=yes, search=yes");
+        newHeaders.set("TDM-Reservation", "0");
+        newHeaders.set("Vary", "Accept");
+        newHeaders.set("Cache-Control", "no-cache, no-store, must-revalidate");
+        newHeaders.set("Pragma", "no-cache");
+        newHeaders.set("Expires", "0");
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: newHeaders
+        });
+      }
+
+      if (url.pathname.startsWith("/css/") || url.pathname.startsWith("/js/") || url.pathname.startsWith("/assets/")) {
+        const newHeaders = new Headers(response.headers);
+        if (url.searchParams.has("v")) {
+          newHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
+        } else {
+          newHeaders.set("Cache-Control", "public, max-age=86400, must-revalidate");
+        }
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: newHeaders
+        });
+      }
+
+      if (url.pathname === "/.well-known/api-catalog") {
+        const newHeaders = new Headers(response.headers);
+        newHeaders.set("Content-Type", "application/linkset+json; charset=utf-8");
+        return new Response(response.body, {
+          status: response.status,
+          statusText: response.statusText,
+          headers: newHeaders
+        });
+      }
+
+      return response;
+    } catch (err) {
+      return new Response("Not Found", { status: 404 });
     }
-
-    if (url.pathname === "/.well-known/api-catalog") {
-      const newHeaders = new Headers(response.headers);
-      newHeaders.set("Content-Type", "application/linkset+json; charset=utf-8");
-      return new Response(response.body, {
-        status: response.status,
-        statusText: response.statusText,
-        headers: newHeaders
-      });
-    }
-
-    return response;
   }
 };

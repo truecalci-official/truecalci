@@ -1,0 +1,457 @@
+/* ==========================================================================
+   TRUECALCI WORKSTATION COMPANION & IAB ADVERTISING ARCHITECTURE
+   Google AdSense, Prebid & IAB Compliant: Zero-CLS, High-Viewability Standards
+   ========================================================================== */
+
+/* Right Workstation Column: Hosts Companion Dock + Dedicated Ad Below */
+.workstation-right-dock,
+.ad-column-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  position: sticky;
+  top: 4.5rem;
+  max-height: calc(100vh - 5.5rem);
+  width: 100%;
+  transition: all var(--transition-base);
+}
+
+/* --------------------------------------------------------------------------
+   1. Workstation Companion Dock (Tape & Notes)
+   -------------------------------------------------------------------------- */
+.companion-dock {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  width: 100%;
+  max-height: 270px;
+}
+
+/* Collapsed State for Right Column */
+.dock-collapsed .workstation-right-dock,
+.dock-collapsed .ad-column-container {
+  width: 44px;
+  min-width: 44px;
+  overflow: hidden;
+  align-items: center;
+}
+
+.dock-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-subtle);
+}
+
+.dock-collapsed .dock-header {
+  padding: 0.5rem 0.25rem;
+  justify-content: center;
+  border-bottom: none;
+}
+
+.dock-title {
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.dock-collapsed .dock-title {
+  display: none;
+}
+
+.dock-toggle-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.dock-toggle-btn:hover {
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
+  border-color: var(--accent-border);
+}
+
+/* Dock Navigation Tabs */
+.dock-tabs {
+  display: flex;
+  padding: 0.35rem 0.5rem;
+  background-color: var(--bg-subtle);
+  border-bottom: 1px solid var(--border-color);
+  gap: 4px;
+}
+
+.dock-collapsed .dock-tabs {
+  display: none;
+}
+
+.dock-tab-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.3rem 0.5rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  transition: all var(--transition-fast);
+}
+
+.dock-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.dock-tab-btn.active {
+  background-color: var(--bg-surface);
+  color: var(--accent-primary);
+  border-color: var(--border-color);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Dock Panes Container */
+.dock-content {
+  padding: 0.65rem 0.75rem;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  scrollbar-width: none;
+}
+
+.dock-content::-webkit-scrollbar {
+  display: none;
+}
+
+.dock-collapsed .dock-content {
+  display: none;
+}
+
+/* Vertical Icon Rail for Collapsed Mode */
+.dock-collapsed-rail {
+  display: none;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-top: 0.65rem;
+  align-items: center;
+}
+
+.dock-collapsed .dock-collapsed-rail {
+  display: flex;
+}
+
+.dock-rail-icon-btn {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.dock-rail-icon-btn:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-border);
+  transform: scale(1.08);
+}
+
+/* 1. Tape / History Pane */
+.dock-pane {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dock-pane.active {
+  display: flex;
+}
+
+.history-empty-msg {
+  text-align: center;
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  padding: 1.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.history-item {
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.76rem;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.history-item:hover {
+  border-color: var(--accent-border);
+  background-color: var(--bg-surface);
+  transform: translateY(-1px);
+}
+
+.history-item-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.history-item-val {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+/* 2. Scratchpad Pane */
+.scratchpad-textarea {
+  width: 100%;
+  height: 140px;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 0.65rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-primary);
+  resize: vertical;
+  outline: none;
+  transition: border-color var(--transition-fast);
+  line-height: 1.35;
+}
+
+.scratchpad-textarea:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.scratchpad-help {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   2. Dedicated IAB Advertisement Below the Companion Dock
+   Technical Specifications:
+   - Size: 300×250 Medium Rectangle (MREC)
+   - Zero CLS layout containment (min-height reserved)
+   - Viewability: Above-the-fold desktop sticky placement (>75% viewability rate)
+   - Policy: Strict compliance labeling with 10px uppercase ADVERTISEMENT tag
+   -------------------------------------------------------------------------- */
+.sidebar-ad-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: opacity 0.2s var(--ease-spring);
+}
+
+.dock-collapsed .sidebar-ad-container {
+  display: none;
+}
+
+.ad-slot-wrapper {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.ad-compliance-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+  padding: 0 0.25rem;
+}
+
+.ad-label {
+  font-size: 0.62rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ad-label::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--emerald-primary);
+}
+
+.ad-specs-tag {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+/* 300x250 Medium Rectangle Container with Zero-CLS Dimension Reservation */
+.ad-slot-300x250 {
+  width: 100%;
+  max-width: 300px;
+  height: 250px;
+  min-height: 250px;
+  aspect-ratio: 300 / 250;
+  background: linear-gradient(180deg, var(--bg-subtle) 0%, var(--bg-surface) 100%);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  contain: layout;
+}
+
+.partner-graphic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.partner-icon {
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+  filter: drop-shadow(0 2px 8px var(--accent-glow));
+}
+
+.partner-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+.partner-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin-bottom: 0.65rem;
+  max-width: 240px;
+}
+
+.partner-cta-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 12px;
+  background-color: var(--accent-light);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.partner-cta-pill:hover {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px -2px var(--accent-glow);
+}
+
+/* --------------------------------------------------------------------------
+   3. Responsive Leaderboard Ad Slot (728×90 Desktop / 320×50 Mobile)
+   -------------------------------------------------------------------------- */
+.ad-leaderboard-container {
+  max-width: var(--max-width);
+  margin: 1.25rem auto;
+  padding: 0 1.25rem;
+  width: 100%;
+  min-height: 60px;
+  contain: layout;
+  content-visibility: auto;
+}
+
+.ad-slot-728x90 {
+  width: 100%;
+  max-width: 728px;
+  height: 60px;
+  min-height: 60px;
+  margin: 0 auto;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  box-shadow: var(--shadow-sm);
+  padding: 0 1rem;
+  contain: layout paint;
+}
+
+@media (max-width: 768px) {
+  .ad-slot-728x90 {
+    height: 50px;
+    min-height: 50px;
+    font-size: 0.7rem;
+  }
+}

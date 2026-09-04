@@ -25,17 +25,21 @@
   <meta property="og:url" content="https://truecalci.com/">
   <meta name="twitter:card" content="summary_large_image">
 
-  <!-- Modern Typography: Inter + Plus Jakarta Sans + JetBrains Mono -->
+  <!-- Modern Typography: Preconnect + Non-blocking Font Loading with System Font Fallbacks -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+  </noscript>
 
-  <!-- Application Stylesheets -->
-  <link rel="stylesheet" href="css/main.css?v=20260904_m3">
-  <link rel="stylesheet" href="css/ad-layout.css?v=20260904_m3">
-  <link rel="stylesheet" href="css/casio-calci.css?v=20260904_m3">
-  <link rel="stylesheet" href="css/financial.css?v=20260904_m3">
-  <link rel="stylesheet" href="css/components.css?v=20260904_m3">
+  <!-- Application Stylesheets (Root-Relative, Cache-Busted & Non-Adblockable) -->
+  <link rel="stylesheet" href="/css/main.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/layout.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/casio-calci.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/financial.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/components.css?v=20260904_perf">
 
   <!-- Schema.org Structured Data for Google, Bing, Claude, ChatGPT & Gemini -->
   <script type="application/ld+json">
@@ -342,7 +346,7 @@
         </button>
 
         <a href="#home" class="brand-area" aria-label="TrueCalci Enterprise Home" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-          <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
+          <img src="/assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
           <span class="brand-title" style="font-size: 1.18rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">TrueCalci</span>
         </a>
 
@@ -542,7 +546,7 @@
       <!-- Mobile Drawer Header with Glassmorphism Treatment -->
       <div class="sidebar-header-mobile">
         <span class="sidebar-header-title">
-          <img src="assets/brand-logo.svg" alt="TrueCalci" style="width: 22px; height: 22px; border-radius: 6px;">
+          <img src="/assets/brand-logo.svg" alt="TrueCalci" style="width: 22px; height: 22px; border-radius: 6px;">
           <span>Calculators</span>
           <span class="drawer-count-badge">15 Engines</span>
         </span>
@@ -815,6 +819,6 @@
   </div>
 
   <!-- Application Bootstrap -->
-  <script type="module" src="js/app.js?v=20260904_m3"></script>
+  <script type="module" src="/js/app.js?v=20260904_perf"></script>
 </body>
 </html>

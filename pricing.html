@@ -26,10 +26,14 @@
   <!-- Fonts & Styles -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap">
+  </noscript>
 
-  <link rel="stylesheet" href="css/main.css?v=20260904_m3">
-  <link rel="stylesheet" href="css/components.css?v=20260904_m3">
+  <link rel="stylesheet" href="/css/main.css?v=20260904_perf">
+  <link rel="stylesheet" href="/css/components.css?v=20260904_perf">
 
   <script type="application/ld+json">
   {
@@ -74,7 +78,7 @@
     <div class="header-container">
       <div style="display:flex; align-items:center; gap: 1.25rem;">
         <a href="/" class="brand-area" aria-label="TrueCalci Home" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-          <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
+          <img src="/assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
           <span class="brand-title" style="font-size: 1.18rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">TrueCalci</span>
         </a>
 
@@ -407,7 +411,7 @@
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 32px; margin-bottom: 40px;">
         <div>
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-            <img src="assets/brand-logo.svg" alt="TrueCalci Monogram" style="width: 26px; height: 26px; border-radius: 6px;">
+            <img src="/assets/brand-logo.svg" alt="TrueCalci Monogram" style="width: 26px; height: 26px; border-radius: 6px;">
             <span style="font-size: 1.1rem; font-weight: 800; color: var(--text-primary);">TrueCalci</span>
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.6; margin: 0 0 14px;">
