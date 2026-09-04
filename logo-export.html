@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrueCalci Brand Logo Assets — GitHub OAuth & Production Download</title>
+  <link rel="icon" type="image/svg+xml" href="assets/brand-logo.svg">
+  <style>
+    :root {
+      --bg-main: #090a0f;
+      --bg-card: #12151e;
+      --border: #232838;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background: var(--bg-main);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    h1 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.02em; }
+    p.subtitle { color: var(--text-muted); font-size: 1rem; margin-bottom: 32px; line-height: 1.5; }
+    
+    .preview-box {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .logo-img {
+      width: 256px;
+      height: 256px;
+      border-radius: 64px;
+      box-shadow: 0 20px 40px rgba(37,99,235,0.35);
+      transition: transform 0.2s ease;
+    }
+    .logo-img:hover {
+      transform: scale(1.03);
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: rgba(37,99,235,0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(37,99,235,0.3);
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 10px 25px -5px rgba(37,99,235,0.4);
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #ffffff;
+      border-color: #334155;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+    }
+    .btn-subtext {
+      font-size: 0.72rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    .instructions {
+      text-align: left;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 12px;
+      padding: 24px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .instructions h2 { font-size: 1.1rem; color: #ffffff; margin-bottom: 12px; }
+    .instructions ol { padding-left: 20px; margin-bottom: 12px; }
+    .instructions li { margin-bottom: 8px; }
+
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <span class="badge">Official Brand Assets</span>
+    <h1 style="margin-top: 12px;">TrueCalci Logo Export</h1>
+    <p class="subtitle">Download the crisp vector monogram logo formatted for GitHub OAuth App registration, social previews, and repository branding.</p>
+
+    <!-- Visual Preview -->
+    <div class="preview-box">
+      <img id="preview-logo" src="assets/brand-logo.svg" alt="TrueCalci Logo" class="logo-img" width="256" height="256">
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        TrueCalci "TC" Monogram • Geometric Tech Blue Squircle
+      </div>
+    </div>
+
+    <!-- Download Buttons -->
+    <div class="btn-grid">
+      <button id="btn-download-512" class="btn btn-primary">
+        <span>Download 512×512 PNG</span>
+        <span class="btn-subtext">Required for GitHub OAuth App</span>
+      </button>
+
+      <button id="btn-download-1024" class="btn btn-secondary">
+        <span>Download 1024×1024 PNG</span>
+        <span class="btn-subtext">Retina Hi-Res & Social Card</span>
+      </button>
+
+      <a href="assets/brand-logo.svg" download="truecalci-logo.svg" class="btn btn-secondary">
+        <span>Download Vector SVG</span>
+        <span class="btn-subtext">Infinite Scale Vector File</span>
+      </a>
+    </div>
+
+    <!-- GitHub OAuth Registration Instructions -->
+    <div class="instructions">
+      <h2>How to upload into GitHub:</h2>
+      <ol>
+        <li>Click <strong>"Download 512×512 PNG"</strong> above to save <code>truecalci-logo-512.png</code> to your device.</li>
+        <li>Go to your GitHub App / OAuth App page: <br>
+            <a href="https://github.com/settings/developers" target="_blank" style="color: #60a5fa; text-decoration: underline;">GitHub Developer Settings → OAuth Apps</a>.</li>
+        <li>Select your OAuth App (or click <strong>New OAuth App</strong>).</li>
+        <li>Under <strong>Application logo</strong>, drag and drop the downloaded <code>truecalci-logo-512.png</code> file.</li>
+        <li>Click <strong>Upload logo</strong> (or <strong>Update application</strong>) at the bottom.</li>
+      </ol>
+      <div style="margin-top: 10px; font-size: 0.8rem; color: var(--success); display: flex; align-items: center; gap: 6px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+        <span id="save-status">Assets pre-rendered and saved to <code>/assets/brand-logo-512.png</code> and <code>/assets/brand-logo-1024.png</code>.</span>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="export-canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("export-canvas");
+    const ctx = canvas.getContext("2d");
+
+    function renderAndSave(size, autoSave = false) {
+      return new Promise((resolve) => {
+        canvas.width = size;
+        canvas.height = size;
+
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+          ctx.clearRect(0, 0, size, size);
+          ctx.drawImage(img, 0, 0, size, size);
+          const dataUrl = canvas.toDataURL("image/png");
+
+          if (autoSave) {
+            fetch("/api/save-logo-png", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ size, dataUrl })
+            }).then(r => r.json()).then(resolve).catch(resolve);
+          } else {
+            const link = document.createElement("a");
+            link.download = `truecalci-logo-${size}.png`;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            resolve();
+          }
+        };
+        img.src = "assets/brand-logo.svg?" + Date.now();
+      });
+    }
+
+    // Auto-generate PNGs on server
+    window.addEventListener("DOMContentLoaded", async () => {
+      await renderAndSave(512, true);
+      await renderAndSave(1024, true);
+      const status = document.getElementById("save-status");
+      if (status) status.textContent = "Assets verified and rendered directly to /assets/brand-logo-512.png and /assets/brand-logo-1024.png";
+    });
+
+    document.getElementById("btn-download-512").addEventListener("click", () => renderAndSave(512, false));
+    document.getElementById("btn-download-1024").addEventListener("click", () => renderAndSave(1024, false));
+  </script>
+</body>
+</html>

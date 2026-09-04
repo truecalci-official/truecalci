@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "truecalci": {
+      "url": "https://truecalci.com/api/v1/mcp",
+      "headers": {
+        "Authorization": "Bearer tc_live_pro_a8f9c2e1b7_d04a"
+      }
+    }
+  }
+}

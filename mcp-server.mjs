@@ -71,6 +71,19 @@ const MCP_TOOLS = [
     }
   },
   {
+    name: "truecalci_tip_splitter",
+    description: "Calculate restaurant bill tipping, tax inclusion, and per-guest itemized bill split.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        billAmount: { type: "number", description: "Subtotal or total bill before tip" },
+        tipPercent: { type: "number", default: 18, description: "Tip percentage (e.g. 15, 18, 20, 25)" },
+        numPeople: { type: "integer", default: 2, description: "Number of guests dining" }
+      },
+      required: ["billAmount"]
+    }
+  },
+  {
     name: "truecalci_compound_wealth",
     description: "Simulate exponential compounding wealth for 401(k), Roth IRA, UK ISA, or European ETF savings plans.",
     inputSchema: {
@@ -97,14 +110,45 @@ const MCP_TOOLS = [
     }
   },
   {
-    name: "truecalci_casio_solve_quadratic",
-    description: "Solve quadratic equation ax^2 + bx + c = 0 with high precision.",
+    name: "truecalci_sip_investment",
+    description: "Compute Systematic Investment Plan (SIP) mutual fund maturity with optional annual step-up percentage.",
     inputSchema: {
       type: "object",
       properties: {
+        monthlyInvestment: { type: "number", description: "Monthly SIP amount" },
+        annualReturnRate: { type: "number", default: 12, description: "Expected annual return rate in %" },
+        tenureYears: { type: "integer", default: 10, description: "Investment duration in years" },
+        stepUpPercent: { type: "number", default: 0, description: "Annual step-up percentage" }
+      },
+      required: ["monthlyInvestment"]
+    }
+  },
+  {
+    name: "truecalci_home_loan_emi",
+    description: "Compute reducing balance monthly loan EMI and total interest with amortization schedule.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        principal: { type: "number", description: "Loan amount" },
+        interestRatePercent: { type: "number", description: "Annual interest rate %" },
+        tenureYears: { type: "integer", default: 20, description: "Loan term in years" }
+      },
+      required: ["principal", "interestRatePercent"]
+    }
+  },
+  {
+    name: "truecalci_casio_solve_quadratic",
+    description: "Solve quadratic equation ax^2 + bx + c = 0 or simultaneous linear equations with high precision.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["quadratic", "simultaneous2"], default: "quadratic" },
         a: { type: "number" },
         b: { type: "number" },
-        c: { type: "number" }
+        c: { type: "number" },
+        a2: { type: "number" },
+        b2: { type: "number" },
+        c2: { type: "number" }
       },
       required: ["a", "b", "c"]
     }
@@ -125,6 +169,19 @@ const MCP_TOOLS = [
     }
   },
   {
+    name: "truecalci_projectile_motion",
+    description: "Calculate 2D physics projectile kinematics: max height, horizontal range, flight time, and velocity components.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialVelocityMs: { type: "number", description: "Initial launch velocity v0 in m/s" },
+        launchAngleDegrees: { type: "number", description: "Launch angle in degrees (0 to 90)" },
+        gravityMs2: { type: "number", default: 9.80665, description: "Gravitational acceleration in m/s^2" }
+      },
+      required: ["initialVelocityMs", "launchAngleDegrees"]
+    }
+  },
+  {
     name: "truecalci_black_scholes",
     description: "Calculate European Option pricing (Call/Put) and Greeks (Delta, Gamma, Vega, Theta) via Black-Scholes formula.",
     inputSchema: {
@@ -138,15 +195,83 @@ const MCP_TOOLS = [
       },
       required: ["stockPrice", "strikePrice", "timeToExpiryYears"]
     }
+  },
+  {
+    name: "truecalci_linear_regression",
+    description: "Calculate Ordinary Least Squares (OLS) best-fit line (y = mx + c), Pearson correlation coefficient r, and R^2 determination.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        points: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              x: { type: "number" },
+              y: { type: "number" }
+            },
+            required: ["x", "y"]
+          },
+          description: "Array of {x, y} coordinate pairs (min 2 points)"
+        }
+      },
+      required: ["points"]
+    }
+  },
+  {
+    name: "truecalci_pipe_flow",
+    description: "Darcy-Weisbach fluid mechanics pipe friction factor, Reynolds number, head loss, and pressure drop.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        flowRateM3s: { type: "number", default: 0.05, description: "Volumetric flow rate Q in m^3/s" },
+        pipeDiameterM: { type: "number", default: 0.15, description: "Internal pipe diameter D in meters" },
+        pipeLengthM: { type: "number", default: 100, description: "Total pipe run length L in meters" },
+        fluidDensityKgM3: { type: "number", default: 1000, description: "Fluid density (kg/m^3)" },
+        dynamicViscosityPaS: { type: "number", default: 0.001, description: "Dynamic viscosity (Pa·s)" },
+        pipeRoughnessM: { type: "number", default: 0.000045, description: "Absolute pipe surface roughness (m)" }
+      },
+      required: ["flowRateM3s", "pipeDiameterM", "pipeLengthM"]
+    }
+  },
+  {
+    name: "truecalci_rlc_circuit",
+    description: "Resonant RLC circuit AC impedance magnitude, phase angle, resonant frequency f0, and quality factor Q.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        resistanceOhms: { type: "number", default: 50, description: "Resistance R in Ohms (Ω)" },
+        inductanceHenrys: { type: "number", default: 0.01, description: "Inductance L in Henrys (H)" },
+        capacitanceFarads: { type: "number", default: 0.000001, description: "Capacitance C in Farads (F)" },
+        frequencyHz: { type: "number", description: "Operating frequency in Hz" }
+      },
+      required: ["resistanceOhms", "inductanceHenrys", "capacitanceFarads"]
+    }
+  },
+  {
+    name: "truecalci_rocket_deltav",
+    description: "Tsiolkovsky rocket equation delta-v budget, effective exhaust velocity, mass ratio, and propellant mass fraction.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialMassKg: { type: "number", default: 549054, description: "Wet launch mass m0 in kg" },
+        finalMassKg: { type: "number", default: 22200, description: "Dry burnout mass mf in kg" },
+        specificImpulseSeconds: { type: "number", default: 311, description: "Engine specific impulse Isp in seconds" },
+        gravityMs2: { type: "number", default: 9.80665, description: "Standard gravity g0 in m/s^2" }
+      },
+      required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
+    }
   }
 ];
 
 function handleToolCall(name, args) {
-  switch (name) {
-    case 'truecalci_contractor_parity':
+  const norm = name.replace(/^truecalci_/, '').toLowerCase();
+  switch (norm) {
+    case 'contractor_parity':
+    case 'contractor_takehome_matrix':
       return ContractorMatrixEngine.calculateParity(
         {
-          salary: Number(args.w2Salary || 130000),
+          salary: Number(args.w2Salary || args.salary || 130000),
           filingStatus: args.filingStatus || 'single',
           stateTaxRatePercent: Number(args.stateTaxRatePercent !== undefined ? args.stateTaxRatePercent : 5.0),
           healthSubsidyAnnual: Number(args.healthSubsidyAnnual !== undefined ? args.healthSubsidyAnnual : 7200),
@@ -154,7 +279,7 @@ function handleToolCall(name, args) {
           ptoDays: Number(args.ptoDays !== undefined ? args.ptoDays : 25)
         },
         {
-          hourlyRate: Number(args.contractorHourlyRate || 85),
+          hourlyRate: Number(args.contractorHourlyRate || args.hourlyRate || 85),
           hoursPerWeek: Number(args.hoursPerWeek || 40),
           weeksPerYear: Number(args.weeksPerYear || 48),
           annualExpenses: Number(args.annualExpenses !== undefined ? args.annualExpenses : 6000),
@@ -168,36 +293,72 @@ function handleToolCall(name, args) {
           selectedRail: args.selectedRail || 'wise'
         }
       );
-    case 'truecalci_mortgage_piti':
+    case 'mortgage_piti':
+    case 'mortgage':
       return GlobalFinanceEngine.calculateMortgagePITI({
         homePrice: Number(args.homePrice),
         downPaymentPercent: Number(args.downPaymentPercent || 20),
         interestRate: Number(args.interestRate),
         tenureYears: Number(args.tenureYears || 30)
       });
-    case 'truecalci_vat_sales_tax':
+    case 'vat_sales_tax':
+    case 'vat':
       return GlobalFinanceEngine.calculateVAT({
         amount: Number(args.amount),
-        vatRatePercent: Number(args.vatRatePercent || 20),
+        vatRatePercent: Number(args.vatRatePercent || args.taxRatePercent || 20),
         mode: args.mode || 'add'
       });
-    case 'truecalci_compound_wealth':
-      return GlobalFinanceEngine.calculateCompoundWealth({
-        principal: Number(args.principal || 0),
-        monthlyDeposit: Number(args.monthlyDeposit || 0),
-        annualRatePercent: Number(args.annualRatePercent || 8),
-        tenureYears: Number(args.tenureYears || 10)
+    case 'tip_splitter':
+    case 'tip':
+      return GlobalFinanceEngine.calculateTip({
+        billAmount: Number(args.billAmount),
+        tipPercent: Number(args.tipPercent || 18),
+        numberOfGuests: Number(args.numberOfGuests || args.numPeople || 2)
       });
-    case 'truecalci_indian_income_tax':
+    case 'compound_wealth':
+    case 'compound':
+      return GlobalFinanceEngine.calculateCompoundWealth({
+        principal: Number(args.principal || args.initialDeposit || 0),
+        monthlyDeposit: Number(args.monthlyDeposit || args.monthlyContribution || 0),
+        annualRatePercent: Number(args.annualRatePercent || args.rate || 8),
+        tenureYears: Number(args.tenureYears || args.timeHorizonYears || 10),
+        compoundingFrequency: Number(args.compoundingFrequency || 12)
+      });
+    case 'indian_income_tax':
+    case 'tax':
       return IndianFinanceEngine.calculateIncomeTax({
-        grossIncome: Number(args.ctc),
+        grossIncome: Number(args.ctc || args.income || args.grossIncome),
         isSalaried: args.isSalaried !== false
       });
-    case 'truecalci_casio_solve_quadratic': {
+    case 'sip_investment':
+    case 'sip':
+      return IndianFinanceEngine.calculateSIP({
+        monthlyInvestment: Number(args.monthlyInvestment || args.monthly),
+        annualReturnRate: Number(args.annualReturnRate || args.rate || 12),
+        tenureYears: Number(args.tenureYears || args.timePeriodYears || 10),
+        annualStepUpPercent: Number(args.stepUpPercent || 0)
+      });
+    case 'home_loan_emi':
+    case 'emi':
+      return IndianFinanceEngine.calculateHomeLoan({
+        principal: Number(args.principal),
+        annualInterestRate: Number(args.annualInterestRate || args.interestRatePercent || 8.5),
+        tenureYears: Number(args.tenureYears || 20)
+      });
+    case 'casio_solve_quadratic':
+    case 'casio_991_solve':
+    case 'calci991_solve':
+    case 'casio': {
       const casio = new CasioCalciEngine();
+      if (args.type === 'simultaneous2') {
+        return casio.solveSimultaneous2(
+          Number(args.a || 1), Number(args.b || 1), Number(args.c || 5),
+          Number(args.a2 || 1), Number(args.b2 || -1), Number(args.c2 || 1)
+        );
+      }
       return casio.solveQuadratic(Number(args.a), Number(args.b), Number(args.c));
     }
-    case 'truecalci_beam_bending':
+    case 'beam_bending':
       return EngineeringPhysicsEngine.calculateBeamBending({
         loadNewtons: Number(args.loadNewtons),
         lengthMeters: Number(args.lengthMeters),
@@ -205,13 +366,45 @@ function handleToolCall(name, args) {
         momentOfInertiaCm4: Number(args.momentOfInertiaCm4),
         distanceFromNeutralAxisMm: Number(args.distanceFromNeutralAxisMm)
       });
-    case 'truecalci_black_scholes':
+    case 'projectile_motion':
+      return EngineeringPhysicsEngine.calculateProjectileMotion({
+        initialVelocityMs: Number(args.initialVelocityMs),
+        launchAngleDegrees: Number(args.launchAngleDegrees),
+        gravityMs2: Number(args.gravityMs2 || 9.80665)
+      });
+    case 'black_scholes':
+    case 'black_scholes_options':
       return StatisticsOptionsEngine.calculateBlackScholes({
-        stockPrice: Number(args.stockPrice),
-        strikePrice: Number(args.strikePrice),
-        timeToExpiryYears: Number(args.timeToExpiryYears),
-        riskFreeRatePercent: Number(args.riskFreeRatePercent || 4.5),
-        volatilityPercent: Number(args.volatilityPercent || 25)
+        stockPrice: Number(args.stockPrice || args.spotPrice || 100),
+        strikePrice: Number(args.strikePrice || 100),
+        timeToExpiryYears: Number(args.timeToExpiryYears || 1),
+        riskFreeRatePercent: Number(args.riskFreeRatePercent || (args.riskFreeRate ? args.riskFreeRate * 100 : 4.5)),
+        volatilityPercent: Number(args.volatilityPercent || (args.volatility ? args.volatility * 100 : 25))
+      });
+    case 'linear_regression':
+      return StatisticsOptionsEngine.calculateLinearRegression(args.points);
+    case 'pipe_flow':
+      return EngineeringPhysicsEngine.calculatePipeFlow({
+        flowRateM3s: Number(args.flowRateM3s),
+        pipeDiameterM: Number(args.pipeDiameterM),
+        pipeLengthM: Number(args.pipeLengthM),
+        fluidDensityKgM3: Number(args.fluidDensityKgM3 || 1000),
+        dynamicViscosityPaS: Number(args.dynamicViscosityPaS || 0.001),
+        pipeRoughnessM: Number(args.pipeRoughnessM || 0.000045)
+      });
+    case 'rlc_circuit':
+      return EngineeringPhysicsEngine.calculateRlcCircuit({
+        resistanceOhms: Number(args.resistanceOhms),
+        inductanceHenrys: Number(args.inductanceHenrys),
+        capacitanceFarads: Number(args.capacitanceFarads),
+        frequencyHz: args.frequencyHz !== undefined ? Number(args.frequencyHz) : undefined
+      });
+    case 'rocket_deltav':
+      return EngineeringPhysicsEngine.calculateRocketDeltaV({
+        initialMassKg: Number(args.initialMassKg),
+        finalMassKg: Number(args.finalMassKg),
+        specificImpulseSeconds: Number(args.specificImpulseSeconds),
+        gravityMs2: Number(args.gravityMs2 || 9.80665)
       });
     default:
       throw new Error(`Unknown tool: ${name}`);

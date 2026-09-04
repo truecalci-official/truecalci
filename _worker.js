@@ -24,136 +24,246 @@ import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-e
 const MCP_TOOL_DEFINITIONS = [
   {
     name: "contractor_parity",
-    description: "Calculate 1099 vs W-2 tax parity, Section 199A QBI deduction, SECA taxes, and exact breakeven billing rate.",
+    description: "Calculate tax, benefits parity, and net spendable cash between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven billing rate ($/hr).",
     inputSchema: {
       type: "object",
       properties: {
-        w2Salary: { type: "number", default: 130000, description: "W-2 gross annual salary in USD" },
-        contractorHourlyRate: { type: "number", default: 85, description: "1099 contractor hourly rate in USD" },
-        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" },
-        stateTaxRatePercent: { type: "number", default: 5.0 },
-        healthSubsidyAnnual: { type: "number", default: 7200 },
-        match401kPercent: { type: "number", default: 4.0 },
-        ptoDays: { type: "number", default: 25 },
-        hoursPerWeek: { type: "number", default: 40 },
-        weeksPerYear: { type: "number", default: 48 },
-        annualExpenses: { type: "number", default: 6000 },
-        eligibleQBI: { type: "boolean", default: true }
+        w2Salary: { type: "number", default: 130000, description: "W-2 gross annual salary in USD ($/yr)" },
+        contractorHourlyRate: { type: "number", default: 85, description: "1099 contractor hourly billing rate in USD ($/hr)" },
+        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single", description: "Tax filing status" },
+        stateTaxRatePercent: { type: "number", default: 5.0, description: "State income tax rate %" },
+        healthSubsidyAnnual: { type: "number", default: 7200, description: "Annual W-2 employer health insurance subsidy ($/yr)" },
+        match401kPercent: { type: "number", default: 4.0, description: "W-2 employer 401(k) match %" },
+        ptoDays: { type: "number", default: 25, description: "W-2 paid time off days" },
+        hoursPerWeek: { type: "number", default: 40, description: "1099 billable hours per week" },
+        weeksPerYear: { type: "number", default: 48, description: "1099 billable weeks per year" },
+        annualExpenses: { type: "number", default: 6000, description: "1099 deductible business expenses ($/yr)" },
+        eligibleQBI: { type: "boolean", default: true, description: "Eligible for Section 199A 20% QBI deduction" },
+        targetCurrency: { type: "string", default: "EUR", description: "Target currency for international cross-border FX drag" },
+        selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
       },
       required: ["w2Salary", "contractorHourlyRate"]
     }
   },
   {
     name: "mortgage_piti",
-    description: "Calculate US monthly mortgage payment (PITI: Principal, Interest, Property Tax, Insurance & PMI) and amortization schedule.",
+    description: "Calculate US monthly mortgage payment (PITI: Principal, Interest, Property Tax, Insurance & PMI) and 30-year amortization schedule.",
     inputSchema: {
       type: "object",
       properties: {
-        homePrice: { type: "number", default: 450000 },
-        downPaymentPercent: { type: "number", default: 20 },
-        interestRate: { type: "number", default: 6.75 },
-        tenureYears: { type: "number", default: 30 }
+        homePrice: { type: "number", description: "Purchase price of the home in currency units (e.g. 450000)" },
+        downPaymentPercent: { type: "number", default: 20, description: "Down payment percentage (e.g. 20 for 20%)" },
+        interestRate: { type: "number", description: "Annual interest rate in % (e.g. 6.8)" },
+        tenureYears: { type: "integer", default: 30, description: "Loan duration in years (e.g. 15, 20, 30)" },
+        propertyTaxRatePercent: { type: "number", default: 1.2, description: "Annual property tax rate %" },
+        annualHomeInsurance: { type: "number", default: 1400, description: "Annual hazard insurance premium" },
+        annualPmiPercent: { type: "number", default: 0.75, description: "Annual PMI % if down payment < 20%" }
       },
       required: ["homePrice", "interestRate"]
     }
   },
   {
     name: "vat_sales_tax",
-    description: "Calculate European VAT and Global Sales Tax in Add (Net to Gross) or Remove (Gross to Net) modes.",
+    description: "Calculate European VAT and global Sales Tax in Add Mode (Net -> Gross) or Remove Mode (Gross -> Net) with statutory rate presets.",
     inputSchema: {
       type: "object",
       properties: {
-        amount: { type: "number", default: 1000 },
-        vatRatePercent: { type: "number", default: 20 },
-        mode: { type: "string", enum: ["add", "remove"], default: "add" }
+        amount: { type: "number", description: "Monetary amount" },
+        vatRatePercent: { type: "number", default: 20, description: "Tax rate in % (e.g. 20 for UK/France, 19 for Germany)" },
+        mode: { type: "string", enum: ["add", "remove"], default: "add", description: "'add' to add VAT to net price, 'remove' to extract VAT from gross" }
       },
       required: ["amount", "vatRatePercent"]
     }
   },
   {
-    name: "casio_991_solve",
-    description: "Scientific matrix, complex root solver, Simpson numerical integration, and derivative calculator.",
+    name: "tip_splitter",
+    description: "Calculate restaurant bill tipping, tax inclusion, and per-guest itemized bill split.",
     inputSchema: {
       type: "object",
       properties: {
-        expression: { type: "string", description: "Mathematical expression e.g. 2x + 8 = 24 or x^2" },
-        operation: { type: "string", enum: ["solve", "integrate", "derivative"], default: "solve" },
-        lowerLimit: { type: "number", default: 0 },
-        upperLimit: { type: "number", default: 1 }
+        billAmount: { type: "number", description: "Subtotal or total bill before tip" },
+        tipPercent: { type: "number", default: 18, description: "Tip percentage (e.g. 15, 18, 20, 25)" },
+        numPeople: { type: "integer", default: 2, description: "Number of guests dining" }
       },
-      required: ["expression"]
+      required: ["billAmount"]
+    }
+  },
+  {
+    name: "compound_wealth",
+    description: "Simulate exponential compounding wealth for 401(k), Roth IRA, UK ISA, or European ETF savings plans (Sparplan).",
+    inputSchema: {
+      type: "object",
+      properties: {
+        principal: { type: "number", default: 10000, description: "Initial principal deposit" },
+        monthlyDeposit: { type: "number", default: 500, description: "Monthly recurring contribution" },
+        annualRatePercent: { type: "number", default: 8, description: "Expected annual return in %" },
+        tenureYears: { type: "integer", default: 15, description: "Duration in years" },
+        compoundFrequency: { type: "integer", default: 12, description: "Compounding frequency per year (12 = monthly)" }
+      },
+      required: ["annualRatePercent", "tenureYears"]
+    }
+  },
+  {
+    name: "indian_income_tax",
+    description: "Compute Indian Income Tax under Budget 2025-26 New Tax Regime (with Section 87A rebate & ₹75,000 standard deduction) vs Old Tax Regime.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        ctc: { type: "number", description: "Annual Cost-to-Company / Gross Salary in INR (₹)" },
+        isSalaried: { type: "boolean", default: true, description: "Whether taxpayer is salaried (eligible for ₹75k standard deduction)" }
+      },
+      required: ["ctc"]
+    }
+  },
+  {
+    name: "sip_investment",
+    description: "Compute Systematic Investment Plan (SIP) mutual fund maturity with optional annual step-up percentage.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        monthlyInvestment: { type: "number", description: "Monthly SIP amount" },
+        annualReturnRate: { type: "number", default: 12, description: "Expected annual return rate in %" },
+        tenureYears: { type: "integer", default: 10, description: "Investment duration in years" },
+        stepUpPercent: { type: "number", default: 0, description: "Annual step-up percentage (e.g. 10 for 10% annual increase)" }
+      },
+      required: ["monthlyInvestment"]
+    }
+  },
+  {
+    name: "home_loan_emi",
+    description: "Compute reducing balance monthly loan EMI and total interest with amortization schedule.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        principal: { type: "number", description: "Loan amount" },
+        interestRatePercent: { type: "number", description: "Annual interest rate %" },
+        tenureYears: { type: "integer", default: 20, description: "Loan term in years" }
+      },
+      required: ["principal", "interestRatePercent"]
+    }
+  },
+  {
+    name: "casio_991_solve",
+    description: "Scientific solver: polynomial quadratic root solver (ax^2 + bx + c = 0) and 2-unknown simultaneous linear equations.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        type: { type: "string", enum: ["quadratic", "simultaneous2"], default: "quadratic" },
+        a: { type: "number" },
+        b: { type: "number" },
+        c: { type: "number" },
+        a2: { type: "number" },
+        b2: { type: "number" },
+        c2: { type: "number" }
+      },
+      required: ["a", "b", "c"]
     }
   },
   {
     name: "beam_bending",
-    description: "Calculate beam deflection, maximum bending moment, and extreme fiber stress.",
+    description: "Calculate structural engineering beam deflection, max bending moment, and peak stress (Euler-Bernoulli beam).",
     inputSchema: {
       type: "object",
       properties: {
-        loadNewtons: { type: "number", default: 5000 },
-        lengthMeters: { type: "number", default: 4 },
-        elasticModulusGpa: { type: "number", default: 200 },
-        momentOfInertiaCm4: { type: "number", default: 800 },
-        distanceFromNeutralAxisMm: { type: "number", default: 50 }
+        loadNewtons: { type: "number", description: "Point load P in Newtons (N)" },
+        lengthMeters: { type: "number", description: "Beam span L in meters (m)" },
+        elasticModulusGpa: { type: "number", default: 200, description: "Young's Modulus E in GPa (e.g. 200 for structural steel)" },
+        momentOfInertiaCm4: { type: "number", description: "Area moment of inertia I in cm^4" },
+        distanceFromNeutralAxisMm: { type: "number", description: "Distance y to extreme fiber in mm" }
       },
-      required: ["loadNewtons", "lengthMeters"]
+      required: ["loadNewtons", "lengthMeters", "momentOfInertiaCm4", "distanceFromNeutralAxisMm"]
+    }
+  },
+  {
+    name: "projectile_motion",
+    description: "Calculate 2D physics projectile kinematics: max height, horizontal range, flight time, and velocity components.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialVelocityMs: { type: "number", description: "Initial launch velocity v0 in m/s" },
+        launchAngleDegrees: { type: "number", description: "Launch angle in degrees (0 to 90)" },
+        gravityMs2: { type: "number", default: 9.80665, description: "Gravitational acceleration in m/s^2" }
+      },
+      required: ["initialVelocityMs", "launchAngleDegrees"]
     }
   },
   {
     name: "black_scholes",
-    description: "Black-Scholes-Merton European option pricing and Greeks (Delta, Gamma, Theta, Vega, Rho).",
+    description: "Compute quantitative finance European Option prices (Call and Put) and Greeks (Delta, Gamma, Vega, Theta) via Black-Scholes model.",
     inputSchema: {
       type: "object",
       properties: {
-        spotPrice: { type: "number", default: 100 },
-        strikePrice: { type: "number", default: 100 },
-        timeToExpiryYears: { type: "number", default: 1 },
-        riskFreeRate: { type: "number", default: 0.05 },
-        volatility: { type: "number", default: 0.2 }
+        spotPrice: { type: "number", default: 100, description: "Underlying stock/asset spot price S" },
+        strikePrice: { type: "number", default: 100, description: "Strike price K" },
+        timeToExpiryYears: { type: "number", default: 1, description: "Time to expiration T in years" },
+        riskFreeRate: { type: "number", default: 0.045, description: "Risk-free interest rate r (decimal or %)" },
+        volatility: { type: "number", default: 0.25, description: "Annualized implied volatility sigma (decimal or %)" }
       },
       required: ["spotPrice", "strikePrice", "timeToExpiryYears"]
     }
   },
   {
-    name: "pipe_flow",
-    description: "Darcy-Weisbach fluid mechanics pipe friction factor, Reynolds number, head loss, and pressure drop.",
+    name: "linear_regression",
+    description: "Calculate Ordinary Least Squares (OLS) best-fit line (y = mx + c), Pearson correlation coefficient r, and R^2 determination.",
     inputSchema: {
       type: "object",
       properties: {
-        flowRateM3s: { type: "number", default: 0.05 },
-        pipeDiameterM: { type: "number", default: 0.15 },
-        pipeLengthM: { type: "number", default: 100 },
-        fluidDensityKgM3: { type: "number", default: 1000 },
-        dynamicViscosityPaS: { type: "number", default: 0.001 },
-        pipeRoughnessM: { type: "number", default: 0.000045 }
+        points: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              x: { type: "number" },
+              y: { type: "number" }
+            },
+            required: ["x", "y"]
+          },
+          description: "Array of {x, y} coordinate pairs (minimum 2 points)"
+        }
+      },
+      required: ["points"]
+    }
+  },
+  {
+    name: "pipe_flow",
+    description: "Calculate fluid dynamics Darcy-Weisbach friction factor, Reynolds number, head loss, and pressure drop in pipes.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        flowRateM3s: { type: "number", default: 0.05, description: "Volumetric flow rate Q in m^3/s" },
+        pipeDiameterM: { type: "number", default: 0.15, description: "Internal pipe diameter D in meters" },
+        pipeLengthM: { type: "number", default: 100, description: "Total pipe run length L in meters" },
+        fluidDensityKgM3: { type: "number", default: 1000, description: "Fluid density (kg/m^3)" },
+        dynamicViscosityPaS: { type: "number", default: 0.001, description: "Dynamic viscosity (Pa·s)" },
+        pipeRoughnessM: { type: "number", default: 0.000045, description: "Absolute pipe surface roughness (m)" }
       },
       required: ["flowRateM3s", "pipeDiameterM", "pipeLengthM"]
     }
   },
   {
     name: "rlc_circuit",
-    description: "Resonant RLC circuit AC impedance magnitude, phase angle, resonant frequency f0, and quality factor Q.",
+    description: "Compute resonant RLC circuit electrical properties: resonant frequency f0, Q-factor, bandwidth, and AC impedance magnitude.",
     inputSchema: {
       type: "object",
       properties: {
-        resistanceOhms: { type: "number", default: 50 },
-        inductanceHenrys: { type: "number", default: 0.01 },
-        capacitanceFarads: { type: "number", default: 0.000001 },
-        frequencyHz: { type: "number" }
+        resistanceOhms: { type: "number", default: 50, description: "Resistance R in Ohms (Ω)" },
+        inductanceHenrys: { type: "number", default: 0.01, description: "Inductance L in Henrys (H)" },
+        capacitanceFarads: { type: "number", default: 0.000001, description: "Capacitance C in Farads (F)" },
+        frequencyHz: { type: "number", description: "Operating frequency f in Hz (optional)" }
       },
       required: ["resistanceOhms", "inductanceHenrys", "capacitanceFarads"]
     }
   },
   {
     name: "rocket_deltav",
-    description: "Tsiolkovsky rocket equation delta-v budget, effective exhaust velocity, mass ratio, and propellant mass fraction.",
+    description: "Aerospace & orbital mechanics: calculate Tsiolkovsky rocket equation delta-v budget, mass ratio, and propellant consumption.",
     inputSchema: {
       type: "object",
       properties: {
-        initialMassKg: { type: "number", default: 549054 },
-        finalMassKg: { type: "number", default: 22200 },
-        specificImpulseSeconds: { type: "number", default: 311 },
-        gravityMs2: { type: "number", default: 9.80665 }
+        initialMassKg: { type: "number", default: 549054, description: "Wet launch mass m0 in kg" },
+        finalMassKg: { type: "number", default: 22200, description: "Dry burnout mass mf in kg" },
+        specificImpulseSeconds: { type: "number", default: 311, description: "Engine specific impulse Isp in seconds" },
+        gravityMs2: { type: "number", default: 9.80665, description: "Standard gravity g0 in m/s^2" }
       },
       required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
     }
@@ -360,8 +470,50 @@ function executeTool(toolName, params) {
   if (t === "vat_sales_tax" || t === "vat") {
     return GlobalFinanceEngine.calculateVAT({
       amount: Number(params.amount || 1000),
-      vatRatePercent: Number(params.vatRatePercent || params.rate || 20),
+      vatRatePercent: Number(params.vatRatePercent || params.taxRatePercent || params.rate || 20),
       mode: params.mode || "add"
+    });
+  }
+
+  if (t === "tip_splitter" || t === "tip") {
+    return GlobalFinanceEngine.calculateTip({
+      billAmount: Number(params.billAmount),
+      tipPercent: Number(params.tipPercent || 18),
+      numberOfGuests: Number(params.numberOfGuests || params.numPeople || 2)
+    });
+  }
+
+  if (t === "compound_wealth" || t === "compound") {
+    return GlobalFinanceEngine.calculateCompoundWealth({
+      principal: Number(params.principal || params.initialDeposit || 0),
+      monthlyDeposit: Number(params.monthlyDeposit || params.monthlyContribution || 0),
+      annualRatePercent: Number(params.annualRatePercent || params.rate || 8),
+      tenureYears: Number(params.tenureYears || params.timeHorizonYears || 10),
+      compoundingFrequency: Number(params.compoundingFrequency || params.compoundFrequency || 12)
+    });
+  }
+
+  if (t === "indian_income_tax" || t === "tax") {
+    return IndianFinanceEngine.calculateIncomeTax({
+      grossIncome: Number(params.ctc || params.income || params.grossIncome),
+      isSalaried: params.isSalaried !== false
+    });
+  }
+
+  if (t === "sip_investment" || t === "sip") {
+    return IndianFinanceEngine.calculateSIP({
+      monthlyInvestment: Number(params.monthlyInvestment || params.monthly),
+      annualReturnRate: Number(params.annualReturnRate || params.rate || 12),
+      tenureYears: Number(params.tenureYears || params.timePeriodYears || params.years || 10),
+      annualStepUpPercent: Number(params.stepUpPercent || params.annualStepUpPercent || 0)
+    });
+  }
+
+  if (t === "home_loan_emi" || t === "emi") {
+    return IndianFinanceEngine.calculateHomeLoan({
+      principal: Number(params.principal),
+      annualInterestRate: Number(params.annualInterestRate || params.interestRatePercent || params.rate || 8.5),
+      tenureYears: Number(params.tenureYears || params.years || 20)
     });
   }
 
@@ -372,6 +524,16 @@ function executeTool(toolName, params) {
         Number(params.a || 1), Number(params.b || 1), Number(params.c || 5),
         Number(params.a2 || 1), Number(params.b2 || -1), Number(params.c2 || 1)
       );
+    }
+    if (params.expression) {
+      const expr = String(params.expression).replace(/\s+/g, '').replace(/=0$/, '');
+      const quadMatch = expr.match(/^([+-]?\d*)x\^?2([+-]\d*)x([+-]\d+)$/i);
+      if (quadMatch) {
+        let a = quadMatch[1] === '' || quadMatch[1] === '+' ? 1 : (quadMatch[1] === '-' ? -1 : Number(quadMatch[1]));
+        let b = quadMatch[2] === '+' ? 1 : (quadMatch[2] === '-' ? -1 : Number(quadMatch[2]));
+        let c = Number(quadMatch[3]);
+        return casio.solveQuadratic(a, b, c);
+      }
     }
     return casio.solveQuadratic(Number(params.a ?? 1), Number(params.b ?? -5), Number(params.c ?? 6));
   }
@@ -386,6 +548,14 @@ function executeTool(toolName, params) {
     });
   }
 
+  if (t === "projectile_motion") {
+    return EngineeringPhysicsEngine.calculateProjectileMotion({
+      initialVelocityMs: Number(params.initialVelocityMs),
+      launchAngleDegrees: Number(params.launchAngleDegrees),
+      gravityMs2: Number(params.gravityMs2 || 9.80665)
+    });
+  }
+
   if (t === "black_scholes" || t === "black_scholes_options") {
     return StatisticsOptionsEngine.calculateBlackScholes({
       stockPrice: Number(params.stockPrice || params.spotPrice || 100),
@@ -394,6 +564,10 @@ function executeTool(toolName, params) {
       riskFreeRatePercent: Number(params.riskFreeRatePercent || (params.riskFreeRate ? params.riskFreeRate * 100 : 4.5)),
       volatilityPercent: Number(params.volatilityPercent || (params.volatility ? params.volatility * 100 : 20))
     });
+  }
+
+  if (t === "linear_regression") {
+    return StatisticsOptionsEngine.calculateLinearRegression(params.points);
   }
 
   if (t === "pipe_flow") {
@@ -832,45 +1006,37 @@ export default {
       });
     }
 
-      if (accept.includes("application/json") && !code) {
-        return new Response(JSON.stringify({
-          success: true,
-          provider: "google",
-          user: {
-            id: "goog_10847291",
-            name: "Alex Chen",
-            login: "alex.chen",
-            email: "alex.chen@gmail.com",
-            avatar_url: "https://lh3.googleusercontent.com/a/default-user",
-            tier: "Developer Starter",
-            tierId: "starter",
-            quotaLimit: 2500
-          },
-          token: `tc_token_goog_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`,
-          apiKey: `tc_live_starter_${Math.random().toString(36).substring(2, 10)}`
-        }), {
-          status: 200,
-          headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
-        });
-      }
-
-      return new Response(`<!DOCTYPE html><html><body><script>
-        localStorage.setItem('tc_dev_user', JSON.stringify({
-          id: 'goog_10847291',
-          name: 'Alex Chen',
-          handle: 'alex.chen',
-          email: 'alex.chen@gmail.com',
-          avatar_url: 'https://lh3.googleusercontent.com/a/default-user',
-          provider: 'google',
-          tier: 'Developer Starter',
-          tierId: 'starter',
-          quotaLimit: 2500
-        }));
-        localStorage.setItem('tc_dev_auth', 'true');
-        window.location.href = '/#developer';
-      </script><p style="font-family: sans-serif; padding: 20px;">Redirecting to Developer Dashboard...</p></body></html>`, {
+    // -------------------------------------------------------------------------
+    // 3.8. API Health & Tool Discovery Endpoints
+    // -------------------------------------------------------------------------
+    if (url.pathname === "/api/health" || url.pathname === "/api/v1/health") {
+      return new Response(JSON.stringify({
+        status: "ok",
+        service: "TrueCalci Edge Computational Engine",
+        version: "2.0.0",
+        timestamp: new Date().toISOString(),
+        modelsSupported: ["Claude 3.7 Sonnet", "Claude 3.5 Sonnet", "GPT-4o", "Gemini 2.0 Flash", "DeepSeek-R1"]
+      }, null, 2), {
         status: 200,
-        headers: { "Content-Type": "text/html; charset=utf-8" }
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Access-Control-Allow-Origin": "*"
+        }
+      });
+    }
+
+    if (url.pathname === "/api/v1/tools" || url.pathname === "/mcp/tools" || url.pathname === "/.well-known/mcp.json") {
+      return new Response(JSON.stringify({
+        name: "truecalci_mcp_suite",
+        description: "High-precision mathematical and financial computational tool suite for AI Agents and LLMs.",
+        protocolVersion: "2024-11-05",
+        tools: MCP_TOOL_DEFINITIONS
+      }, null, 2), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Access-Control-Allow-Origin": "*"
+        }
       });
     }
 
@@ -878,6 +1044,23 @@ export default {
     // 4. Model Context Protocol (MCP) Streamable HTTP JSON-RPC 2.0 Handler
     // -------------------------------------------------------------------------
     if (url.pathname === "/api/v1/mcp" || url.pathname === "/mcp") {
+      if (request.method === "GET") {
+        return new Response(JSON.stringify({
+          status: "ok",
+          endpoint: "TrueCalci Streamable HTTP MCP Endpoint",
+          protocol: "MCP JSON-RPC 2.0",
+          capabilities: { tools: {} },
+          supportedMethods: ["initialize", "tools/list", "tools/call", "ping"]
+        }, null, 2), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key"
+          }
+        });
+      }
+
       if (request.method === "POST") {
         // Enforce rate limit (tier burst limit + monthly quota)
         const rateCheck = checkRateLimit(clientIdentity);
@@ -916,7 +1099,7 @@ export default {
               result: {
                 protocolVersion: "2024-11-05",
                 capabilities: { tools: {} },
-                serverInfo: { name: "truecalci-mcp-edge", version: "1.0.0" }
+                serverInfo: { name: "truecalci-mcp-edge", version: "2.0.0" }
               }
             }), {
               status: 200,
@@ -978,18 +1161,57 @@ export default {
     const API_ROUTES = {
       "/api/contractor-parity": "contractor_parity",
       "/api/v1/contractor-parity": "contractor_parity",
+      "/api/v1/contractor_parity": "contractor_parity",
+      "/api/v1/contractor_takehome_matrix": "contractor_parity",
       "/api/v1/mortgage_piti": "mortgage_piti",
+      "/api/v1/mortgage": "mortgage_piti",
       "/api/v1/vat_sales_tax": "vat_sales_tax",
+      "/api/v1/vat": "vat_sales_tax",
+      "/api/v1/tip_splitter": "tip_splitter",
+      "/api/v1/tip": "tip_splitter",
+      "/api/v1/compound_wealth": "compound_wealth",
+      "/api/v1/compound": "compound_wealth",
+      "/api/v1/indian_income_tax": "indian_income_tax",
+      "/api/v1/tax": "indian_income_tax",
+      "/api/v1/sip_investment": "sip_investment",
+      "/api/v1/sip": "sip_investment",
+      "/api/v1/home_loan_emi": "home_loan_emi",
+      "/api/v1/emi": "home_loan_emi",
       "/api/v1/casio_991_solve": "casio_991_solve",
+      "/api/v1/calci991_solve": "casio_991_solve",
+      "/api/v1/casio": "casio_991_solve",
       "/api/v1/beam_bending": "beam_bending",
+      "/api/v1/projectile_motion": "projectile_motion",
       "/api/v1/black_scholes": "black_scholes",
+      "/api/v1/black_scholes_options": "black_scholes",
+      "/api/v1/linear_regression": "linear_regression",
       "/api/v1/pipe_flow": "pipe_flow",
       "/api/v1/rlc_circuit": "rlc_circuit",
       "/api/v1/rocket_deltav": "rocket_deltav"
     };
 
-    if (API_ROUTES[url.pathname]) {
-      const toolName = API_ROUTES[url.pathname];
+    if (url.pathname === "/api/v1/calculate" || API_ROUTES[url.pathname]) {
+      let toolName = API_ROUTES[url.pathname];
+      let params = {};
+
+      if (request.method === "POST") {
+        try {
+          const body = await request.json();
+          if (url.pathname === "/api/v1/calculate") {
+            toolName = body.tool || body.name;
+            params = body.params || body.arguments || body;
+          } else {
+            params = body;
+          }
+        } catch (e) {
+          params = {};
+        }
+      } else {
+        params = Object.fromEntries(url.searchParams.entries());
+        if (url.pathname === "/api/v1/calculate") {
+          toolName = params.tool || params.name;
+        }
+      }
       const rateCheck = checkRateLimit(clientIdentity);
 
       // Return HTTP 429 when quota exceeded
@@ -1013,18 +1235,6 @@ export default {
             "X-RateLimit-Remaining": "0"
           }
         });
-      }
-
-      // Execute calculation
-      let params = {};
-      if (request.method === "POST") {
-        try {
-          params = await request.json();
-        } catch (e) {
-          params = {};
-        }
-      } else {
-        params = Object.fromEntries(url.searchParams.entries());
       }
 
       try {
