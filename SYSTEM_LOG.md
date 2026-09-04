@@ -107,16 +107,16 @@ This log is the single source of truth for all architectural decisions, commit h
 ---
 
 ### Milestone 6: Claude Enterprise Redesign & MCP Registry Preparation (Current)
-* **Local State (In Progress)**:
-  * Extracted and audited `Truecalci Enterprise Redesign 1.zip` (`handoff_v2/`):
-    * `handoff/workstation.html` (34.2 KB) — 19-engine left rail, calculation canvas, derivation drawer, Dodo checkout modal, Apple SSO sheet.
-    * `handoff/design-system.css` (41.4 KB) — Modernist zero-radius architectural design tokens, OKLCH tonal ramps, Archivo typography.
-    * `handoff/app.js` (19.1 KB) — Dependency-free unified vanilla JS engine.
-  * Installed vetted Agent Skills via `npx skills add --agent antigravity --copy`:
-    * `mcp-builder` (Anthropic official)
-    * `writing-guidelines` (Vercel Labs)
-  * Implemented `manual_setup_guide.md` covering Claude Desktop, Cursor, OpenAI GPTs, and Dodo Payments.
-  * Audited repo cleanliness, identified loose screenshots, internal strategy files, and sensitive credentials needing reorganization.
+* **`47cfd3d`** | `2026-09-04 19:01:12 +0530`
+  * **Scope**: chore: sanitize repository structure, add public README.md, update package.json, and establish SYSTEM_LOG.md ledger.
+  * **Actions**:
+    - Moved loose screenshots from root into `docs/assets/images/`.
+    - Moved test scripts into dedicated `tests/` directory; verified all 174 tests pass (`tests/test_suite.mjs`).
+    - Quarantined internal strategy & growth memos (`opportunities/`, `AUTH_SETUP_GUIDE.md`, etc.) into `docs/internal/`.
+    - Hardened `.gitignore` against `.env`, `.env.txt`, `*.zip`, `handoff/`, and `scratch/`.
+    - Authored institutional, MCP-compliant `README.md` with tool tables, Quickstart for Claude Desktop/Cursor/OpenAI, and architectural guarantees.
+    - Updated `package.json` with official MCP keywords, bin entry (`truecalci-mcp`), and scripts.
+    - Pushed to GitHub `origin/main`.
 
 ---
 
@@ -124,11 +124,11 @@ This log is the single source of truth for all architectural decisions, commit h
 
 | Item | Requirement | Status |
 | :--- | :--- | :---: |
-| **Mathematical Determinism** | Exact floating-point parity across all 19 engines | ✅ Verified |
+| **Mathematical Determinism** | Exact floating-point parity across all 19 engines (174 assertions) | ✅ Verified |
 | **FOUC Prevention** | Synchronous theme/view execution at 0ms in `<head>` | ✅ Verified |
 | **Deployment Freeze** | Zero automated pushes to Cloudflare | ✅ Active |
-| **Sensitive Data Quarantine** | `.env`, `.env.txt`, private keys, and strategy notes isolated from public repo | ⏳ Pending Reorganization |
-| **Public `README.md`** | High-authority documentation for GitHub & MCP registries | ⏳ Pending Creation |
+| **Sensitive Data Quarantine** | `.env`, `.env.txt`, private keys, and strategy notes isolated from public repo | ✅ Completed |
+| **Public `README.md`** | High-authority documentation for GitHub & MCP registries | ✅ Completed |
 | **Workstation Integration** | Merging Claude's workstation layout with the 19 live engines | ⏳ In Planning |
 
 ---
