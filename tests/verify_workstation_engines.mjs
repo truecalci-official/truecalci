@@ -158,6 +158,20 @@ EXPECTED_24_ENGINES.forEach(eng => {
 });
 
 // -----------------------------------------------------------------------------
+// 6. Verify Statutory Verification Strip on Stage & CSS
+// -----------------------------------------------------------------------------
+console.log('\n[Suite 6] Official Statutory Verification Stage Strip & Styling...');
+
+const cssContent = fs.readFileSync(path.join(rootDir, 'css', 'design-system.css'), 'utf8');
+
+assert(htmlContent.includes('id="ws-statutory-section"'), 'workstation.html contains #ws-statutory-section on stage');
+assert(htmlContent.includes('id="statutory-links-container"'), 'workstation.html contains #statutory-links-container');
+assert(cssContent.includes('.statute-chip'), 'design-system.css contains .statute-chip styling');
+assert(jsContent.includes('stageLinksContainer.innerHTML = chips.join'), 'workstation.js dynamically populates statutory links onto stage');
+assert(fs.existsSync(path.join(rootDir, 'scripts', 'cron_statutory_monitor.mjs')), 'scripts/cron_statutory_monitor.mjs exists');
+assert(fs.existsSync(path.join(rootDir, 'data', 'statutory_health.json')), 'data/statutory_health.json exists');
+
+// -----------------------------------------------------------------------------
 // 7. Test Execution Summary
 // -----------------------------------------------------------------------------
 console.log('\n================================================================================');

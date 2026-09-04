@@ -1,0 +1,132 @@
+{
+  "timestamp": "2026-09-04T17:15:53.190Z",
+  "version": "2.6.1",
+  "auditType": "CRON_AUTOMATED_STATUTORY_HEALTH",
+  "summary": {
+    "totalRulesTested": 5,
+    "rulesCompliant": 5,
+    "sampleUrlsAudited": 12,
+    "healthyUrls": 12,
+    "redirectedUrls": 4,
+    "flaggedUrls": 0,
+    "systemStatus": "OPTIMAL"
+  },
+  "statutoryRules": [
+    {
+      "engine": "ITX-05",
+      "rule": "ITA 2025 §115BAC Salaried Rebate",
+      "authority": "CBDT / Ministry of Finance",
+      "status": "COMPLIANT"
+    },
+    {
+      "engine": "CTR-18",
+      "rule": "IRC §1402 Self-Employment Tax Base",
+      "authority": "Internal Revenue Service (IRS)",
+      "status": "COMPLIANT"
+    },
+    {
+      "engine": "FEI-23",
+      "rule": "IRC §911 Foreign Earned Income Exclusion Cap",
+      "authority": "Internal Revenue Service (IRS)",
+      "status": "COMPLIANT"
+    },
+    {
+      "engine": "B2B-22",
+      "rule": "OECD Article 5 Permanent Establishment Safe Harbor",
+      "authority": "OECD & IRS",
+      "status": "COMPLIANT"
+    },
+    {
+      "engine": "SLO-20",
+      "rule": "IRC §415(c) Defined Contribution Limit",
+      "authority": "Internal Revenue Service (IRS)",
+      "status": "COMPLIANT"
+    }
+  ],
+  "endpointSampleResults": [
+    {
+      "url": "https://www.law.cornell.edu/uscode/text/26/1402",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.law.cornell.edu/uscode/text/26/199A",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.law.cornell.edu/uscode/text/26/3121",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.law.cornell.edu/uscode/text/26/415",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.irs.gov/retirement-plans/one-participant-401k-plans",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.iso.org/iso-4217-currency-codes.html",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.bis.org/cpmi/publ/d197.htm",
+      "status": 301,
+      "healthy": true,
+      "redirect": true,
+      "location": "https://www.bis.org/publications/implementation-monitoring-pfmi-level-3-assessment-fmis-business-continuity-planning"
+    },
+    {
+      "url": "https://www.law.cornell.edu/uscode/text/26/162",
+      "status": 200,
+      "healthy": true,
+      "redirect": false,
+      "location": null
+    },
+    {
+      "url": "https://www.anthropic.com/pricing",
+      "status": 301,
+      "healthy": true,
+      "redirect": true,
+      "location": "https://claude.com/pricing"
+    },
+    {
+      "url": "https://openai.com/api/pricing/",
+      "status": 308,
+      "healthy": true,
+      "redirect": true,
+      "location": "/business/pricing/#api"
+    },
+    {
+      "url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "status": 302,
+      "healthy": true,
+      "redirect": true,
+      "location": "/quick_start/pricing/"
+    }
+  ]
+}

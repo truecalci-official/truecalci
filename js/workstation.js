@@ -167,14 +167,14 @@
       statutes: [
         { name: 'Self-employment tax base (92.35%)', ref: 'IRC § 1402(a)', url: 'https://www.law.cornell.edu/uscode/text/26/1402' },
         { name: 'Qualified Business Income Deduction (20%)', ref: 'IRC § 199A', url: 'https://www.law.cornell.edu/uscode/text/26/199A' },
-        { name: 'Reasonable Compensation Guidance', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov' }
+        { name: 'Reasonable Compensation Guidelines', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues' }
       ]
     },
     'SCP-19': {
       title: 'S-Corp Reasonable Salary Optimizer',
       formula: 'SE_SoleProp = (Profit × 0.9235) × 0.153\nSalary = Profit × Split%\nFICA_SCorp = Salary × 0.153\nFICA_Saved = max(SE_SoleProp − FICA_SCorp, 0)\nNet_Benefit = FICA_Saved − (Payroll_Fee + CPA_Fee)',
       statutes: [
-        { name: 'Reasonable Officer Compensation Mandate', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov' },
+        { name: 'Reasonable Officer Compensation Mandate', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov/businesses/small-businesses-self-employed/s-corporation-compensation-and-medical-insurance-issues' },
         { name: 'FICA Taxation Limits & Wages', ref: 'IRC § 3121(a)', url: 'https://www.law.cornell.edu/uscode/text/26/3121' }
       ]
     },
@@ -183,15 +183,15 @@
       formula: 'Employee_Deferral = $23,000 (+ $7,500 if Age ≥ 50)\nEmployer_Share = Profit × 0.20 (LLC) or W2_Salary × 0.25 (S-Corp)\nMax_Solo401k = min(Employee_Deferral + Employer_Share, $69,000)\nSEP_IRA_Comparison = Profit × 0.20\nImmediate_Tax_Saved = Max_Solo401k × Marginal_Tax_Rate',
       statutes: [
         { name: 'Defined Contribution Plan Dollar Limitations', ref: 'IRC § 415(c)(1)(A)', url: 'https://www.law.cornell.edu/uscode/text/26/415' },
-        { name: 'Elective Deferral Dollar Limits', ref: 'IRS Notice 2023-75', url: 'https://www.irs.gov' }
+        { name: 'One-Participant 401(k) Plans Overview', ref: 'IRS Publication 560', url: 'https://www.irs.gov/retirement-plans/one-participant-401k-plans' }
       ]
     },
     'FXR-21': {
       title: 'Cross-Border FX Rail Drag',
       formula: 'Landed_Cash = Invoice × (1 − Rail_Fee_Drag) × Mid_Market_Rate\nRail_Drag = Spread% + Fixed_Transaction_Fee\nAnnual_Loss = 12 × (Landed_Benchmark − Landed_Current_Rail)',
       statutes: [
-        { name: 'Foreign Exchange Mid-Market Benchmarks', ref: 'ISO 4217 Currency Standard', url: 'https://www.iso.org' },
-        { name: 'Fintech vs SWIFT Interbank Settlement Protocol', ref: 'SWIFT MT103 Gateway Standard', url: 'https://www.swift.com' }
+        { name: 'Currency Codes and Decimal Representation', ref: 'ISO 4217 Currency Standard', url: 'https://www.iso.org/iso-4217-currency-codes.html' },
+        { name: 'Enhancing Cross-Border Payments Protocol', ref: 'BIS CPMI Report 197', url: 'https://www.bis.org/cpmi/publ/d197.htm' }
       ]
     },
     'BHF-22': {
@@ -205,9 +205,9 @@
       title: 'AI Token Inference & Cache Arbitrage',
       formula: 'Effective_Cost = (Prompt × (1 - HitRate) × Rate_In) + (Prompt × HitRate × Rate_Cache) + (Comp × Rate_Out)\nBatch_Cost = Effective_Cost × 0.50\nDisparity_Ratio = Max_Cost ÷ Min_Cost',
       statutes: [
-        { name: 'Anthropic Prompt Caching Protocol', ref: 'Claude API Spec 2026', url: 'https://docs.anthropic.com' },
-        { name: 'OpenAI Prompt Caching SLA', ref: 'OpenAI Platform', url: 'https://platform.openai.com' },
-        { name: 'DeepSeek V3 Multi-Head Latent Attention', ref: 'DeepSeek V3 Technical Report', url: 'https://deepseek.com' }
+        { name: 'Anthropic Prompt Caching Protocol', ref: 'Claude API Pricing 2026', url: 'https://www.anthropic.com/pricing' },
+        { name: 'OpenAI Prompt Caching & Batch API SLA', ref: 'OpenAI Platform Pricing', url: 'https://openai.com/api/pricing/' },
+        { name: 'DeepSeek Multi-Head Latent Attention Specification', ref: 'DeepSeek API Architecture', url: 'https://api-docs.deepseek.com/quick_start/pricing' }
       ]
     },
     'SRD-21': {
@@ -215,16 +215,16 @@
       formula: 'Net_Burn = Gross_Burn − MRR\nRunway_Months = Cash_In_Bank ÷ Net_Burn\nSAFE_Ownership = Investment_SAFE ÷ Post_Money_Cap\nSeries_A_Ownership = Investment_SeriesA ÷ (Pre_Valuation + Investment_SeriesA)\nFounder_Retained = (1 − SAFE_Own) × (1 − Series_A_Own) × (1 − Option_Pool)',
       statutes: [
         { name: 'Y Combinator Standard Post-Money SAFE', ref: 'YC Safe Guidelines v1.3', url: 'https://www.ycombinator.com/documents' },
-        { name: 'NVCA Model Legal Documents', ref: 'National Venture Capital Assoc.', url: 'https://nvca.org' }
+        { name: 'National Venture Capital Model Term Sheet', ref: 'NVCA Standards', url: 'https://nvca.org/model-legal-documents/' }
       ]
     },
     'B2B-22': {
       title: 'Cross-Border B2B Withholding & PE Threshold',
       formula: 'Statutory_Withholding = Invoice × Statutory_Rate\nTreaty_Withholding = Has_TRC ? (Invoice × Treaty_Rate) : Statutory_Withholding\nPE_Trigger = OnSite_Days > 183\nNet_Cash = Invoice − Treaty_Withholding',
       statutes: [
-        { name: 'Nonresident Alien & Foreign Entity Withholding', ref: 'IRC § 1441 / § 1442', url: 'https://www.law.cornell.edu/uscode/text/26/1441' },
-        { name: 'Permanent Establishment 183-day threshold', ref: 'OECD Model Article 5', url: 'https://www.oecd.org' },
-        { name: 'Royalties and Fees for Technical Services', ref: 'US-India DTAA Article 12', url: 'https://www.irs.gov' }
+        { name: 'OECD Model Tax Convention Article 5 (PE)', ref: 'OECD Base Erosion (BEPS)', url: 'https://www.oecd.org/en/topics/sub-issues/model-tax-convention.html' },
+        { name: 'Foreign Entity Withholding Certificate', ref: 'IRS Form W-8BEN-E', url: 'https://www.irs.gov/forms-pubs/about-form-w-8-ben-e' },
+        { name: 'Nonresident Alien & Entity Withholding Tax', ref: 'IRC § 1441 / § 1442', url: 'https://www.law.cornell.edu/uscode/text/26/1441' }
       ]
     },
     'FEI-23': {
@@ -232,157 +232,174 @@
       formula: 'Qualifies_PPT = Days_Abroad_in_365_days ≥ 330\nFEIE_Cap = $130,000 (Tax Year 2026)\nExcluded_Amount = Qualifies_PPT ? min(Income, FEIE_Cap) : 0\nTaxable_Excess = max(Income − Excluded_Amount, 0)\nEstimated_Tax_Saved = Excluded_Amount × 0.24',
       statutes: [
         { name: 'Foreign Earned Income Exclusion (FEIE)', ref: 'IRC § 911(a)', url: 'https://www.law.cornell.edu/uscode/text/26/911' },
-        { name: 'Physical Presence Test (330 full days)', ref: '26 CFR § 1.911-2(d)', url: 'https://www.law.cornell.edu/cfr/text/26/1.911-2' },
-        { name: 'Inflation-Adjusted Exclusion Limits (2026)', ref: 'IRS Rev. Proc. 2025-32', url: 'https://www.irs.gov' }
+        { name: 'Physical Presence Test (330 full days abroad)', ref: '26 CFR § 1.911-2(d)', url: 'https://www.law.cornell.edu/cfr/text/26/1.911-2' },
+        { name: 'IRS Official Form 2555 Instructions', ref: 'IRS Form 2555', url: 'https://www.irs.gov/individuals/international-taxpayers/foreign-earned-income-exclusion' }
       ]
     },
     'CEF-24': {
       title: 'Multi-Cloud Egress & Transit Optimization',
       formula: 'Standard_Egress = Tiered_Hyperscaler_Rates(Egress_GB)\nDirect_Connect_Cost = (Egress_GB × 0.02) + (Commit_Gbps × Port_Hour_Rate × 730)\nZero_Egress_Cost = Egress_GB × 0.015 (Worker Proxy / R2 Transit)\nMonthly_Savings = Standard_Egress − min(Direct_Connect_Cost, Zero_Egress_Cost)',
       statutes: [
-        { name: 'Hyperscaler Data Transfer Out Pricing', ref: 'AWS / GCP / Azure Rate Cards', url: 'https://aws.amazon.com/ec2/pricing/on-demand/' },
-        { name: 'Cloudflare Bandwidth Alliance (Zero Egress)', ref: 'Bandwidth Alliance Protocol', url: 'https://www.cloudflare.com/bandwidth-alliance/' }
+        { name: 'Hyperscaler Direct Connect Rate Cards', ref: 'AWS Dedicated Transit', url: 'https://aws.amazon.com/directconnect/pricing/' },
+        { name: 'Zero Data Egress Transit Protocol', ref: 'Cloudflare Bandwidth Alliance', url: 'https://www.cloudflare.com/bandwidth-alliance/' }
       ]
     },
     'MTG-01': {
       title: 'Mortgage PITI & PMI Amortization',
       formula: 'Monthly_PI = P × [r(1 + r)^n] ÷ [(1 + r)^n − 1]\nPMI = Down% < 20% ? (Loan × 0.75% ÷ 12) : 0\nPITI = Monthly_PI + PMI + Monthly_Tax + Monthly_Hazard_Ins',
       statutes: [
-        { name: 'Truth in Lending Act (Regulation Z)', ref: '12 CFR Part 1026', url: 'https://www.consumerfinance.gov' },
-        { name: 'Homeowners Protection Act of 1998 (PMI Cancellation)', ref: '12 U.S.C. § 4901', url: 'https://www.law.cornell.edu/uscode/text/12/4901' }
+        { name: 'CFPB Truth in Lending Act (Regulation Z)', ref: '12 CFR Part 1026', url: 'https://www.consumerfinance.gov/owning-a-home/loan-estimate/' },
+        { name: 'Homeowners Protection Act (PMI Cancellation)', ref: '12 U.S.C. § 4901', url: 'https://www.law.cornell.edu/uscode/text/12/4901' }
       ]
     },
     'VAT-02': {
       title: 'European VAT & Sales Tax Reversal',
       formula: 'Add_Mode: Gross = Net × (1 + Rate)\nRemove_Mode: Net = Gross ÷ (1 + Rate)\nTax_Amount = Gross − Net',
       statutes: [
-        { name: 'EU Council Directive on the Common System of VAT', ref: 'Directive 2006/112/EC', url: 'https://eur-lex.europa.eu' }
+        { name: 'EU Council Directive on Common System of VAT', ref: 'Directive 2006/112/EC', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32006L0112' },
+        { name: 'European Commission VIES Tax Verification', ref: 'EC Taxation & Customs', url: 'https://ec.europa.eu/taxation_customs/vies/' }
       ]
     },
     'TIP-03': {
       title: 'Tip & Bill Splitter',
       formula: 'Tip_Amount = Bill × Tip%\nTotal_Bill = Bill + Tip_Amount\nPer_Person = Total_Bill ÷ Number_Of_Guests',
       statutes: [
-        { name: 'Fair Labor Standards Act Tip Credit Guidelines', ref: '29 U.S.C. § 203(m)', url: 'https://www.dol.gov' }
+        { name: 'Fair Labor Standards Act Tip Regulations', ref: '29 U.S.C. § 203(m)', url: 'https://www.dol.gov/agencies/whd/flsa/tips' }
       ]
     },
     'CMP-04': {
       title: 'Compound Wealth & 401(k) Future Value',
       formula: 'FV = P × (1 + r/n)^(n×t) + PMT × [((1 + r/n)^(n×t) − 1) ÷ (r/n)]\nTotal_Principal = P + (PMT × 12 × t)\nCompound_Gains = FV − Total_Principal',
       statutes: [
-        { name: 'Compound Interest Formulas in Financial Mathematics', ref: 'FINRA Rule 2210 Standards', url: 'https://www.finra.org' }
+        { name: 'Compound Interest Financial Computation Standard', ref: 'FINRA Investor Guidelines', url: 'https://www.finra.org/investors/investing/investing-basics' },
+        { name: 'SEC Compound Interest & Retirement Methodology', ref: 'SEC Investor Tools', url: 'https://www.sec.gov/investor/tools/calculators' }
       ]
     },
     'ITX-05': {
       title: 'Indian Income Tax — Section 115BAC (ITA 2025)',
       formula: 'Taxable_Income = max(Gross − Standard_Deduction(₹75,000), 0)\nSlabs: 0-3L (Nil), 3-7L (5%), 7-10L (10%), 10-12L (15%), 12-15L (20%), >15L (30%)\nRebate_87A = Taxable ≤ 12,00,000 ? Full Rebate : 0\nHealth_Education_Cess = Tax × 4%',
       statutes: [
-        { name: 'Tax on Income of Individuals (New Tax Regime)', ref: 'Income-tax Act, 2025 § 115BAC', url: 'https://incometaxindia.gov.in' },
-        { name: 'Rebate of Income-tax in Certain Cases', ref: 'Section 87A Relief', url: 'https://incometaxindia.gov.in' }
+        { name: 'Income Tax Department Official Tax Slab Schedule', ref: 'Income-tax Act § 115BAC', url: 'https://www.incometax.gov.in/iec/fposervices/#/tax-slab' },
+        { name: 'Union Budget Finance Bill 2025-26 & 2026-27', ref: 'Ministry of Finance Official', url: 'https://indiabudget.gov.in/' }
       ]
     },
     'GST-06': {
       title: 'Goods and Services Tax (GST) Split',
       formula: 'Total_GST = Base_Amount × Rate%\nIntrastate: CGST = Total_GST ÷ 2, SGST = Total_GST ÷ 2\nInterstate: IGST = Total_GST\nGross_Invoice = Base_Amount + Total_GST',
       statutes: [
-        { name: 'Central Goods and Services Tax Act, 2017', ref: 'CGST Act § 9 & IGST Act § 5', url: 'https://cbic.gov.in' }
+        { name: 'Central Goods and Services Tax Act, 2017', ref: 'CGST Act § 9 & IGST Act § 5', url: 'https://cbic-gst.gov.in/' }
       ]
     },
     'SIP-09': {
       title: 'Mutual Fund SIP with Geometric Step-Up',
       formula: 'FV = Σ [Monthly_Instalment_y × (1 + r)^(months_remaining)]\nMonthly_Instalment_y = Base_SIP × (1 + StepUp%)^y',
       statutes: [
-        { name: 'SEBI Mutual Fund Investment Performance Norms', ref: 'SEBI (Mutual Funds) Reg. 1996', url: 'https://www.sebi.gov.in' }
+        { name: 'SEBI Mutual Fund Investment Performance Norms', ref: 'SEBI (Mutual Funds) Reg. 1996', url: 'https://www.sebi.gov.in/' }
       ]
     },
     'FXD-10': {
       title: 'Fixed Deposit (FD) Compounding',
       formula: 'A = P × (1 + r/n)^(n×t)\nInterest_Earned = A − P\nAPY = (1 + r/n)^n − 1',
       statutes: [
-        { name: 'Reserve Bank of India Master Directions on Interest Rates', ref: 'RBI/DBR/2015-16/19', url: 'https://rbi.org.in' }
+        { name: 'Reserve Bank of India Master Directions on Interest Rates', ref: 'RBI/DBR/2015-16/19', url: 'https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx' }
       ]
     },
     'GLD-11': {
       title: 'Gold & Jewellery Invoice Calculator',
       formula: 'Pure_Gold_Value = Weight_Grams × Karat_Rate_Per_Gram\nMaking_Charges = Pure_Gold_Value × Making_Charge%\nTaxable_Value = Pure_Gold_Value + Making_Charges\nGST_3% = Taxable_Value × 0.03\nInvoice_Total = Taxable_Value + GST_3%',
       statutes: [
-        { name: 'Bureau of Indian Standards (BIS) Hallmarking Order', ref: 'BIS Hallmark Standard 2021', url: 'https://bis.gov.in' }
+        { name: 'Bureau of Indian Standards (BIS) Hallmarking Order', ref: 'BIS Hallmark Standard 2021', url: 'https://www.bis.gov.in/hallmarking-overview/' }
       ]
     },
     'PPF-13': {
       title: 'Public Provident Fund (PPF)',
       formula: 'Interest calculated on minimum balance between 5th and last day of month.\nAnnual compounding at statutory rate (7.1%).\nExempt-Exempt-Exempt (EEE) statutory tax status.',
       statutes: [
-        { name: 'Public Provident Fund Scheme, 2019', ref: 'GSR 915(E) Ministry of Finance', url: 'https://nsiindia.gov.in' },
-        { name: 'Deductions in Respect of Life Insurance, PPF, etc.', ref: 'Income-tax Act § 80C', url: 'https://incometaxindia.gov.in' }
+        { name: 'Public Provident Fund Scheme, 2019', ref: 'GSR 915(E) Ministry of Finance', url: 'https://nsiindia.gov.in/InternalPage.aspx?Id_Pk=55' },
+        { name: 'Deductions in Respect of Life Insurance, PPF, etc.', ref: 'Income-tax Act § 80C', url: 'https://www.incometax.gov.in/iec/fposervices/#/tax-slab' }
       ]
     },
     'SSY-14': {
       title: 'Sukanya Samriddhi Account (SSY)',
       formula: 'Deposits allowed up to 15 years from opening date.\nMaturity occurs after 21 years from opening date.\nCompounded annually at statutory 8.2% rate with EEE tax exemption.',
       statutes: [
-        { name: 'Sukanya Samriddhi Account Rules, 2019', ref: 'GSR 914(E) Ministry of Finance', url: 'https://nsiindia.gov.in' }
+        { name: 'Sukanya Samriddhi Account Rules, 2019', ref: 'GSR 914(E) Ministry of Finance', url: 'https://nsiindia.gov.in/InternalPage.aspx?Id_Pk=89' }
       ]
     },
     'HLN-07': {
       title: 'Home Loan EMI & Prepayment Reduction',
       formula: 'EMI = P × [r(1+r)^n] ÷ [(1+r)^n − 1]\nPrepayment accelerates principal amortization, reducing tenure n.',
       statutes: [
-        { name: 'Reserve Bank of India Home Loan Guidelines', ref: 'RBI/2014-15/65', url: 'https://rbi.org.in' }
+        { name: 'Reserve Bank of India Housing Finance Circular', ref: 'RBI/2014-15/65', url: 'https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=9202' }
       ]
     },
     'SCI-15': {
       title: 'Scientific 991 Analytical Solver',
       formula: 'Quadratic: ax² + bx + c = 0\nDiscriminant: Δ = b² − 4ac\nRoots: x = (−b ± √Δ) ÷ (2a)\nVertex: (−b ÷ 2a, −Δ ÷ 4a)',
       statutes: [
-        { name: 'IEEE Standard for Floating-Point Arithmetic', ref: 'IEEE 754-2019 Specification', url: 'https://standards.ieee.org' }
+        { name: 'IEEE Standard for Floating-Point Arithmetic', ref: 'IEEE 754-2019 Specification', url: 'https://standards.ieee.org/ieee/754/6267/' }
       ]
     },
     'PRG-17': {
       title: 'Programmer 64-Bit Logic & Bitboard',
       formula: 'Bitwise AND: A & B | OR: A | B | XOR: A ^ B | NOT: ~A\nTwo\'s complement representation for signed 64-bit integers.',
       statutes: [
-        { name: 'Two\'s Complement Arithmetic and Bitboard Architecture', ref: 'ISO/IEC 9899:2018 (C18)', url: 'https://iso.org' }
+        { name: 'ISO/IEC 9899 Specification for Bitwise Logic', ref: 'ISO/IEC 9899:2018 (C18)', url: 'https://www.iso.org/standard/74528.html' }
       ]
     }
   };
 
   function updateDrawerContent() {
     var body = $('#drawer-body-content');
-    if (!body) return;
+    var stageLinksContainer = $('#statutory-links-container');
 
     var d = DERIVATIONS[activeCode] || {
       title: activeTitle,
       formula: 'Result = f(Inputs) [IEEE 754 Deterministic Float Standard]',
       statutes: [
-        { name: 'Official Statutory & Numerical Standards', ref: 'IEEE 754-2019 Specification', url: 'https://standards.ieee.org' }
+        { name: 'Official Statutory & Numerical Standards', ref: 'IEEE 754-2019 Specification', url: 'https://standards.ieee.org/ieee/754/6267/' }
       ]
     };
 
-    var htmlContent = [
-      '<div class="caps" style="opacity:0.5;margin-bottom:8px;">' + d.title + '</div>',
-      '<div class="formula">' + d.formula.replace(/\n/g, '<br>') + '</div>',
-      '<div class="caps" style="opacity:0.5;margin:26px 0 8px;">Statutory &amp; Technical References</div>'
-    ];
+    if (body) {
+      var htmlContent = [
+        '<div class="caps" style="opacity:0.5;margin-bottom:8px;">' + d.title + '</div>',
+        '<div class="formula">' + d.formula.replace(/\n/g, '<br>') + '</div>',
+        '<div class="caps" style="opacity:0.5;margin:26px 0 8px;">Statutory &amp; Technical References</div>'
+      ];
 
-    d.statutes.forEach(function (s) {
+      d.statutes.forEach(function (s) {
+        htmlContent.push(
+          '<a class="statute" href="' + s.url + '" target="_blank" rel="noopener noreferrer">' +
+            s.name + '<span class="statute__ref">' + s.ref + ' ↗</span>' +
+          '</a>'
+        );
+      });
+
       htmlContent.push(
-        '<a class="statute" href="' + s.url + '" target="_blank" rel="noopener">' +
-          s.name + '<span class="statute__ref">' + s.ref + '</span>' +
-        '</a>'
+        '<div class="alert alert--good" style="margin-top:22px;">' +
+          '<div>' +
+            '<div class="alert__title">Deterministic Execution</div>' +
+            '<div class="alert__body">Every calculation executes in volatile memory with pure functional determinism. Zero corporate branding, zero data retention.</div>' +
+          '</div>' +
+        '</div>'
       );
-    });
 
-    htmlContent.push(
-      '<div class="alert alert--good" style="margin-top:22px;">' +
-        '<div>' +
-          '<div class="alert__title">Deterministic Execution</div>' +
-          '<div class="alert__body">Every calculation executes in volatile memory with pure functional determinism. Zero corporate branding, zero data retention.</div>' +
-        '</div>' +
-      '</div>'
-    );
+      body.innerHTML = htmlContent.join('');
+    }
 
-    body.innerHTML = htmlContent.join('');
+    if (stageLinksContainer) {
+      var chips = [];
+      d.statutes.forEach(function (s) {
+        chips.push(
+          '<a class="statute-chip" href="' + s.url + '" target="_blank" rel="noopener noreferrer" title="View official primary document for ' + s.name + '">' +
+            '<span>' + s.name + '</span>' +
+            '<span class="statute-chip__ref">' + s.ref + ' ↗</span>' +
+          '</a>'
+        );
+      });
+      stageLinksContainer.innerHTML = chips.join('');
+    }
   }
 
   /* ====================================================================
