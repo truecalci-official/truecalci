@@ -1,7 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark" data-view="home">
 <head>
   <meta charset="UTF-8">
+  <script>
+    (function() {
+      try {
+        var savedTheme = localStorage.getItem('calc_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        var rawHash = window.location.hash || '';
+        var cleanHash = rawHash.replace('#', '').split('?')[0].trim();
+        var validTools = [
+          'contractor_matrix', 'scorp', 'retirement', 'fx', 'billable',
+          'mortgage', 'vat', 'tip', 'compound', 'tax', 'sip', 'home_loan',
+          'gold', 'ppf', 'ssy', 'fd', 'gst', 'land', 'calci_991', 'basic',
+          'programmer', 'pricing', 'developer', 'admin', 'subscriptions', 'profile'
+        ];
+        var initialView = (cleanHash && validTools.indexOf(cleanHash) !== -1) ? cleanHash : 'home';
+        document.documentElement.setAttribute('data-view', initialView);
+      } catch (e) {}
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TrueCalci — The Deterministic Compute Engine for AI Agents & Enterprise Teams</title>
   <meta name="description" content="Sub-millisecond deterministic statutory & financial compute engine for AI agents and enterprise systems. Model Context Protocol (MCP) streamable HTTP, Tax Year 2026-27 (Income-tax Act, 2025), Remote Contractor Parity, US Mortgage PITI, and European VAT.">
@@ -333,7 +352,8 @@
   })();
   </script>
 </head>
-<body>
+<body data-view="home">
+  <script>document.body.dataset.view = document.documentElement.getAttribute('data-view') || 'home';</script>
 
   <!-- Top Navigation Header -->
   <header class="app-header">
@@ -748,7 +768,31 @@
 
     <!-- Center: Main Calculator Engine Workspace -->
     <main class="calculator-main-workspace" id="calculator-workspace">
-      <!-- Injected dynamically by app coordinator -->
+      <div id="tool-view-mount">
+        <div class="enterprise-home-root" style="max-width: 1320px; margin: 0 auto; padding: 0 16px 64px;">
+          <!-- Top Announcement Banner -->
+          <div class="announcement-banner" style="margin: 16px 0 28px; padding: 10px 16px; border-radius: 30px; background: var(--accent-light); border: 1px solid var(--accent-border); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.82rem; color: var(--text-primary); text-align: center;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; padding: 2px 8px; border-radius: 12px; background: var(--accent-primary); color: #ffffff; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;">NEW</span>
+            <span>TrueCalci Edge Compute v2: Sub-1ms deterministic mathematical and tax parity execution for AI agents.</span>
+            <a href="#developer" class="announcement-link" style="color: var(--accent-primary); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+              Explore API & MCP Docs ↗
+            </a>
+          </div>
+
+          <!-- Hero Section -->
+          <section class="enterprise-hero" style="text-align: center; padding: 20px 0 40px;">
+            <div style="font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-primary); margin-bottom: 12px;">
+              / The Deterministic Compute Layer for AI Agents & Enterprise Systems
+            </div>
+            <h1 style="font-size: clamp(2rem, 4.5vw, 3.4rem); font-weight: 800; line-height: 1.15; color: var(--text-primary); letter-spacing: -0.03em; max-width: 960px; margin: 0 auto 20px;">
+              The Deterministic Compute Engine for AI Agents & Enterprise Teams
+            </h1>
+            <p style="font-size: clamp(0.95rem, 1.8vw, 1.15rem); color: var(--text-secondary); max-width: 780px; margin: 0 auto 32px; line-height: 1.6;">
+              Sub-millisecond mathematical, financial, and engineering calculations executed at Cloudflare's global edge. 100% deterministic precision with zero hallucinations for LLMs, autonomous workflows, and human builders.
+            </p>
+          </section>
+        </div>
+      </div>
     </main>
 
     <!-- Right: Workstation Column (Companion Dock + Dedicated IAB Ad Below) -->  </div>

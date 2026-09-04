@@ -240,12 +240,12 @@ class CalculatorApp {
   }
 
   initTheme() {
-    const savedTheme = localStorage.getItem("calc_theme") || "light";
+    const savedTheme = localStorage.getItem("calc_theme") || "dark";
     this.setTheme(savedTheme, false);
 
     const themeIconBtn = document.getElementById("theme-toggle-icon-btn");
     themeIconBtn?.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "light";
+      const current = document.documentElement.getAttribute("data-theme") || "dark";
       const next = current === "dark" ? "light" : "dark";
       this.setTheme(next, true);
     });
@@ -632,6 +632,7 @@ class CalculatorApp {
       this.currentAdminView = null;
     }
 
+    document.documentElement.dataset.view = toolKey;
     document.body.dataset.view = toolKey;
 
     // Show Currency Dropdown only on the pricing/payments page

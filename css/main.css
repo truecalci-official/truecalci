@@ -1101,6 +1101,18 @@ body {
 }
 
 /* Full-Width Enterprise Homepage, Subscriptions, Profile, Pricing Layout Override */
+html[data-view="home"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="home"] .app-sidebar-ad,
+html[data-view="pricing"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="pricing"] .app-sidebar-ad,
+html[data-view="developer"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="developer"] .app-sidebar-ad,
+html[data-view="admin"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="admin"] .app-sidebar-ad,
+html[data-view="subscriptions"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="subscriptions"] .app-sidebar-ad,
+html[data-view="profile"] .app-sidebar-nav:not(.drawer-open),
+html[data-view="profile"] .app-sidebar-ad,
 body[data-view="home"] .app-sidebar-nav:not(.drawer-open),
 body[data-view="home"] .app-sidebar-ad,
 body[data-view="pricing"] .app-sidebar-nav:not(.drawer-open),
@@ -1354,6 +1366,12 @@ body[data-view="pricing"] .currency-dropdown-wrapper {
   display: inline-flex !important;
 }
 
+html[data-view="home"] .app-layout-grid,
+html[data-view="pricing"] .app-layout-grid,
+html[data-view="developer"] .app-layout-grid,
+html[data-view="admin"] .app-layout-grid,
+html[data-view="subscriptions"] .app-layout-grid,
+html[data-view="profile"] .app-layout-grid,
 body[data-view="home"] .app-layout-grid,
 body[data-view="pricing"] .app-layout-grid,
 body[data-view="developer"] .app-layout-grid,
@@ -1365,6 +1383,12 @@ body[data-view="profile"] .app-layout-grid {
   padding: 0 1rem !important;
 }
 
+html[data-view="home"] .app-workspace,
+html[data-view="pricing"] .app-workspace,
+html[data-view="developer"] .app-workspace,
+html[data-view="admin"] .app-workspace,
+html[data-view="subscriptions"] .app-workspace,
+html[data-view="profile"] .app-workspace,
 body[data-view="home"] .app-workspace,
 body[data-view="pricing"] .app-workspace,
 body[data-view="developer"] .app-workspace,
