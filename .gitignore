@@ -34,3 +34,10 @@ __pycache__/
 # IDE
 .vscode/
 
+# Handoff inspection & scratch
+handoff/
+handoff_v2/
+scratch/
+
+# Internal strategy & monetization docs
+docs/internal/

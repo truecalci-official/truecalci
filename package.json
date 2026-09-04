@@ -1,6 +1,29 @@
 {
   "name": "truecalci",
+  "version": "2.6.1",
+  "description": "Deterministic statutory & financial compute engine for AI agents and enterprise teams over the Model Context Protocol (MCP).",
   "type": "module",
+  "main": "mcp-server.mjs",
+  "bin": {
+    "truecalci-mcp": "./mcp-server.mjs"
+  },
+  "scripts": {
+    "test": "node tests/test_suite.mjs",
+    "start": "node server.mjs",
+    "mcp": "node mcp-server.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "modelcontextprotocol",
+    "claude",
+    "cursor",
+    "deterministic-compute",
+    "statutory-tax",
+    "financial-engine",
+    "cloudflare-workers"
+  ],
+  "author": "TrueCalci Team",
+  "license": "MIT",
   "devDependencies": {
     "wrangler": "^4.128.0"
   }

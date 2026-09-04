@@ -2,18 +2,18 @@
  * Comprehensive Automated Verification Test Suite for TrueCalci Precision Suite
  */
 
-import { IndianFinanceEngine } from "./js/engines/indian-finance.js";
-import { CasioCalciEngine } from "./js/engines/casio-engine.js";
-import { BasicCalculatorEngine } from "./js/engines/basic-engine.js";
-import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-engine.js";
-import { EngineeringPhysicsEngine } from "./js/engines/engineering-physics.js";
-import { StatisticsOptionsEngine } from "./js/engines/statistics-options.js";
-import { ContractorMatrixEngine } from "./js/engines/contractor-matrix.js";
-import { SCorpEngine } from "./js/engines/scorp-engine.js";
-import { RetirementEngine } from "./js/engines/retirement-engine.js";
-import { FXInvoicingEngine } from "./js/engines/fx-engine.js";
-import { BillableRateEngine } from "./js/engines/billable-engine.js";
-import { CALCULATOR_DEFINITIONS } from "./js/data/definitions.js";
+import { IndianFinanceEngine } from "../js/engines/indian-finance.js";
+import { CasioCalciEngine } from "../js/engines/casio-engine.js";
+import { BasicCalculatorEngine } from "../js/engines/basic-engine.js";
+import { ProgrammerEngine, UnitConverterEngine } from "../js/engines/programmer-engine.js";
+import { EngineeringPhysicsEngine } from "../js/engines/engineering-physics.js";
+import { StatisticsOptionsEngine } from "../js/engines/statistics-options.js";
+import { ContractorMatrixEngine } from "../js/engines/contractor-matrix.js";
+import { SCorpEngine } from "../js/engines/scorp-engine.js";
+import { RetirementEngine } from "../js/engines/retirement-engine.js";
+import { FXInvoicingEngine } from "../js/engines/fx-engine.js";
+import { BillableRateEngine } from "../js/engines/billable-engine.js";
+import { CALCULATOR_DEFINITIONS } from "../js/data/definitions.js";
 
 console.log("================================================================================");
 console.log("RUNNING AUTOMATED VERIFICATION FOR TRUECALCI PRECISION SUITE");
@@ -216,8 +216,8 @@ assert(indexHtml.includes("privacy.html"), "index.html links to privacy.html");
 // 6. Google Analytics 4, Search Console & Privacy Policy Verification
 // -----------------------------------------------------------------------------
 console.log("\n[6] Testing Google Analytics, Search Console & Privacy Foundation...");
-import { SITE_CONFIG } from "./js/config.js";
-import { analytics } from "./js/analytics.js";
+import { SITE_CONFIG } from "../js/config.js";
+import { analytics } from "../js/analytics.js";
 
 // 6.1 Configuration checks
 assert(typeof SITE_CONFIG.productionDomain === "string" && SITE_CONFIG.productionDomain.length > 0, "SITE_CONFIG defines productionDomain");
@@ -270,7 +270,7 @@ assert(robotsTxt.includes("Allow: /sitemap.xml"), "robots.txt allows sitemap.xml
 // 7. TrueCalci Global & Multi-Regional Engine Verification
 // -----------------------------------------------------------------------------
 console.log("\n[7] Testing TrueCalci Global Finance Engine (US, Europe & Worldwide)...");
-import { GlobalFinanceEngine } from "./js/engines/global-finance.js";
+import { GlobalFinanceEngine } from "../js/engines/global-finance.js";
 
 // 7.1 US Mortgage PITI Calculation
 const mgRes = GlobalFinanceEngine.calculateMortgagePITI({

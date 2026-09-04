@@ -79,6 +79,12 @@
       "skillPath": "skills/material-3/SKILL.md",
       "computedHash": "b675af544d7f335ca6dd2edb708930605484084354a4ef383362c9ec2b1717c7"
     },
+    "mcp-builder": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/mcp-builder/SKILL.md",
+      "computedHash": "6498a736a8dc5c645047c8a875b8ea7417e2ad97146f005200e50d20a9337ada"
+    },
     "mobile-checkout": {
       "source": "dodopayments/dodo-agent-plugin",
       "sourceType": "github",
@@ -126,6 +132,12 @@
       "sourceType": "github",
       "skillPath": "skills/webhook-integration/SKILL.md",
       "computedHash": "095d51d37ea5257ef93b167a5bf96af495189bb5c84ef89a75e99d3c68c20867"
+    },
+    "writing-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/writing-guidelines/SKILL.md",
+      "computedHash": "25aa3a33a97bddbcb1847ce4a6169106ec25e5b19b15b99c66e75ab383866ef2"
     }
   }
 }
