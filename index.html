@@ -84,24 +84,32 @@
     },
     {
       "@context": "https://schema.org",
-      "@type": "MathSolver",
+      "@type": ["MathSolver", "LearningResource"],
       "name": "TrueCalci Precision Math & Physics Solver",
-      "url": "https://truecalci.com/engineering-formulas.html",
-      "usageInfo": "https://truecalci.com/terms.html",
+      "url": "https://truecalci.com/",
       "inLanguage": "en",
+      "learningResourceType": "Math solver",
+      "usageInfo": "https://truecalci.com/terms.html",
       "potentialAction": [
         {
           "@type": "SolveMathAction",
+          "inLanguage": "en",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://truecalci.com/engineering-formulas.html?q={math_expression}",
+            "urlTemplate": "https://truecalci.com/?q={math_expression}#scientific",
             "actionPlatform": [
               "http://schema.org/DesktopWebPlatform",
               "http://schema.org/MobileWebPlatform"
             ]
           },
           "mathExpression-input": "required name=math_expression",
-          "eduQuestionType": "https://schema.org/Polynomial"
+          "eduQuestionType": [
+            "Polynomial Equation",
+            "Quadratic Equation",
+            "Linear Equation",
+            "Definite Integral",
+            "Derivative"
+          ]
         }
       ]
     },
