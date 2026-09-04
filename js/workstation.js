@@ -2,7 +2,7 @@
    TrueCalci — workstation.js
    Dependency-free, deterministic Workstation Studio driver.
    Supports all 24 production computational engines, dynamic multi-currency,
-   ephemeral RAM recalculations, derivation drawer, and Dodo billing flows.
+   ephemeral RAM recalculations, derivation drawer, hash routing, and Dodo billing flows.
    ========================================================================== */
 (function () {
   'use strict';
@@ -31,22 +31,32 @@
     USD: { long: 'USD ($) — Global', short: 'USD $', symbol: '$', region: 'Global ($)', rate: 1 },
     INR: { long: 'INR (₹) — India',  short: 'INR ₹', symbol: '₹', region: 'India (₹)',  rate: 83.2 }
   };
-  var cur = html.dataset.currency || 'USD';
+
+  function normalizeCurrency(val) {
+    if (!val) return 'USD';
+    var u = String(val).toUpperCase().trim();
+    return (u === 'INDIA' || u === 'INR') ? 'INR' : 'USD';
+  }
+
+  var cur = normalizeCurrency(html.dataset.currency || (function() {
+    try { return localStorage.getItem('calc_region'); } catch(e) { return 'USD'; }
+  })());
+
+  function getCur() {
+    return CUR[cur] || CUR.USD;
+  }
 
   function fmt(n) {
-    var c = CUR[cur];
+    var c = getCur();
+    if (typeof n !== 'number' || isNaN(n)) n = 0;
     var v = Math.round(n * (cur === 'INR' ? c.rate : 1));
     return c.symbol + v.toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US');
   }
 
-  function fmtRaw(n) {
-    var c = CUR[cur];
-    return c.symbol + Number(n).toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
   function applyCurrency() {
-    var c = CUR[cur];
+    cur = normalizeCurrency(cur);
     html.dataset.currency = cur;
+    var c = getCur();
 
     var btn = $('#currency-toggle');
     if (btn) {
@@ -66,14 +76,19 @@
     var taxLabel = $('#tax-label');
     if (taxLabel) taxLabel.textContent = cur === 'INR' ? 'GST — 18% (SAC 998314)' : 'Sales tax — TX (8.25%)';
 
-    recalcCurrent();
+    try {
+      recalcCurrent();
+    } catch (err) {
+      console.warn('recalcCurrent error in applyCurrency:', err);
+    }
   }
 
   var curBtn = $('#currency-toggle');
   if (curBtn) curBtn.addEventListener('click', function () {
     cur = cur === 'USD' ? 'INR' : 'USD';
+    try { localStorage.setItem('calc_region', cur === 'INR' ? 'india' : 'global'); } catch (e) {}
     applyCurrency();
-    toast('Currency switched to ' + CUR[cur].short);
+    toast('Currency switched to ' + getCur().short);
   });
 
   /* ====================================================================
@@ -85,10 +100,6 @@
 
   var STAGES = {
     'CTR-18': '#stage-contractor',
-    'SCP-19': '#stage-contractor',
-    'SLO-20': '#stage-contractor',
-    'FXR-21': '#stage-contractor',
-    'BHF-22': '#stage-contractor',
     'AIT-20': '#stage-ai-tokens',
     'SRD-21': '#stage-startup',
     'B2B-22': '#stage-b2b',
@@ -97,6 +108,7 @@
   };
 
   function switchEngine(tool) {
+    if (!tool) return;
     $$('.ws-tool').forEach(function (t) { t.removeAttribute('aria-current'); });
     tool.setAttribute('aria-current', 'true');
 
@@ -121,11 +133,15 @@
     if (targetStage) targetStage.hidden = false;
 
     if (stageSelector === '#stage-generic') {
-      renderGenericEngine(activeCode, activeSlug, activeTitle);
+      try {
+        renderGenericEngine(activeCode, activeSlug, activeTitle);
+      } catch (err) {
+        console.error('renderGenericEngine error:', err);
+      }
     }
 
-    updateDrawerContent();
-    recalcCurrent();
+    try { updateDrawerContent(); } catch (e) { console.warn(e); }
+    try { recalcCurrent(); } catch (e) { console.warn(e); }
   }
 
   $$('.ws-rail__head').forEach(function (head) {
@@ -142,7 +158,7 @@
   });
 
   /* ====================================================================
-     4. DERIVATIONS DICTIONARY
+     4. DERIVATIONS DICTIONARY (All 24 Engines Covered)
      ==================================================================== */
   var DERIVATIONS = {
     'CTR-18': {
@@ -152,6 +168,37 @@
         { name: 'Self-employment tax base (92.35%)', ref: 'IRC § 1402(a)', url: 'https://www.law.cornell.edu/uscode/text/26/1402' },
         { name: 'Qualified Business Income Deduction (20%)', ref: 'IRC § 199A', url: 'https://www.law.cornell.edu/uscode/text/26/199A' },
         { name: 'Reasonable Compensation Guidance', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov' }
+      ]
+    },
+    'SCP-19': {
+      title: 'S-Corp Reasonable Salary Optimizer',
+      formula: 'SE_SoleProp = (Profit × 0.9235) × 0.153\nSalary = Profit × Split%\nFICA_SCorp = Salary × 0.153\nFICA_Saved = max(SE_SoleProp − FICA_SCorp, 0)\nNet_Benefit = FICA_Saved − (Payroll_Fee + CPA_Fee)',
+      statutes: [
+        { name: 'Reasonable Officer Compensation Mandate', ref: 'IRS Rev. Rul. 74-44', url: 'https://www.irs.gov' },
+        { name: 'FICA Taxation Limits & Wages', ref: 'IRC § 3121(a)', url: 'https://www.law.cornell.edu/uscode/text/26/3121' }
+      ]
+    },
+    'SLO-20': {
+      title: 'Solo 401(k) Maximizer & Tax Shield',
+      formula: 'Employee_Deferral = $23,000 (+ $7,500 if Age ≥ 50)\nEmployer_Share = Profit × 0.20 (LLC) or W2_Salary × 0.25 (S-Corp)\nMax_Solo401k = min(Employee_Deferral + Employer_Share, $69,000)\nSEP_IRA_Comparison = Profit × 0.20\nImmediate_Tax_Saved = Max_Solo401k × Marginal_Tax_Rate',
+      statutes: [
+        { name: 'Defined Contribution Plan Dollar Limitations', ref: 'IRC § 415(c)(1)(A)', url: 'https://www.law.cornell.edu/uscode/text/26/415' },
+        { name: 'Elective Deferral Dollar Limits', ref: 'IRS Notice 2023-75', url: 'https://www.irs.gov' }
+      ]
+    },
+    'FXR-21': {
+      title: 'Cross-Border FX Rail Drag',
+      formula: 'Landed_Cash = Invoice × (1 − Rail_Fee_Drag) × Mid_Market_Rate\nRail_Drag = Spread% + Fixed_Transaction_Fee\nAnnual_Loss = 12 × (Landed_Benchmark − Landed_Current_Rail)',
+      statutes: [
+        { name: 'Foreign Exchange Mid-Market Benchmarks', ref: 'ISO 4217 Currency Standard', url: 'https://www.iso.org' },
+        { name: 'Fintech vs SWIFT Interbank Settlement Protocol', ref: 'SWIFT MT103 Gateway Standard', url: 'https://www.swift.com' }
+      ]
+    },
+    'BHF-22': {
+      title: 'Billable Hourly Floor Solver',
+      formula: 'Working_Weeks = 52 − Vacation_Weeks − Sick_Holiday_Weeks\nBillable_Capacity = Working_Weeks × Hours_Per_Week × (1 − NonBillable%)\nRequired_Gross = (Target_Net + Expenses + Health + Buffer) ÷ (1 − Effective_Tax_Rate)\nHourly_Floor = Required_Gross ÷ Billable_Capacity',
+      statutes: [
+        { name: 'Independent Contractor Schedule C Deductions', ref: 'IRC § 162(a)', url: 'https://www.law.cornell.edu/uscode/text/26/162' }
       ]
     },
     'AIT-20': {
@@ -196,6 +243,107 @@
         { name: 'Hyperscaler Data Transfer Out Pricing', ref: 'AWS / GCP / Azure Rate Cards', url: 'https://aws.amazon.com/ec2/pricing/on-demand/' },
         { name: 'Cloudflare Bandwidth Alliance (Zero Egress)', ref: 'Bandwidth Alliance Protocol', url: 'https://www.cloudflare.com/bandwidth-alliance/' }
       ]
+    },
+    'MTG-01': {
+      title: 'Mortgage PITI & PMI Amortization',
+      formula: 'Monthly_PI = P × [r(1 + r)^n] ÷ [(1 + r)^n − 1]\nPMI = Down% < 20% ? (Loan × 0.75% ÷ 12) : 0\nPITI = Monthly_PI + PMI + Monthly_Tax + Monthly_Hazard_Ins',
+      statutes: [
+        { name: 'Truth in Lending Act (Regulation Z)', ref: '12 CFR Part 1026', url: 'https://www.consumerfinance.gov' },
+        { name: 'Homeowners Protection Act of 1998 (PMI Cancellation)', ref: '12 U.S.C. § 4901', url: 'https://www.law.cornell.edu/uscode/text/12/4901' }
+      ]
+    },
+    'VAT-02': {
+      title: 'European VAT & Sales Tax Reversal',
+      formula: 'Add_Mode: Gross = Net × (1 + Rate)\nRemove_Mode: Net = Gross ÷ (1 + Rate)\nTax_Amount = Gross − Net',
+      statutes: [
+        { name: 'EU Council Directive on the Common System of VAT', ref: 'Directive 2006/112/EC', url: 'https://eur-lex.europa.eu' }
+      ]
+    },
+    'TIP-03': {
+      title: 'Tip & Bill Splitter',
+      formula: 'Tip_Amount = Bill × Tip%\nTotal_Bill = Bill + Tip_Amount\nPer_Person = Total_Bill ÷ Number_Of_Guests',
+      statutes: [
+        { name: 'Fair Labor Standards Act Tip Credit Guidelines', ref: '29 U.S.C. § 203(m)', url: 'https://www.dol.gov' }
+      ]
+    },
+    'CMP-04': {
+      title: 'Compound Wealth & 401(k) Future Value',
+      formula: 'FV = P × (1 + r/n)^(n×t) + PMT × [((1 + r/n)^(n×t) − 1) ÷ (r/n)]\nTotal_Principal = P + (PMT × 12 × t)\nCompound_Gains = FV − Total_Principal',
+      statutes: [
+        { name: 'Compound Interest Formulas in Financial Mathematics', ref: 'FINRA Rule 2210 Standards', url: 'https://www.finra.org' }
+      ]
+    },
+    'ITX-05': {
+      title: 'Indian Income Tax — Section 115BAC (ITA 2025)',
+      formula: 'Taxable_Income = max(Gross − Standard_Deduction(₹75,000), 0)\nSlabs: 0-3L (Nil), 3-7L (5%), 7-10L (10%), 10-12L (15%), 12-15L (20%), >15L (30%)\nRebate_87A = Taxable ≤ 12,00,000 ? Full Rebate : 0\nHealth_Education_Cess = Tax × 4%',
+      statutes: [
+        { name: 'Tax on Income of Individuals (New Tax Regime)', ref: 'Income-tax Act, 2025 § 115BAC', url: 'https://incometaxindia.gov.in' },
+        { name: 'Rebate of Income-tax in Certain Cases', ref: 'Section 87A Relief', url: 'https://incometaxindia.gov.in' }
+      ]
+    },
+    'GST-06': {
+      title: 'Goods and Services Tax (GST) Split',
+      formula: 'Total_GST = Base_Amount × Rate%\nIntrastate: CGST = Total_GST ÷ 2, SGST = Total_GST ÷ 2\nInterstate: IGST = Total_GST\nGross_Invoice = Base_Amount + Total_GST',
+      statutes: [
+        { name: 'Central Goods and Services Tax Act, 2017', ref: 'CGST Act § 9 & IGST Act § 5', url: 'https://cbic.gov.in' }
+      ]
+    },
+    'SIP-09': {
+      title: 'Mutual Fund SIP with Geometric Step-Up',
+      formula: 'FV = Σ [Monthly_Instalment_y × (1 + r)^(months_remaining)]\nMonthly_Instalment_y = Base_SIP × (1 + StepUp%)^y',
+      statutes: [
+        { name: 'SEBI Mutual Fund Investment Performance Norms', ref: 'SEBI (Mutual Funds) Reg. 1996', url: 'https://www.sebi.gov.in' }
+      ]
+    },
+    'FXD-10': {
+      title: 'Fixed Deposit (FD) Compounding',
+      formula: 'A = P × (1 + r/n)^(n×t)\nInterest_Earned = A − P\nAPY = (1 + r/n)^n − 1',
+      statutes: [
+        { name: 'Reserve Bank of India Master Directions on Interest Rates', ref: 'RBI/DBR/2015-16/19', url: 'https://rbi.org.in' }
+      ]
+    },
+    'GLD-11': {
+      title: 'Gold & Jewellery Invoice Calculator',
+      formula: 'Pure_Gold_Value = Weight_Grams × Karat_Rate_Per_Gram\nMaking_Charges = Pure_Gold_Value × Making_Charge%\nTaxable_Value = Pure_Gold_Value + Making_Charges\nGST_3% = Taxable_Value × 0.03\nInvoice_Total = Taxable_Value + GST_3%',
+      statutes: [
+        { name: 'Bureau of Indian Standards (BIS) Hallmarking Order', ref: 'BIS Hallmark Standard 2021', url: 'https://bis.gov.in' }
+      ]
+    },
+    'PPF-13': {
+      title: 'Public Provident Fund (PPF)',
+      formula: 'Interest calculated on minimum balance between 5th and last day of month.\nAnnual compounding at statutory rate (7.1%).\nExempt-Exempt-Exempt (EEE) statutory tax status.',
+      statutes: [
+        { name: 'Public Provident Fund Scheme, 2019', ref: 'GSR 915(E) Ministry of Finance', url: 'https://nsiindia.gov.in' },
+        { name: 'Deductions in Respect of Life Insurance, PPF, etc.', ref: 'Income-tax Act § 80C', url: 'https://incometaxindia.gov.in' }
+      ]
+    },
+    'SSY-14': {
+      title: 'Sukanya Samriddhi Account (SSY)',
+      formula: 'Deposits allowed up to 15 years from opening date.\nMaturity occurs after 21 years from opening date.\nCompounded annually at statutory 8.2% rate with EEE tax exemption.',
+      statutes: [
+        { name: 'Sukanya Samriddhi Account Rules, 2019', ref: 'GSR 914(E) Ministry of Finance', url: 'https://nsiindia.gov.in' }
+      ]
+    },
+    'HLN-07': {
+      title: 'Home Loan EMI & Prepayment Reduction',
+      formula: 'EMI = P × [r(1+r)^n] ÷ [(1+r)^n − 1]\nPrepayment accelerates principal amortization, reducing tenure n.',
+      statutes: [
+        { name: 'Reserve Bank of India Home Loan Guidelines', ref: 'RBI/2014-15/65', url: 'https://rbi.org.in' }
+      ]
+    },
+    'SCI-15': {
+      title: 'Scientific 991 Analytical Solver',
+      formula: 'Quadratic: ax² + bx + c = 0\nDiscriminant: Δ = b² − 4ac\nRoots: x = (−b ± √Δ) ÷ (2a)\nVertex: (−b ÷ 2a, −Δ ÷ 4a)',
+      statutes: [
+        { name: 'IEEE Standard for Floating-Point Arithmetic', ref: 'IEEE 754-2019 Specification', url: 'https://standards.ieee.org' }
+      ]
+    },
+    'PRG-17': {
+      title: 'Programmer 64-Bit Logic & Bitboard',
+      formula: 'Bitwise AND: A & B | OR: A | B | XOR: A ^ B | NOT: ~A\nTwo\'s complement representation for signed 64-bit integers.',
+      statutes: [
+        { name: 'Two\'s Complement Arithmetic and Bitboard Architecture', ref: 'ISO/IEC 9899:2018 (C18)', url: 'https://iso.org' }
+      ]
     }
   };
 
@@ -238,7 +386,7 @@
   }
 
   /* ====================================================================
-     5. COMPUTATIONAL ENGINES
+     5. COMPUTATIONAL ENGINES & CALCULATION LOGIC
      ==================================================================== */
   var SE_BASE   = 0.9235;
   var FICA      = 0.153;
@@ -250,7 +398,7 @@
   function num(id) { var el = $(id); return el ? parseFloat(el.value) || 0 : 0; }
   function setText(sel, val) { var el = $(sel); if (el) el.textContent = val; }
 
-  // 1. Contractor Parity & S-Corp
+  // 1. Contractor Parity & S-Corp (CTR-18)
   function seTax(base) {
     var b = base * SE_BASE;
     if (b <= OASDI_CAP) return b * FICA;
@@ -342,7 +490,7 @@
     }
   }
 
-  // 2. AI Token Arbitrage
+  // 2. AI Token Arbitrage (AIT-20)
   var AI_MODELS = [
     { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', in: 3.00, out: 15.00, cache: 0.30 },
     { id: 'claude-3-5-haiku',  name: 'Claude 3.5 Haiku',  in: 0.80, out: 4.00,  cache: 0.08 },
@@ -411,7 +559,7 @@
     }
   }
 
-  // 3. Startup Runway & Dilution
+  // 3. Startup Runway & Dilution (SRD-21)
   function recalcStartup() {
     if (!$('#st-cash')) return;
 
@@ -444,7 +592,7 @@
     setText('#st-series-own', (seriesAOwn * 100).toFixed(2) + '%');
   }
 
-  // 4. B2B Withholding & PE Risk
+  // 4. B2B Withholding & PE Risk (B2B-22)
   function recalcB2b() {
     if (!$('#b2b-invoice')) return;
 
@@ -476,7 +624,7 @@
     }
   }
 
-  // 5. FEIE Nomad Tracker
+  // 5. FEIE Nomad Tracker (FEI-23)
   function recalcFeie() {
     if (!$('#feie-income')) return;
 
@@ -505,7 +653,7 @@
     }
   }
 
-  // 6. Cloud Egress FinOps
+  // 6. Cloud Egress FinOps (CEF-24)
   function recalcEgress() {
     if (!$('#egress-gb')) return;
 
@@ -526,8 +674,130 @@
     setText('#egress-roi-multiplier', (stdCost / Math.max(optCost, 1)).toFixed(2) + 'x');
   }
 
-  // 7. Generic Engine Builder for Classical & Statutory Suites
+  // 7. Generic Engine Builder for Classical & Statutory Suites (All remaining engines)
   var GENERIC_CONFIGS = {
+    // Remote Suite Extras
+    'SCP-19': {
+      title: 'S-Corp Reasonable Salary Optimizer',
+      sub: 'IRS Rev. Rul. 74-44 FICA Tax Shield and Net Corporate Savings',
+      fields: [
+        { id: 'scp-profit', label: 'Net business profit', type: 'number', val: 150000, step: 5000, cur: true },
+        { id: 'scp-split', label: 'Reasonable salary split (%)', type: 'number', val: 55, step: 1, suffix: '%' },
+        { id: 'scp-payroll', label: 'Annual payroll service fee', type: 'number', val: 600, step: 50, cur: true },
+        { id: 'scp-cpa', label: 'Annual CPA 1120-S filing fee', type: 'number', val: 1500, step: 100, cur: true }
+      ],
+      calc: function () {
+        var profit = num('#scp-profit'), split = num('#scp-split') / 100;
+        var payrollFee = num('#scp-payroll'), cpaFee = num('#scp-cpa');
+        var seSoleProp = profit * 0.9235 * 0.153;
+        var salary = profit * split;
+        var ficaScorp = salary * 0.153;
+        var grossFicaSaved = Math.max(seSoleProp - ficaScorp, 0);
+        var overhead = payrollFee + cpaFee;
+        var netSavings = Math.max(grossFicaSaved - overhead, 0);
+        return {
+          primaryLabel: 'Net Annual FICA Tax Saved',
+          primaryVal: fmt(netSavings),
+          subText: 'Gross Saved: ' + fmt(grossFicaSaved) + ' · Overhead: -' + fmt(overhead),
+          metrics: [
+            { label: 'Reasonable Salary (W-2)', val: fmt(salary) },
+            { label: 'Corporate K-1 Distribution', val: fmt(profit - salary) },
+            { label: 'Breakeven Profit Threshold', val: fmt(41000) },
+            { label: 'Audit Safety Rating', val: split >= 0.50 ? 'Strong (≥50%)' : 'Caution (<50%)' }
+          ]
+        };
+      }
+    },
+    'SLO-20': {
+      title: 'Solo 401(k) Maximizer & Tax Shield',
+      sub: 'IRS Notice 2023-75 Limits ($69k / $76.5k) vs SEP-IRA',
+      fields: [
+        { id: 'slo-earnings', label: 'Net self-employed business earnings', type: 'number', val: 120000, step: 5000, cur: true },
+        { id: 'slo-age50', label: 'Age 50 or older ($7,500 catch-up)', type: 'number', val: 0, step: 1, suffix: '0=No, 1=Yes' },
+        { id: 'slo-taxrate', label: 'Combined marginal tax rate (%)', type: 'number', val: 28, step: 1, suffix: '%' }
+      ],
+      calc: function () {
+        var earnings = num('#slo-earnings'), is50 = num('#slo-age50') > 0, rate = num('#slo-taxrate') / 100;
+        var employee = 23000 + (is50 ? 7500 : 0);
+        var employer = earnings * 0.20;
+        var cap = is50 ? 76500 : 69000;
+        var soloMax = Math.min(employee + employer, cap);
+        var sepMax = earnings * 0.20;
+        var extraShield = Math.max(soloMax - sepMax, 0);
+        var taxSaved = soloMax * rate;
+        return {
+          primaryLabel: 'Maximum Legal Tax Shelter',
+          primaryVal: fmt(soloMax),
+          subText: 'Immediate Cash Tax Saved: ' + fmt(taxSaved),
+          metrics: [
+            { label: 'Employee Elective Deferral', val: fmt(employee) },
+            { label: 'Employer 20% Profit Share', val: fmt(employer) },
+            { label: 'Extra Shelter vs SEP-IRA', val: fmt(extraShield) },
+            { label: 'Cash Tax Benefit', val: fmt(taxSaved) }
+          ]
+        };
+      }
+    },
+    'FXR-21': {
+      title: 'Cross-Border FX Rail Drag',
+      sub: 'Landed Local Currency vs Mid-Market Benchmark & Provider Spreads',
+      fields: [
+        { id: 'fxr-amount', label: 'Gross USD invoice amount', type: 'number', val: 10000, step: 500, cur: true }
+      ],
+      calc: function () {
+        var usd = num('#fxr-amount');
+        var eurBenchmark = usd * 0.92;
+        var wiseLanded = usd * (1 - 0.0055) * 0.92;
+        var stripeLanded = usd * (1 - 0.039) * 0.92;
+        var paypalLanded = usd * (1 - 0.079) * 0.92;
+        var wiseSavings = wiseLanded - paypalLanded;
+        return {
+          primaryLabel: 'Landed EUR (Wise Business)',
+          primaryVal: '€' + Math.round(wiseLanded).toLocaleString('en-US'),
+          subText: 'Mid-Market: €' + Math.round(eurBenchmark).toLocaleString('en-US') + ' · Drag: 0.55%',
+          metrics: [
+            { label: 'Wise Drag (0.55%)', val: '€' + Math.round(eurBenchmark - wiseLanded).toLocaleString('en-US') },
+            { label: 'PayPal Drag (7.90%)', val: '€' + Math.round(eurBenchmark - paypalLanded).toLocaleString('en-US') },
+            { label: 'Annual Savings vs PayPal', val: '€' + Math.round(wiseSavings * 12).toLocaleString('en-US') },
+            { label: 'Optimal Rail', val: 'Wise Business' }
+          ]
+        };
+      }
+    },
+    'BHF-22': {
+      title: 'Billable Hourly Floor Solver',
+      sub: 'True Hourly Floor Accounting for 47 Weeks, Buffer & FICA',
+      fields: [
+        { id: 'bhf-takehome', label: 'Target annual net spendable cash', type: 'number', val: 120000, step: 5000, cur: true },
+        { id: 'bhf-expenses', label: 'Annual deductible business expenses', type: 'number', val: 8000, step: 500, cur: true },
+        { id: 'bhf-health', label: 'Annual out-of-pocket health insurance', type: 'number', val: 7200, step: 500, cur: true },
+        { id: 'bhf-vacation', label: 'Vacation & holiday weeks off', type: 'number', val: 5.5, step: 0.5, suffix: 'wks' },
+        { id: 'bhf-nonbill', label: 'Non-billable admin / sales drag (%)', type: 'number', val: 28, step: 1, suffix: '%' }
+      ],
+      calc: function () {
+        var takeHome = num('#bhf-takehome'), exp = num('#bhf-expenses'), health = num('#bhf-health');
+        var offWeeks = num('#bhf-vacation'), nonBill = num('#bhf-nonbill') / 100;
+        var workingWeeks = Math.max(52 - offWeeks, 1);
+        var nominalHours = workingWeeks * 40;
+        var billableHours = Math.round(nominalHours * (1 - nonBill));
+        // Effective tax and buffer estimate ~28%
+        var grossTarget = (takeHome + exp + health) / 0.72;
+        var floor = billableHours > 0 ? (grossTarget / billableHours) : 0;
+        return {
+          primaryLabel: 'True Billable Rate Floor',
+          primaryVal: '$' + Math.round(floor) + ' / hr',
+          subText: 'Annual Billable Hours: ' + billableHours + ' hrs (' + workingWeeks.toFixed(1) + ' weeks)',
+          metrics: [
+            { label: 'Gross Target Revenue', val: fmt(grossTarget) },
+            { label: 'Working Weeks / Year', val: workingWeeks.toFixed(1) + ' wks' },
+            { label: 'Annual Billable Hours', val: billableHours + ' hrs' },
+            { label: 'Capacity Utilization', val: ((1 - nonBill) * 100).toFixed(0) + '%' }
+          ]
+        };
+      }
+    },
+
+    // Global & Real Estate Suite
     'MTG-01': {
       title: 'Mortgage PITI & PMI Solver',
       sub: 'Statutory Amortization, Property Tax, Hazard Insurance & PMI',
@@ -582,29 +852,89 @@
         };
       }
     },
+    'TIP-03': {
+      title: 'Tip & Bill Splitter',
+      sub: 'Restaurant Dining Gratuity, Tax Inclusion & Per-Guest Itemized Split',
+      fields: [
+        { id: 'tip-bill', label: 'Subtotal bill amount', type: 'number', val: 85, step: 5, cur: true },
+        { id: 'tip-pct', label: 'Gratuity tip percentage (%)', type: 'number', val: 18, step: 1, suffix: '%' },
+        { id: 'tip-guests', label: 'Number of paying guests', type: 'number', val: 2, min: 1, max: 50, step: 1 }
+      ],
+      calc: function () {
+        var bill = num('#tip-bill'), pct = num('#tip-pct') / 100, guests = Math.max(num('#tip-guests'), 1);
+        var tipVal = bill * pct;
+        var total = bill + tipVal;
+        var perPerson = total / guests;
+        return {
+          primaryLabel: 'Per Person Share',
+          primaryVal: fmt(perPerson),
+          subText: 'Total Bill with Tip: ' + fmt(total),
+          metrics: [
+            { label: 'Total Tip Added', val: fmt(tipVal) },
+            { label: 'Guest Count', val: guests + ' guests' },
+            { label: 'Subtotal Base', val: fmt(bill) },
+            { label: 'Effective Tip Rate', val: (pct * 100).toFixed(1) + '%' }
+          ]
+        };
+      }
+    },
+    'CMP-04': {
+      title: 'Compound Wealth & 401(k) Simulator',
+      sub: 'Long-Term Exponential Compounding for Retirement, ISA & Wealth Corpus',
+      fields: [
+        { id: 'cmp-init', label: 'Initial principal investment', type: 'number', val: 10000, step: 1000, cur: true },
+        { id: 'cmp-monthly', label: 'Monthly recurring contribution', type: 'number', val: 500, step: 50, cur: true },
+        { id: 'cmp-rate', label: 'Expected annual return (%)', type: 'number', val: 8.0, step: 0.25, suffix: '%' },
+        { id: 'cmp-years', label: 'Investment horizon (years)', type: 'number', val: 15, step: 1, suffix: 'yrs' }
+      ],
+      calc: function () {
+        var p = num('#cmp-init'), pmt = num('#cmp-monthly'), r = (num('#cmp-rate') / 100) / 12, n = num('#cmp-years') * 12;
+        var fvInit = p * Math.pow(1 + r, n);
+        var fvContrib = r > 0 ? (pmt * (Math.pow(1 + r, n) - 1) / r) : (pmt * n);
+        var totalFv = fvInit + fvContrib;
+        var totalDeposited = p + (pmt * n);
+        var gains = Math.max(totalFv - totalDeposited, 0);
+        return {
+          primaryLabel: 'Estimated Future Corpus',
+          primaryVal: fmt(totalFv),
+          subText: 'Compound Interest Gains: ' + fmt(gains),
+          metrics: [
+            { label: 'Total Principal Deposited', val: fmt(totalDeposited) },
+            { label: 'Compound Interest Share', val: (totalFv > 0 ? (gains / totalFv * 100).toFixed(1) : 0) + '%' },
+            { label: 'Wealth Multiplier', val: (totalDeposited > 0 ? (totalFv / totalDeposited).toFixed(2) : 1) + 'x' },
+            { label: 'Horizon Duration', val: num('#cmp-years') + ' Years' }
+          ]
+        };
+      }
+    },
+
+    // Statutory & Tax Suite
     'ITX-05': {
       title: 'Indian Income Tax — Section 115BAC (ITA 2025)',
-      sub: 'Statutory New Tax Regime Slabs & Section 87A Rebate',
+      sub: 'Statutory New Tax Regime Slabs (Zero Net Tax Up to ₹12.75 Lakhs for Salaried)',
       fields: [
-        { id: 'itx-income', label: 'Gross total income (₹)', type: 'number', val: 1800000, step: 50000, suffix: '₹' },
+        { id: 'itx-income', label: 'Gross total income (₹)', type: 'number', val: 1250000, step: 25000, suffix: '₹' },
         { id: 'itx-std', label: 'Standard deduction (₹)', type: 'number', val: 75000, step: 5000, suffix: '₹' }
       ],
       calc: function () {
         var income = num('#itx-income'), std = num('#itx-std');
         var net = Math.max(income - std, 0);
         var tax = 0;
-        // 115BAC slabs: 0-3L nil, 3-7L 5%, 7-10L 10%, 10-12L 15%, 12-15L 20%, >15L 30%
         if (net > 1500000) { tax += (net - 1500000) * 0.30; net = 1500000; }
         if (net > 1200000) { tax += (net - 1200000) * 0.20; net = 1200000; }
         if (net > 1000000) { tax += (net - 1000000) * 0.15; net = 1000000; }
         if (net > 700000)  { tax += (net - 700000)  * 0.10; net = 700000; }
         if (net > 300000)  { tax += (net - 300000)  * 0.05; }
+        // Section 87A rebate under FY25-26 Budget: up to 12L taxable income => full rebate!
+        if (income - std <= 1200000) {
+          tax = 0;
+        }
         var cess = tax * 0.04;
         var totalTax = tax + cess;
         return {
           primaryLabel: 'Total Income Tax Payable (115BAC)',
           primaryVal: '₹' + Math.round(totalTax).toLocaleString('en-IN'),
-          subText: 'Effective Rate: ' + (income > 0 ? (totalTax / income * 100).toFixed(2) : 0) + '%',
+          subText: totalTax === 0 ? 'Zero Net Tax (Section 87A Full Rebate Applied)' : ('Effective Tax Rate: ' + (income > 0 ? (totalTax / income * 100).toFixed(2) : 0) + '%'),
           metrics: [
             { label: 'Taxable Income', val: '₹' + Math.max(income - std, 0).toLocaleString('en-IN') },
             { label: 'Health & Edu Cess (4%)', val: '₹' + Math.round(cess).toLocaleString('en-IN') },
@@ -673,6 +1003,227 @@
           ]
         };
       }
+    },
+    'FXD-10': {
+      title: 'Fixed Deposit (FD) Maturity Solver',
+      sub: 'Quarterly Compounding Bank Fixed Deposit Growth',
+      fields: [
+        { id: 'fxd-principal', label: 'Principal deposit amount', type: 'number', val: 500000, step: 25000, cur: true },
+        { id: 'fxd-rate', label: 'Annual interest rate (%)', type: 'number', val: 7.25, step: 0.25, suffix: '%' },
+        { id: 'fxd-tenure', label: 'Tenure (years)', type: 'number', val: 5, step: 1, suffix: 'yrs' }
+      ],
+      calc: function () {
+        var p = num('#fxd-principal'), r = num('#fxd-rate') / 100, t = num('#fxd-tenure');
+        var n = 4; // quarterly
+        var maturity = p * Math.pow(1 + r / n, n * t);
+        var interest = maturity - p;
+        return {
+          primaryLabel: 'Maturity Value at Period End',
+          primaryVal: fmt(maturity),
+          subText: 'Total Interest Earned: ' + fmt(interest),
+          metrics: [
+            { label: 'Principal Invested', val: fmt(p) },
+            { label: 'Effective APY', val: ((Math.pow(1 + r / n, n) - 1) * 100).toFixed(2) + '%' },
+            { label: 'Total Interest Accrued', val: fmt(interest) },
+            { label: 'Compounding Frequency', val: 'Quarterly (4x/yr)' }
+          ]
+        };
+      }
+    },
+    'GLD-11': {
+      title: 'Gold & Jewellery Invoice Solver',
+      sub: 'Statutory 22K/24K Metal Valuation, Making Charges & 3% GST',
+      fields: [
+        { id: 'gld-grams', label: 'Gold net weight (grams)', type: 'number', val: 25, step: 1, suffix: 'g' },
+        { id: 'gld-rate', label: 'Gold rate per gram (₹)', type: 'number', val: 7200, step: 50, suffix: '₹' },
+        { id: 'gld-making', label: 'Making charges (%)', type: 'number', val: 12, step: 1, suffix: '%' }
+      ],
+      calc: function () {
+        var grams = num('#gld-grams'), rate = num('#gld-rate'), makingPct = num('#gld-making') / 100;
+        var metalVal = grams * rate;
+        var makingVal = metalVal * makingPct;
+        var taxableBase = metalVal + makingVal;
+        var gst = taxableBase * 0.03;
+        var total = taxableBase + gst;
+        return {
+          primaryLabel: 'Gross Invoice Total (with GST)',
+          primaryVal: '₹' + Math.round(total).toLocaleString('en-IN'),
+          subText: 'Metal Base: ₹' + Math.round(metalVal).toLocaleString('en-IN') + ' · GST 3%: ₹' + Math.round(gst).toLocaleString('en-IN'),
+          metrics: [
+            { label: 'Pure Metal Value', val: '₹' + Math.round(metalVal).toLocaleString('en-IN') },
+            { label: 'Making Charges (' + (makingPct * 100).toFixed(0) + '%)', val: '₹' + Math.round(makingVal).toLocaleString('en-IN') },
+            { label: 'GST Amount (3%)', val: '₹' + Math.round(gst).toLocaleString('en-IN') },
+            { label: 'Effective Rate/Gram', val: '₹' + Math.round(total / Math.max(grams, 1)).toLocaleString('en-IN') }
+          ]
+        };
+      }
+    },
+    'PPF-13': {
+      title: 'Public Provident Fund (PPF)',
+      sub: '15-Year Sovereign Guaranteed Growth & EEE Tax-Free Wealth',
+      fields: [
+        { id: 'ppf-annual', label: 'Annual deposit amount (Max ₹1.5L)', type: 'number', val: 150000, max: 150000, step: 5000, suffix: '₹' },
+        { id: 'ppf-rate', label: 'Statutory interest rate (%)', type: 'number', val: 7.1, step: 0.1, suffix: '%' }
+      ],
+      calc: function () {
+        var dep = Math.min(num('#ppf-annual'), 150000), r = num('#ppf-rate') / 100;
+        var balance = 0, totalInvested = 0;
+        for (var i = 1; i <= 15; i++) {
+          totalInvested += dep;
+          balance = (balance + dep) * (1 + r);
+        }
+        var interest = balance - totalInvested;
+        return {
+          primaryLabel: 'Tax-Free Maturity Corpus (15 Years)',
+          primaryVal: '₹' + Math.round(balance).toLocaleString('en-IN'),
+          subText: 'Total Interest Earned: ₹' + Math.round(interest).toLocaleString('en-IN'),
+          metrics: [
+            { label: 'Total Invested (15 Yrs)', val: '₹' + Math.round(totalInvested).toLocaleString('en-IN') },
+            { label: 'Tax-Free Wealth Multiplier', val: (balance / Math.max(totalInvested, 1)).toFixed(2) + 'x' },
+            { label: 'Tax Status', val: 'EEE (Exempt)' },
+            { label: 'Statutory Rate', val: (r * 100).toFixed(1) + '% Sovereign' }
+          ]
+        };
+      }
+    },
+    'SSY-14': {
+      title: 'Sukanya Samriddhi Yojana (SSY)',
+      sub: 'Statutory Sovereign Scheme for the Girl Child (8.2% Compound Interest)',
+      fields: [
+        { id: 'ssy-annual', label: 'Annual deposit amount (Max ₹1.5L)', type: 'number', val: 150000, max: 150000, step: 5000, suffix: '₹' },
+        { id: 'ssy-rate', label: 'Statutory interest rate (%)', type: 'number', val: 8.2, step: 0.1, suffix: '%' }
+      ],
+      calc: function () {
+        var dep = Math.min(num('#ssy-annual'), 150000), r = num('#ssy-rate') / 100;
+        var balance = 0, totalInvested = 0;
+        // 15 years of deposit, continues to compound until 21 years
+        for (var i = 1; i <= 21; i++) {
+          if (i <= 15) {
+            totalInvested += dep;
+            balance = (balance + dep) * (1 + r);
+          } else {
+            balance = balance * (1 + r);
+          }
+        }
+        var interest = balance - totalInvested;
+        return {
+          primaryLabel: 'Tax-Free Maturity Corpus at Age 21',
+          primaryVal: '₹' + Math.round(balance).toLocaleString('en-IN'),
+          subText: 'Total Interest Earned: ₹' + Math.round(interest).toLocaleString('en-IN'),
+          metrics: [
+            { label: 'Total Capital Deposited', val: '₹' + Math.round(totalInvested).toLocaleString('en-IN') },
+            { label: 'Wealth Multiplier', val: (balance / Math.max(totalInvested, 1)).toFixed(2) + 'x' },
+            { label: 'Tax Status', val: 'Section 80C (EEE)' },
+            { label: 'Statutory Rate', val: (r * 100).toFixed(1) + '% Sovereign' }
+          ]
+        };
+      }
+    },
+    'HLN-07': {
+      title: 'Home Loan EMI & Prepayment Tenure Reducer',
+      sub: 'Amortization Accelerated by Regular Monthly Prepayment',
+      fields: [
+        { id: 'hln-principal', label: 'Total loan principal amount', type: 'number', val: 3000000, step: 100000, cur: true },
+        { id: 'hln-rate', label: 'Annual interest rate (%)', type: 'number', val: 8.5, step: 0.1, suffix: '%' },
+        { id: 'hln-tenure', label: 'Tenure duration (years)', type: 'number', val: 20, step: 1, suffix: 'yrs' },
+        { id: 'hln-prepay', label: 'Monthly extra prepayment', type: 'number', val: 5000, step: 1000, cur: true }
+      ],
+      calc: function () {
+        var p = num('#hln-principal'), r = (num('#hln-rate') / 100) / 12, n = num('#hln-tenure') * 12, prepay = num('#hln-prepay');
+        var emi = r > 0 ? (p * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1)) : (p / n);
+        var totalWithout = emi * n - p;
+
+        // Amortization with prepayment
+        var bal = p, actualMonths = 0, totalInterestPaid = 0;
+        while (bal > 0 && actualMonths < n) {
+          actualMonths++;
+          var interestMonth = bal * r;
+          totalInterestPaid += interestMonth;
+          var principalMonth = (emi - interestMonth) + prepay;
+          bal -= principalMonth;
+          if (bal <= 0) break;
+        }
+        var interestSaved = Math.max(totalWithout - totalInterestPaid, 0);
+        var yearsSaved = Math.max((n - actualMonths) / 12, 0);
+        return {
+          primaryLabel: 'Monthly Base Loan EMI',
+          primaryVal: fmt(emi),
+          subText: 'Prepayment of ' + fmt(prepay) + '/mo saves ' + fmt(interestSaved) + ' in interest',
+          metrics: [
+            { label: 'Total Interest Saved', val: fmt(interestSaved) },
+            { label: 'Loan Tenure Reduced By', val: yearsSaved.toFixed(1) + ' Years' },
+            { label: 'New Loan Duration', val: (actualMonths / 12).toFixed(1) + ' Years' },
+            { label: 'Total Principal Borrowed', val: fmt(p) }
+          ]
+        };
+      }
+    },
+
+    // Engineering & Bitwise Suite
+    'SCI-15': {
+      title: 'Scientific 991 Analytical Solver',
+      sub: 'Casio fx-991 Standard V.P.A.M. Quadratic & Polynomial Solver',
+      fields: [
+        { id: 'sci-a', label: 'Polynomial coefficient a (x²)', type: 'number', val: 1, step: 1 },
+        { id: 'sci-b', label: 'Polynomial coefficient b (x)', type: 'number', val: -5, step: 1 },
+        { id: 'sci-c', label: 'Polynomial constant c', type: 'number', val: 6, step: 1 }
+      ],
+      calc: function () {
+        var a = num('#sci-a') || 1, b = num('#sci-b'), c = num('#sci-c');
+        var disc = b * b - 4 * a * c;
+        var root1, root2;
+        if (disc >= 0) {
+          root1 = ((-b + Math.sqrt(disc)) / (2 * a)).toFixed(4);
+          root2 = ((-b - Math.sqrt(disc)) / (2 * a)).toFixed(4);
+        } else {
+          var real = (-b / (2 * a)).toFixed(4);
+          var imag = (Math.sqrt(-disc) / (2 * a)).toFixed(4);
+          root1 = real + ' + ' + imag + 'i';
+          root2 = real + ' − ' + imag + 'i';
+        }
+        var vX = (-b / (2 * a)).toFixed(4);
+        var vY = (-(disc) / (4 * a)).toFixed(4);
+        return {
+          primaryLabel: 'Primary Root (x₁)',
+          primaryVal: 'x₁ = ' + root1,
+          subText: 'Secondary Root: x₂ = ' + root2 + ' · Discriminant Δ = ' + disc.toFixed(2),
+          metrics: [
+            { label: 'Root 1 (x₁)', val: String(root1) },
+            { label: 'Root 2 (x₂)', val: String(root2) },
+            { label: 'Discriminant (b²−4ac)', val: disc.toFixed(2) },
+            { label: 'Parabola Vertex (h, k)', val: '(' + vX + ', ' + vY + ')' }
+          ]
+        };
+      }
+    },
+    'PRG-17': {
+      title: 'Programmer 64-Bit Logic & Bitboard',
+      sub: 'Base Conversions (HEX / DEC / OCT / BIN) & Bitwise Matrix',
+      fields: [
+        { id: 'prg-val', label: 'Primary decimal integer value', type: 'number', val: 255, step: 1 },
+        { id: 'prg-op2', label: 'Operand 2 for bitwise test', type: 'number', val: 15, step: 1 }
+      ],
+      calc: function () {
+        var v1 = Math.floor(num('#prg-val')) || 0;
+        var v2 = Math.floor(num('#prg-op2')) || 0;
+        var hex = '0x' + (v1 >>> 0).toString(16).toUpperCase();
+        var oct = '0o' + (v1 >>> 0).toString(8);
+        var bin = (v1 >>> 0).toString(2).padStart(16, '0');
+        var andRes = v1 & v2;
+        var orRes = v1 | v2;
+        var xorRes = v1 ^ v2;
+        return {
+          primaryLabel: 'Hexadecimal (HEX)',
+          primaryVal: hex,
+          subText: 'Binary: ' + bin + ' · Octal: ' + oct,
+          metrics: [
+            { label: 'Bitwise AND (' + v1 + ' & ' + v2 + ')', val: '0x' + (andRes >>> 0).toString(16).toUpperCase() + ' (' + andRes + ')' },
+            { label: 'Bitwise OR (' + v1 + ' | ' + v2 + ')', val: '0x' + (orRes >>> 0).toString(16).toUpperCase() + ' (' + orRes + ')' },
+            { label: 'Bitwise XOR (' + v1 + ' ^ ' + v2 + ')', val: '0x' + (xorRes >>> 0).toString(16).toUpperCase() + ' (' + xorRes + ')' },
+            { label: 'Active Bit Count', val: bin.split('1').length - 1 + ' bits set' }
+          ]
+        };
+      }
     }
   };
 
@@ -681,12 +1232,9 @@
     var sub = $('#gen-engine-sub');
     var fieldsContainer = $('#gen-fields-container');
 
-    if (heading) heading.textContent = title;
-    if (sub) sub.textContent = 'Deterministic calculation for ' + slug + ' (' + code + ')';
-
     var cfg = GENERIC_CONFIGS[code] || {
       title: title,
-      sub: 'Engine: ' + slug,
+      sub: 'Engine: ' + slug + ' (' + code + ')',
       fields: [
         { id: 'gen-val-1', label: 'Primary Input Parameter', type: 'number', val: 10000, step: 500, cur: true },
         { id: 'gen-val-2', label: 'Secondary Parameter (%)', type: 'number', val: 15, step: 1, suffix: '%' }
@@ -707,14 +1255,21 @@
       }
     };
 
+    if (heading) heading.textContent = cfg.title;
+    if (sub) sub.textContent = cfg.sub;
+
     if (fieldsContainer) {
       var h = '';
       cfg.fields.forEach(function (f) {
         h += '<div class="field">' +
                '<label for="' + f.id + '">' + f.label + '</label>' +
                '<div class="input-group">' +
-                 (f.cur ? '<span class="input-group__pill cur-symbol">' + CUR[cur].symbol + '</span>' : '') +
-                 '<input class="input num" id="' + f.id + '" type="' + f.type + '" value="' + f.val + '" step="' + f.step + '" data-calc-gen>' +
+                 (f.cur ? '<span class="input-group__pill cur-symbol">' + getCur().symbol + '</span>' : '') +
+                 '<input class="input num" id="' + f.id + '" type="' + f.type + '" value="' + f.val + '"' +
+                   (f.step ? ' step="' + f.step + '"' : '') +
+                   (f.min !== undefined ? ' min="' + f.min + '"' : '') +
+                   (f.max !== undefined ? ' max="' + f.max + '"' : '') +
+                   ' data-calc-gen>' +
                  (f.suffix ? '<span class="input-suffix">' + f.suffix + '</span>' : '') +
                '</div>' +
              '</div>';
@@ -731,22 +1286,8 @@
   }
 
   function recalcGeneric() {
-    var cfg = GENERIC_CONFIGS[activeCode] || {
-      calc: function () {
-        var v1 = num('#gen-val-1'), v2 = num('#gen-val-2') / 100;
-        return {
-          primaryLabel: 'Computed Result',
-          primaryVal: fmt(v1 * (1 + v2)),
-          subText: 'Calculated in volatile RAM',
-          metrics: [
-            { label: 'Parameter 1', val: fmt(v1) },
-            { label: 'Parameter 2', val: (v2 * 100).toFixed(1) + '%' },
-            { label: 'Status', val: 'Valid' },
-            { label: 'Precision', val: '64-bit' }
-          ]
-        };
-      }
-    };
+    var cfg = GENERIC_CONFIGS[activeCode];
+    if (!cfg || typeof cfg.calc !== 'function') return;
 
     var res = cfg.calc();
     setText('#gen-result-label', res.primaryLabel);
@@ -777,7 +1318,7 @@
       recalcFeie();
     } else if (activeCode === 'CEF-24') {
       recalcEgress();
-    } else if (STAGES[activeCode] === '#stage-contractor') {
+    } else if (activeCode === 'CTR-18') {
       recalcContractor();
     } else {
       recalcGeneric();
@@ -837,7 +1378,7 @@
   if (dClose) dClose.addEventListener('click', closeDrawer);
 
   /* ====================================================================
-     7. STAGE ACTIONS
+     7. STAGE ACTIONS (Copy Derivation, Copy API, Export PDF, Save Scenario)
      ==================================================================== */
   function derivationText() {
     var d = DERIVATIONS[activeCode];
@@ -900,12 +1441,8 @@
       };
     } else {
       payload = {
-        revenue: num('#in-revenue'),
-        expenses: num('#in-expenses'),
-        salarySplit: num('#in-salary-split'),
-        deferral: num('#in-retirement'),
-        healthcare: num('#in-health'),
-        billableHours: num('#in-hours')
+        engine: activeSlug,
+        code: activeCode
       };
     }
 
@@ -1042,7 +1579,118 @@
   });
 
   /* ====================================================================
-     10. KEYBOARD ESCAPE LISTENER
+     10. HASH ROUTING & DEEP LINKING
+     ==================================================================== */
+  var ALIASES = {
+    'tax': 'ITX-05',
+    'incometax': 'ITX-05',
+    'income-tax': 'ITX-05',
+    '115bac': 'ITX-05',
+    'itx': 'ITX-05',
+    'itx-05': 'ITX-05',
+    'gst': 'GST-06',
+    'gst-06': 'GST-06',
+    'compound': 'CMP-04',
+    'wealth': 'CMP-04',
+    'cmp-04': 'CMP-04',
+    'mortgage': 'MTG-01',
+    'piti': 'MTG-01',
+    'mtg-01': 'MTG-01',
+    'vat': 'VAT-02',
+    'vat-02': 'VAT-02',
+    'tip': 'TIP-03',
+    'tip-03': 'TIP-03',
+    'sip': 'SIP-09',
+    'sip-09': 'SIP-09',
+    'fd': 'FXD-10',
+    'fxd-10': 'FXD-10',
+    'gold': 'GLD-11',
+    'gld-11': 'GLD-11',
+    'ppf': 'PPF-13',
+    'ppf-13': 'PPF-13',
+    'ssy': 'SSY-14',
+    'ssy-14': 'SSY-14',
+    'homeloan': 'HLN-07',
+    'home_loan': 'HLN-07',
+    'emi': 'HLN-07',
+    'hln-07': 'HLN-07',
+    'scientific': 'SCI-15',
+    'calci991': 'SCI-15',
+    'calci_991': 'SCI-15',
+    'sci-15': 'SCI-15',
+    'programmer': 'PRG-17',
+    'bitwise': 'PRG-17',
+    'prg-17': 'PRG-17',
+    'contractor': 'CTR-18',
+    'contractor_matrix': 'CTR-18',
+    'parity': 'CTR-18',
+    'ctr-18': 'CTR-18',
+    'scorp': 'SCP-19',
+    'scp-19': 'SCP-19',
+    'solo401k': 'SLO-20',
+    'retirement': 'SLO-20',
+    'slo-20': 'SLO-20',
+    'fx': 'FXR-21',
+    'fxr-21': 'FXR-21',
+    'billable': 'BHF-22',
+    'bhf-22': 'BHF-22',
+    'tokens': 'AIT-20',
+    'ai': 'AIT-20',
+    'ait-20': 'AIT-20',
+    'startup': 'SRD-21',
+    'runway': 'SRD-21',
+    'srd-21': 'SRD-21',
+    'b2b': 'B2B-22',
+    'b2b-22': 'B2B-22',
+    'wht': 'B2B-22',
+    'feie': 'FEI-23',
+    'nomad': 'FEI-23',
+    'fei-23': 'FEI-23',
+    'egress': 'CEF-24',
+    'cloud': 'CEF-24',
+    'cef-24': 'CEF-24'
+  };
+
+  function handleHash() {
+    var rawHash = (window.location.hash || '').replace(/^#/, '').toLowerCase().trim();
+    if (!rawHash) return;
+
+    var targetTool = null;
+    $$('.ws-tool').forEach(function (tool) {
+      var code = (tool.dataset.code || '').toLowerCase();
+      var slug = (tool.dataset.slug || '').toLowerCase();
+      if (
+        code === rawHash ||
+        code.replace('-', '') === rawHash ||
+        slug === rawHash ||
+        slug.replace('.', '') === rawHash ||
+        slug.replace('.', '-') === rawHash
+      ) {
+        targetTool = tool;
+      }
+    });
+
+    if (!targetTool) {
+      var matchedCode = ALIASES[rawHash] || ALIASES[rawHash.split('-')[0]] || ALIASES[rawHash.split('.')[0]] || ALIASES[rawHash.split('_')[0]];
+      if (matchedCode) {
+        targetTool = $('.ws-tool[data-code="' + matchedCode + '"]');
+      }
+    }
+
+    if (targetTool) {
+      var group = targetTool.closest('.ws-rail__group');
+      if (group) {
+        var head = $('.ws-rail__head', group);
+        if (head) head.setAttribute('aria-expanded', 'true');
+      }
+      switchEngine(targetTool);
+    }
+  }
+
+  window.addEventListener('hashchange', handleHash);
+
+  /* ====================================================================
+     11. KEYBOARD ESCAPE LISTENER
      ==================================================================== */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
@@ -1053,9 +1701,13 @@
   });
 
   /* ====================================================================
-     11. INITIALIZATION
+     12. INITIALIZATION
      ==================================================================== */
-  applyCurrency();
-  updateDrawerContent();
-  recalcCurrent();
+  try { applyCurrency(); } catch (e) { console.warn('applyCurrency init error:', e); }
+  try { updateDrawerContent(); } catch (e) { console.warn('updateDrawerContent init error:', e); }
+  if (window.location.hash) {
+    try { handleHash(); } catch (e) { console.warn('handleHash init error:', e); }
+  } else {
+    try { recalcCurrent(); } catch (e) { console.warn('recalcCurrent init error:', e); }
+  }
 })();

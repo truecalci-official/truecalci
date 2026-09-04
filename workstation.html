@@ -7,9 +7,12 @@
     try {
       var savedTheme = localStorage.getItem('calc_theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
-      var savedCur = localStorage.getItem('calc_region') || 'USD';
+      var raw = (localStorage.getItem('calc_region') || 'USD').toUpperCase().trim();
+      var savedCur = (raw === 'INDIA' || raw === 'INR') ? 'INR' : 'USD';
       document.documentElement.setAttribute('data-currency', savedCur);
-    } catch (e) {}
+    } catch (e) {
+      document.documentElement.setAttribute('data-currency', 'USD');
+    }
   })();
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -642,6 +645,8 @@
           </div>
         </div>
       </div>
+    </div>
+
     <!-- B2B Withholding & PE Risk Panel -->
     <div id="stage-b2b" hidden>
       <div class="ws-section">
