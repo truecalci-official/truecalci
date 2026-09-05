@@ -1,6 +1,7 @@
 # TrueCalci — Deterministic Compute Engine for AI Agents & Enterprise Teams
 
 [![MCP Compatible](https://img.shields.io/badge/MCP-Streamable%20HTTP%20%26%20stdio-blue.svg)](https://modelcontextprotocol.io)
+[![Smithery Badge](https://smithery.ai/badge/truecalci-official/truecalci)](https://smithery.ai/servers/truecalci-official/truecalci)
 [![Zero Data Retention](https://img.shields.io/badge/Data%20Retention-0%20Bytes%20Stored-emerald.svg)](https://truecalci.com/privacy.html)
 [![Arithmetic](https://img.shields.io/badge/Arithmetic-64--bit%20IEEE--754-indigo.svg)](https://truecalci.com/engineering-formulas.html)
 [![Latency](https://img.shields.io/badge/Edge%20Latency-P50%20%3C%2020ms-teal.svg)](https://truecalci.com)

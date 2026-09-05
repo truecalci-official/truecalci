@@ -2,16 +2,52 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
-  <!-- Google Consent Mode v2 (EEA Compliance) -->
+  <!-- Google Consent Mode v2 (Region-Aware EU/EEA Compliance & Global Measurement) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+
+    // Global default: Granted for non-EEA traffic (US, IN, CA, APAC, LATAM)
+    gtag('consent', 'default', {
+      'ad_storage': 'granted',
+      'analytics_storage': 'granted',
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted'
+    });
+
+    // Stricter default: Denied for EEA, UK, and Switzerland per EU User Consent Policy
     gtag('consent', 'default', {
       'ad_storage': 'denied',
-      'analytics_storage': 'granted',
+      'analytics_storage': 'denied',
       'ad_user_data': 'denied',
-      'ad_personalization': 'denied'
+      'ad_personalization': 'denied',
+      'region': [
+        'AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR',
+        'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL',
+        'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'IS', 'LI', 'NO',
+        'GB', 'CH'
+      ],
+      'wait_for_update': 500
     });
+
+    try {
+      var savedConsent = localStorage.getItem('tc_consent_analytics');
+      if (savedConsent === 'granted') {
+        gtag('consent', 'update', {
+          'ad_storage': 'granted',
+          'analytics_storage': 'granted',
+          'ad_user_data': 'granted',
+          'ad_personalization': 'granted'
+        });
+      } else if (savedConsent === 'denied') {
+        gtag('consent', 'update', {
+          'ad_storage': 'denied',
+          'analytics_storage': 'denied',
+          'ad_user_data': 'denied',
+          'ad_personalization': 'denied'
+        });
+      }
+    } catch (e) {}
   </script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CYZYEW5T4"></script>
@@ -842,6 +878,7 @@
   </script>
   <script src="/js/theme.js"></script>
   <script src="/js/currency-select.js"></script>
+  <script src="/js/cookie-consent.js"></script>
   <script src="/js/global-header-search.js"></script>
 </body>
 </html>

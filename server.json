@@ -17,6 +17,10 @@
       "version": "2.6.1"
     }
   ],
+  "configSchema": {
+    "type": "object",
+    "properties": {}
+  },
   "endpoints": {
     "streamableHttp": "https://truecalci.com/api/v1/mcp"
   },

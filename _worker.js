@@ -804,7 +804,29 @@ export default {
     telemetry.uniqueIps.add(clientIP);
     telemetry.sessionRequests++;
 
-    const LINK_HEADER = '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </.well-known/mcp.json>; rel="describedby"';
+    // Global CORS Preflight
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+          "Access-Control-Max-Age": "86400"
+        }
+      });
+    }
+
+    // Explicitly reject OAuth discovery endpoints so registry scanners never trigger OAuth sign-in popups
+    if (
+      url.pathname === "/.well-known/oauth-protected-resource" ||
+      url.pathname === "/.well-known/oauth-authorization-server" ||
+      url.pathname === "/.well-known/openid-configuration"
+    ) {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    const LINK_HEADER = '</.well-known/mcp/server-card.json>; rel="server-card", </.well-known/mcp/server-card.json>; rel="mcp-server-card", </.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </.well-known/mcp.json>; rel="describedby"';
 
     // -------------------------------------------------------------------------
     // 1. Subdomain Multi-Tenant Routing
@@ -1245,12 +1267,28 @@ export default {
       });
     }
 
-    if (url.pathname === "/api/v1/tools" || url.pathname === "/mcp/tools" || url.pathname === "/.well-known/mcp.json") {
+    if (url.pathname === "/api/v1/tools" || url.pathname === "/mcp/tools" || url.pathname.endsWith("/.well-known/mcp.json") || url.pathname.endsWith("/.well-known/mcp/server-card.json") || url.pathname.endsWith("/server-card.json")) {
       return new Response(JSON.stringify({
-        name: "truecalci_mcp_suite",
-        description: "High-precision mathematical and financial computational tool suite for AI Agents and LLMs.",
+        serverInfo: {
+          name: "truecalci-mcp-server",
+          version: "2.0.0",
+          description: "Deterministic statutory & financial compute engine for AI agents and enterprise teams over the Model Context Protocol (MCP)."
+        },
+        configSchema: {
+          type: "object",
+          properties: {}
+        },
+        authentication: {
+          required: false
+        },
+        transport: {
+          type: "http",
+          url: "https://truecalci.com/mcp"
+        },
         protocolVersion: "2024-11-05",
-        tools: MCP_TOOL_DEFINITIONS
+        tools: MCP_TOOL_DEFINITIONS,
+        resources: [],
+        prompts: []
       }, null, 2), {
         status: 200,
         headers: {
@@ -1262,13 +1300,28 @@ export default {
 
     // -------------------------------------------------------------------------
     // 4. Model Context Protocol (MCP) Streamable HTTP JSON-RPC 2.0 Handler
-    // -------------------------------------------------------------------------
-    if (url.pathname === "/api/v1/mcp" || url.pathname === "/mcp") {
+    const isMcpRoute = url.pathname === "/api/v1/mcp" || url.pathname === "/mcp" || url.pathname === "/api/v1" || url.pathname === "/api/v1/" || ((url.pathname === "/" || url.pathname === "" || url.pathname === "/index.html") && (request.method === "POST" || accept.includes("text/event-stream")));
+    if (isMcpRoute) {
       if (request.method === "GET") {
+        if (accept.includes("text/event-stream")) {
+          return new Response("event: endpoint\ndata: https://truecalci.com/mcp\n\n", {
+            status: 200,
+            headers: {
+              "Content-Type": "text/event-stream; charset=utf-8",
+              "Cache-Control": "no-cache",
+              "Connection": "keep-alive",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+              "Link": LINK_HEADER
+            }
+          });
+        }
+
         return new Response(JSON.stringify({
           status: "ok",
           endpoint: "TrueCalci Streamable HTTP MCP Endpoint",
           protocol: "MCP JSON-RPC 2.0",
+          transport: "http",
           capabilities: { tools: {} },
           supportedMethods: ["initialize", "tools/list", "tools/call", "ping"]
         }, null, 2), {
@@ -1276,54 +1329,53 @@ export default {
           headers: {
             "Content-Type": "application/json; charset=utf-8",
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key"
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+            "Link": LINK_HEADER
           }
         });
       }
 
       if (request.method === "POST") {
-        // Enforce rate limit (tier burst limit + monthly quota)
-        const rateCheck = checkRateLimit(clientIdentity);
-        if (!rateCheck.allowed) {
-          telemetry.sessionBlocked++;
-          return new Response(JSON.stringify({
-            jsonrpc: "2.0",
-            id: null,
-            error: {
-              code: -32000,
-              message: `Rate limit exceeded. Tier "${rateCheck.tier}" allows ${rateCheck.limit} requests per minute.`,
-              data: { remaining: 0, limit: rateCheck.limit, retryAfter: rateCheck.retryAfterSeconds, upgrade: "https://truecalci.com/#pricing" }
-            }
-          }), {
-            status: 429,
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Retry-After": String(rateCheck.retryAfterSeconds),
-              "X-RateLimit-Limit": String(rateCheck.limit),
-              "X-RateLimit-Remaining": "0"
-            }
-          });
-        }
-
         try {
           const body = await request.json();
           const method = body.method;
           const id = body.id ?? 1;
 
+          // Introspection & metadata calls are always free and never rate-limited
           if (method === "initialize") {
             telemetry.sessionAllowed++;
+            const SUPPORTED_VERSIONS = ["2025-06-18", "2025-03-26", "2024-11-05"];
+            const requestedVersion = body.params?.protocolVersion;
+            const negotiatedVersion = SUPPORTED_VERSIONS.includes(requestedVersion) ? requestedVersion : (requestedVersion || "2025-06-18");
+
             return new Response(JSON.stringify({
               jsonrpc: "2.0",
               id,
               result: {
-                protocolVersion: "2024-11-05",
+                protocolVersion: negotiatedVersion,
                 capabilities: { tools: {} },
                 serverInfo: { name: "truecalci-mcp-edge", version: "2.0.0" }
               }
             }), {
               status: 200,
-              headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+                "Link": LINK_HEADER
+              }
+            });
+          }
+
+          // Handle MCP initialized notification and other notifications (RFC JSON-RPC notifications have no response body or return 204)
+          if (method === "notifications/initialized" || (method && method.startsWith("notifications/"))) {
+            return new Response(null, {
+              status: 204,
+              headers: {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+                "Link": LINK_HEADER
+              }
             });
           }
 
@@ -1335,7 +1387,47 @@ export default {
               result: { tools: MCP_TOOL_DEFINITIONS }
             }), {
               status: 200,
-              headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id",
+                "Link": LINK_HEADER
+              }
+            });
+          }
+
+          if (method === "ping") {
+            return new Response(JSON.stringify({ jsonrpc: "2.0", id, result: {} }), {
+              status: 200,
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "Content-Type, Authorization, X-API-Key, Accept, mcp-session-id"
+              }
+            });
+          }
+
+          // Enforce rate limit only on tools/call execution
+          const rateCheck = checkRateLimit(clientIdentity);
+          if (!rateCheck.allowed) {
+            telemetry.sessionBlocked++;
+            return new Response(JSON.stringify({
+              jsonrpc: "2.0",
+              id: null,
+              error: {
+                code: -32000,
+                message: `Rate limit exceeded. Tier "${rateCheck.tier}" allows ${rateCheck.limit} requests per minute.`,
+                data: { remaining: 0, limit: rateCheck.limit, retryAfter: rateCheck.retryAfterSeconds, upgrade: "https://truecalci.com/#pricing" }
+              }
+            }), {
+              status: 429,
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Retry-After": String(rateCheck.retryAfterSeconds),
+                "X-RateLimit-Limit": String(rateCheck.limit),
+                "X-RateLimit-Remaining": "0"
+              }
             });
           }
 
@@ -1387,6 +1479,16 @@ export default {
               headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
             });
           }
+
+          // Method not recognized
+          return new Response(JSON.stringify({
+            jsonrpc: "2.0",
+            id: id || null,
+            error: { code: -32601, message: `Method '${method}' not found.` }
+          }), {
+            status: 200,
+            headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+          });
         } catch (err) {
           return new Response(JSON.stringify({
             jsonrpc: "2.0",

@@ -19,7 +19,9 @@ export class ViewEnterpriseHome {
 
   render() {
     const isIndia = (localStorage.getItem("calc_region") === "india");
-    this.containerEl.innerHTML = `
+    const existingRoot = this.containerEl.querySelector(".enterprise-home-root");
+    if (!existingRoot || !existingRoot.querySelector("#hero-sandbox-run-btn")) {
+      this.containerEl.innerHTML = `
       <div class="enterprise-home-root" style="max-width: 1320px; margin: 0 auto; padding: 0 16px 64px;">
         
         <!-- Top Announcement Banner (Tavily Style) -->
@@ -241,13 +243,20 @@ export class ViewEnterpriseHome {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
           </div>
-        </section>
+        </div>
+      `;
+      this.renderSandboxInputs();
+      this.renderCodeSnippet();
+    } else {
+      if (!document.getElementById("hero-sb-w2") && !document.getElementById("hero-sb-tax-income")) {
+        this.renderSandboxInputs();
+      }
+      const codeBox = document.getElementById("hero-code-display-box");
+      if (codeBox && !codeBox.textContent) {
+        this.renderCodeSnippet();
+      }
+    }
 
-      </div>
-    `;
-
-    this.renderSandboxInputs();
-    this.renderCodeSnippet();
     this.bindEvents();
   }
 

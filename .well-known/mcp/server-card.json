@@ -1,21 +1,19 @@
 {
-  "": "https://modelcontextprotocol.io/schema/manifest.json",
-  "name": "TrueCalci Precision Calculation Server",
-  "version": "2.0.0",
-  "description": "Deterministic quantitative finance, structural engineering, kinematics physics, and global multi-regional tax calculation tools for AI agents.",
-  "publisher": "TrueCalci Team",
-  "homepage": "https://truecalci.com",
-  "transport": {
-    "type": "http",
-    "url": "https://truecalci.com/mcp"
-  },
-  "remoteTransport": {
-    "type": "http",
-    "endpoint": "https://truecalci.com/mcp"
+  "serverInfo": {
+    "name": "truecalci-mcp-server",
+    "version": "2.0.0",
+    "description": "Deterministic statutory & financial compute engine for AI agents and enterprise teams over the Model Context Protocol (MCP)."
   },
   "configSchema": {
     "type": "object",
     "properties": {}
+  },
+  "authentication": {
+    "required": false
+  },
+  "transport": {
+    "type": "http",
+    "url": "https://truecalci.com/mcp"
   },
   "tools": [
     {
