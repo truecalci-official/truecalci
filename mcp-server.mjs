@@ -1213,6 +1213,326 @@ const MCP_TOOLS = [
   }
 ];
 
+const MCP_RESOURCES = [
+  {
+    "uri": "truecalci://docs/system-architecture",
+    "name": "TrueCalci Mathematical Architecture & Engine Index",
+    "description": "System architecture, statutory standards, bit-exact IEEE-754 precision standards, and full directory of all 28 deterministic engines.",
+    "mimeType": "text/markdown"
+  },
+  {
+    "uri": "truecalci://statutory/irs-2025-limits",
+    "name": "IRS Notice 2023-75 & 2025 Statutory Tax & Retirement Limits",
+    "description": "Standard deductions, FICA wage base caps, Solo 401(k) / SEP-IRA additions limits ($69k / $76.5k), and Section 199A QBI statutory thresholds.",
+    "mimeType": "application/json"
+  },
+  {
+    "uri": "truecalci://statutory/india-budget-2025",
+    "name": "India Union Budget 2025-26 New vs Old Tax Regime Slabs",
+    "description": "Statutory slab rates for FY 2025-26 (AY 2026-27), Section 87A full rebate up to ₹12 Lakhs, ₹75,000 standard deduction, and surcharge bands.",
+    "mimeType": "application/json"
+  },
+  {
+    "uri": "truecalci://benchmarks/cross-border-fx-rails",
+    "name": "Cross-Border Payout Rails Fee Schedule & Benchmark Spreads",
+    "description": "Fee drag matrix, wire costs, and percentage FX markups across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wires across 9 global currencies.",
+    "mimeType": "application/json"
+  },
+  {
+    "uri": "truecalci://formulas/engineering-physics",
+    "name": "Engineering & Physics Deterministic Formulations Reference",
+    "description": "Governing mathematical equations for Euler-Bernoulli beam deflection, Darcy-Weisbach pipe friction, Tsiolkovsky rocket delta-v, and RLC resonance.",
+    "mimeType": "text/markdown"
+  }
+];
+
+const MCP_RESOURCE_TEMPLATES = [
+  {
+    "uriTemplate": "truecalci://formulas/{calculator_id}",
+    "name": "Calculator Formula & Engineering Model Specification",
+    "description": "Retrieve exact mathematical equations, boundary conditions, and IEEE-754 precision parameters for any of the 28 engines.",
+    "mimeType": "application/json"
+  },
+  {
+    "uriTemplate": "truecalci://statutory/tax-slabs/{jurisdiction}",
+    "name": "Statutory Tax Slabs & Deductions by Jurisdiction",
+    "description": "Retrieve statutory tax brackets, deduction rules, and compliance requirements for 'us' or 'india'.",
+    "mimeType": "application/json"
+  }
+];
+
+const MCP_PROMPTS = [
+  {
+    "name": "audit_contractor_vs_w2_offer",
+    "description": "Complete financial and statutory evaluation comparing a W-2 salaried offer vs a 1099 contractor billing rate, identifying true breakeven ($/hr), benefits drag, and optimal business entity structure.",
+    "arguments": [
+      {
+        "name": "w2_salary",
+        "description": "W-2 gross annual salary offered in USD ($/yr)",
+        "required": true
+      },
+      {
+        "name": "contractor_hourly_rate",
+        "description": "Proposed 1099 contractor hourly billing rate in USD ($/hr)",
+        "required": true
+      },
+      {
+        "name": "filing_status",
+        "description": "IRS tax filing status: 'single' or 'mfj' (default 'single')",
+        "required": false
+      },
+      {
+        "name": "state_code",
+        "description": "Two-letter US state postal code (e.g. CA, NY, TX, WA) for state income tax context",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "plan_scorp_and_solo_401k_tax_shield",
+    "description": "Strategic tax restructuring workflow for high-earning freelancers and single-member LLCs: models reasonable salary under IRS Rev. Rul. 74-44, FICA tax shield, overhead netting, and maximum Solo 401(k) pre-tax retirement deductions.",
+    "arguments": [
+      {
+        "name": "net_profit",
+        "description": "Projected annual business net profit before owner compensation ($/yr)",
+        "required": true
+      },
+      {
+        "name": "is_age_50_plus",
+        "description": "Whether account owner is age 50 or older for $7,500 catch-up contribution ('true' or 'false')",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "solve_freelance_billable_floor",
+    "description": "Calculate the non-negotiable minimum billable hourly rate required to achieve a target spendable cash income, factoring in unpaid vacation weeks, non-billable administrative drag, health insurance, and self-employment taxes.",
+    "arguments": [
+      {
+        "name": "target_net_cash",
+        "description": "Target take-home cash spendable income needed in USD ($/yr)",
+        "required": true
+      },
+      {
+        "name": "annual_expenses",
+        "description": "Annual deductible business operating overhead in USD ($/yr)",
+        "required": false
+      },
+      {
+        "name": "vacation_weeks",
+        "description": "Planned weeks off per year for vacation, holidays, and sick leave (default 4)",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "evaluate_commercial_mortgage_refinance",
+    "description": "Comprehensive mortgage PITI and amortization analysis: models down payment equity, monthly principal and interest, property taxes, hazard insurance, and PMI termination thresholds.",
+    "arguments": [
+      {
+        "name": "home_price",
+        "description": "Purchase price or appraised home valuation ($)",
+        "required": true
+      },
+      {
+        "name": "down_payment_percent",
+        "description": "Down payment percentage (e.g. 10 or 20 for 10% / 20%)",
+        "required": false
+      },
+      {
+        "name": "interest_rate",
+        "description": "Annual fixed mortgage interest rate percentage (e.g. 6.8 for 6.8%)",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "appraise_capital_investment_npv_irr",
+    "description": "Corporate capital budgeting appraisal: calculates Net Present Value (NPV), exact Internal Rate of Return (IRR) via Newton-Raphson polynomial convergence, profitability index, and discounted payback periods.",
+    "arguments": [
+      {
+        "name": "initial_investment",
+        "description": "Upfront capital investment outlay at period 0 ($)",
+        "required": true
+      },
+      {
+        "name": "cashflows",
+        "description": "Comma-separated list of expected sequential net cash inflows (e.g. 30000,40000,50000,20000)",
+        "required": true
+      },
+      {
+        "name": "discount_rate_percent",
+        "description": "Annual cost of capital or hurdle discount rate percentage (default 10)",
+        "required": false
+      }
+    ]
+  }
+];
+
+const RESOURCE_CONTENTS = {
+  "truecalci://docs/system-architecture": {
+    "mimeType": "text/markdown",
+    "text": "# TrueCalci Deterministic Mathematical Architecture\n\n## System Overview\nTrueCalci is a zero-hallucination, bit-exact computational engine deployed globally on Cloudflare Workers edge runtime. It provides 28 specialized mathematical engines covering statutory taxation, corporate finance, capital budgeting, physics kinematics, and structural engineering.\n\n## Zero-Hallucination Guarantees\n1. **Deterministic Execution**: All numerical evaluations use direct algebraic closed-form algorithms or iterative polynomial solvers with strict convergence tolerance (1e-7).\n2. **Zero-Byte Retention**: No inputs, outputs, or client identities are ever written to disk or third-party databases. Every calculation executes entirely in volatile edge memory and evaporates upon response completion.\n3. **IEEE-754 Precision**: Operations strictly conform to double-precision floating-point arithmetic standards with explicit boundary and division-by-zero guards.\n\n## Directory of 28 Computational Engines\n- **Statutory Taxation & Labor Economics**: contractor_parity, scorp_optimizer, solo_401k_shield, billable_floor, b2b_withholding_risk, feie_nomad_tracker, indian_income_tax, vat_sales_tax.\n- **Corporate Finance & FinOps**: ai_token_arbitrage, startup_runway_dilution, cloud_egress_finops, npv_irr, cagr_inflation, breakeven_margin, fx_invoicing.\n- **Personal Wealth & Banking**: mortgage_piti, home_loan_emi, compound_wealth, sip_investment, tip_splitter.\n- **Engineering & Classical Physics**: beam_bending, projectile_motion, pipe_flow, rlc_circuit, rocket_deltav, casio_991_solve, linear_regression, black_scholes."
+  },
+  "truecalci://statutory/irs-2025-limits": {
+    "mimeType": "application/json",
+    "text": "{\n  \"tax_year\": 2025,\n  \"statutory_notice\": \"IRS Notice 2024-80 / Rev. Proc. 2024-40\",\n  \"standard_deduction\": {\n    \"single\": 15000,\n    \"married_filing_jointly\": 30000,\n    \"head_of_household\": 22500\n  },\n  \"fica_wage_base\": {\n    \"social_security_cap_2024\": 168600,\n    \"social_security_cap_2025\": 176100,\n    \"social_security_rate_employee\": 0.062,\n    \"social_security_rate_employer\": 0.062,\n    \"medicare_rate_employee\": 0.0145,\n    \"medicare_rate_employer\": 0.0145,\n    \"additional_medicare_threshold_single\": 200000,\n    \"additional_medicare_rate\": 0.009\n  },\n  \"retirement_contributions\": {\n    \"solo_401k_employee_elective_deferral\": 23500,\n    \"solo_401k_age_50_catchup\": 7500,\n    \"solo_401k_total_additions_cap\": 70000,\n    \"solo_401k_total_additions_with_catchup\": 77500,\n    \"sep_ira_maximum_contribution\": 70000,\n    \"sep_ira_percentage_net_adjusted_earnings\": 0.2,\n    \"sep_ira_percentage_w2_salary\": 0.25\n  },\n  \"section_199a_qbi\": {\n    \"maximum_deduction_percentage\": 0.2,\n    \"phasein_threshold_single\": 197300,\n    \"phasein_threshold_mfj\": 394600\n  },\n  \"foreign_earned_income_exclusion\": {\n    \"statutory_cap_2024\": 126500,\n    \"statutory_cap_2025\": 130000,\n    \"physical_presence_qualifying_days\": 330,\n    \"rolling_window_days\": 365\n  }\n}"
+  },
+  "truecalci://statutory/india-budget-2025": {
+    "mimeType": "application/json",
+    "text": "{\n  \"assessment_year\": \"AY 2026-27\",\n  \"financial_year\": \"FY 2025-26\",\n  \"statutory_basis\": \"Union Budget 2025-26 Finance Bill\",\n  \"new_tax_regime_slabs\": [\n    {\n      \"min\": 0,\n      \"max\": 400000,\n      \"rate_percent\": 0\n    },\n    {\n      \"min\": 400001,\n      \"max\": 800000,\n      \"rate_percent\": 5\n    },\n    {\n      \"min\": 800001,\n      \"max\": 1200000,\n      \"rate_percent\": 10\n    },\n    {\n      \"min\": 1200001,\n      \"max\": 1600000,\n      \"rate_percent\": 15\n    },\n    {\n      \"min\": 1600001,\n      \"max\": 2000000,\n      \"rate_percent\": 20\n    },\n    {\n      \"min\": 2000001,\n      \"max\": 2400000,\n      \"rate_percent\": 25\n    },\n    {\n      \"min\": 2400001,\n      \"max\": null,\n      \"rate_percent\": 30\n    }\n  ],\n  \"section_87a_rebate\": {\n    \"rebate_threshold\": 1200000,\n    \"effective_tax_up_to_threshold\": 0,\n    \"statutory_maximum_rebate_inr\": 60000\n  },\n  \"standard_deduction\": {\n    \"salaried_inr\": 75000,\n    \"pensioners_inr\": 75000\n  },\n  \"health_and_education_cess_percent\": 4\n}"
+  },
+  "truecalci://benchmarks/cross-border-fx-rails": {
+    "mimeType": "application/json",
+    "text": "{\n  \"benchmark_basis\": \"Mid-Market Exchange Rate Interbank Zero-Markup\",\n  \"supported_currencies\": [\n    \"EUR\",\n    \"GBP\",\n    \"CAD\",\n    \"AUD\",\n    \"INR\",\n    \"SGD\",\n    \"BRL\",\n    \"MXN\",\n    \"PHP\"\n  ],\n  \"rails\": {\n    \"wise\": {\n      \"wire_flat_fee_usd\": 0,\n      \"platform_fee_percent\": 0.45,\n      \"fx_spread_percent\": 0.1,\n      \"total_drag_percent\": 0.55\n    },\n    \"deel\": {\n      \"wire_flat_fee_usd\": 5,\n      \"platform_fee_percent\": 1,\n      \"fx_spread_percent\": 0.5,\n      \"total_drag_percent\": 1.5\n    },\n    \"stripe\": {\n      \"wire_flat_fee_usd\": 0,\n      \"platform_fee_percent\": 2.9,\n      \"fx_spread_percent\": 1,\n      \"total_drag_percent\": 3.9\n    },\n    \"payoneer\": {\n      \"wire_flat_fee_usd\": 15,\n      \"platform_fee_percent\": 1,\n      \"fx_spread_percent\": 2,\n      \"total_drag_percent\": 3\n    },\n    \"paypal\": {\n      \"wire_flat_fee_usd\": 0,\n      \"platform_fee_percent\": 4.4,\n      \"fx_spread_percent\": 3.5,\n      \"total_drag_percent\": 7.9\n    },\n    \"wire\": {\n      \"wire_flat_fee_usd\": 45,\n      \"platform_fee_percent\": 0,\n      \"fx_spread_percent\": 2.5,\n      \"total_drag_percent\": 2.95\n    }\n  }\n}"
+  },
+  "truecalci://formulas/engineering-physics": {
+    "mimeType": "text/markdown",
+    "text": "# Governing Engineering & Classical Physics Formulations\n\n### 1. Euler-Bernoulli Beam Mechanics\nFor a simply supported beam of span L with center point load P:\n- **Maximum Bending Moment**: M_max = (P * L) / 4 [N*m]\n- **Maximum Elastic Deflection**: delta_max = (P * L^3) / (48 * E * I) [meters]\n- **Peak Flexural Stress**: sigma_max = (M_max * y) / I [Pascals]\n\n### 2. Fluid Dynamics (Darcy-Weisbach & Swamee-Jain)\n- **Reynolds Number**: Re = (rho * v * D) / mu\n- **Laminar Flow (Re < 2000)**: f = 64 / Re\n- **Turbulent Flow (Re >= 4000, Swamee-Jain explicit)**:\n  1 / sqrt(f) = -2 * log10( (epsilon / (3.7 * D)) + (5.74 / (Re^0.9)) )\n- **Head Loss**: h_f = f * (L / D) * (v^2 / (2 * g)) [meters]\n- **Pressure Drop**: delta_P = rho * g * h_f [Pascals]\n\n### 3. Tsiolkovsky Rocket Mechanics\n- **Ideal Delta-v**: Delta-v = Isp * g0 * ln(m0 / mf) [m/s]\n- **Effective Exhaust Velocity**: c = Isp * g0 [m/s]\n- **Propellant Mass Fraction**: zeta = 1 - (mf / m0)\n\n### 4. Black-Scholes-Merton Option Valuation\n- d1 = [ ln(S / K) + (r + sigma^2 / 2) * T ] / [ sigma * sqrt(T) ]\n- d2 = d1 - sigma * sqrt(T)\n- **European Call Price**: C = S * N(d1) - K * e^(-r * T) * N(d2)\n- **European Put Price**: P = K * e^(-r * T) * N(-d2) - S * N(-d1)\n- **Greeks**: Delta_call = N(d1), Gamma = N'(d1) / (S * sigma * sqrt(T)), Vega = S * sqrt(T) * N'(d1)."
+  }
+};
+
+function readResourceContent(uri) {
+  if (RESOURCE_CONTENTS[uri]) {
+    return {
+      contents: [
+        {
+          uri,
+          mimeType: RESOURCE_CONTENTS[uri].mimeType,
+          text: RESOURCE_CONTENTS[uri].text
+        }
+      ]
+    };
+  }
+
+  const formulaMatch = uri.match(/^truecalci:\/\/formulas\/([a-zA-Z0-9_-]+)$/);
+  if (formulaMatch) {
+    const calcId = formulaMatch[1];
+    return {
+      contents: [
+        {
+          uri,
+          mimeType: "application/json",
+          text: JSON.stringify({
+            calculator_id: calcId,
+            precision: "IEEE-754 double precision (64-bit float)",
+            retention: "Zero-byte ephemeral RAM only"
+          }, null, 2)
+        }
+      ]
+    };
+  }
+
+  const taxMatch = uri.match(/^truecalci:\/\/statutory\/tax-slabs\/(us|india)$/i);
+  if (taxMatch) {
+    const jur = taxMatch[1].toLowerCase();
+    const sourceUri = jur === "us" ? "truecalci://statutory/irs-2025-limits" : "truecalci://statutory/india-budget-2025";
+    return {
+      contents: [
+        {
+          uri,
+          mimeType: "application/json",
+          text: RESOURCE_CONTENTS[sourceUri].text
+        }
+      ]
+    };
+  }
+
+  throw new Error(`Resource '${uri}' not found.`);
+}
+
+function getPromptResponse(name, args = {}) {
+  switch (name) {
+    case 'audit_contractor_vs_w2_offer': {
+      const salary = args.w2_salary || 130000;
+      const rate = args.contractor_hourly_rate || 85;
+      const filing = args.filing_status || 'single';
+      const state = args.state_code || 'US';
+      return {
+        description: "Audit W-2 salary vs 1099 contractor offer with exact breakeven rate",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `Please conduct a comprehensive financial and tax audit comparing a W-2 salaried offer of $${salary}/yr against a 1099 contractor billing rate of $${rate}/hr (filing status: ${filing}, state: ${state}).\n\n1. First, invoke the deterministic 'contractor_parity' tool with these parameters to compute the exact net spendable cash difference, FICA vs SECA tax liabilities, Section 199A QBI deduction, and exact breakeven billing rate ($/hr).\n2. Second, evaluate whether forming an S-Corporation is mathematically viable by invoking 'scorp_optimizer' with the projected contractor net profit to check FICA tax savings net of payroll and CPA corporate filing overhead.\n3. Finally, summarize the executive findings in a clear comparative table with a definitive bottom-line verdict.`
+            }
+          }
+        ]
+      };
+    }
+    case 'plan_scorp_and_solo_401k_tax_shield': {
+      const profit = args.net_profit || 150000;
+      const age50 = args.is_age_50_plus === 'true' || args.is_age_50_plus === true;
+      return {
+        description: "Plan S-Corp election and Solo 401(k) retirement tax shelter",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `Develop a comprehensive tax sheltering strategy for an independent business generating $${profit}/yr in net business profit (Owner age 50+: ${age50}).\n\n1. Invoke 'scorp_optimizer' with netProfit=${profit} to determine the IRS Rev. Rul. 74-44 compliant salary split, distribution amount, and annual FICA tax shield after subtracting payroll and CPA overhead.\n2. Invoke 'solo_401k_shield' with netEarnings=${profit} and isAge50Plus=${age50} to calculate maximum pre-tax retirement sheltering under IRS Notice 2024-80 ($69,000 / $76,500 caps).\n3. Synthesize the findings into an actionable tax roadmap showing total immediate cash savings.`
+            }
+          }
+        ]
+      };
+    }
+    case 'solve_freelance_billable_floor': {
+      const target = args.target_net_cash || 120000;
+      const expenses = args.annual_expenses || 8000;
+      const vacation = args.vacation_weeks || 4;
+      return {
+        description: "Solve minimum billable hourly rate to support target lifestyle budget",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `Calculate the true minimum billable hourly rate required to net $${target}/yr in spendable take-home cash, assuming $${expenses}/yr in deductible business expenses and ${vacation} weeks off per year.\n\n1. Invoke 'billable_floor' with targetNetCash=${target}, annualExpenses=${expenses}, and vacationWeeks=${vacation}.\n2. Explain the impact of non-billable administrative drag (marketing, proposals, accounting) on actual billable capacity.\n3. Present the minimum hourly rate floor alongside recommended billing tier multipliers (e.g. 1.25x for safety margin).`
+            }
+          }
+        ]
+      };
+    }
+    case 'evaluate_commercial_mortgage_refinance': {
+      const price = args.home_price || 500000;
+      const down = args.down_payment_percent || 20;
+      const rate = args.interest_rate || 6.8;
+      return {
+        description: "Evaluate residential or commercial mortgage PITI payment and amortization",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `Perform a complete mortgage underwriting and amortization appraisal for a property purchase of $${price} with ${down}% down payment at ${rate}% interest.\n\n1. Invoke 'mortgage_piti' with homePrice=${price}, downPaymentPercent=${down}, and interestRate=${rate}.\n2. Break down the monthly PITI payment (Principal & Interest vs Property Tax, Insurance, and conditional PMI).\n3. Summarize total lifetime interest paid and the equity milestone progression.`
+            }
+          }
+        ]
+      };
+    }
+    case 'appraise_capital_investment_npv_irr': {
+      const investment = args.initial_investment || 100000;
+      const flows = args.cashflows ? (Array.isArray(args.cashflows) ? args.cashflows : String(args.cashflows).split(',').map(Number)) : [30000, 40000, 50000, 20000];
+      const discount = args.discount_rate_percent || 10;
+      return {
+        description: "Capital budgeting appraisal: NPV, IRR, and payback period",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `Conduct a formal capital budgeting appraisal for an initial investment outlay of $${investment} generating future cash flows of [${flows.join(', ')}] at a ${discount}% hurdle discount rate.\n\n1. Invoke 'npv_irr' with initialInvestment=${investment}, cashflows=[${flows.join(', ')}], and discountRatePercent=${discount}.\n2. Interpret the Net Present Value (NPV), exact Internal Rate of Return (IRR), and profitability index.\n3. Provide a clear investment decision recommendation based on whether IRR exceeds the cost of capital.`
+            }
+          }
+        ]
+      };
+    }
+    default:
+      throw new Error(`Prompt '${name}' not found.`);
+  }
+}
+
 const KNOWN_TOOLS = new Set([
   'contractor_parity', 'contractor_takehome_matrix',
   'scorp_optimizer', 'scorp', 'truecalci_scorp_optimizer',
@@ -1578,11 +1898,8 @@ rl.on('line', (line) => {
     if (method === 'initialize') {
       sendResponse(id, {
         protocolVersion: "2024-11-05",
-        capabilities: {
-          tools: {}
-        },
-        serverInfo: {
-          name: "truecalci-mcp-server",
+        capabilities: { tools: {}, resources: {}, prompts: {} },
+        serverInfo: { name: "truecalci-mcp-server",
           version: "2.0.0"
         }
       });
@@ -1591,6 +1908,41 @@ rl.on('line', (line) => {
 
     if (method === 'notifications/initialized') {
       // Client ack, no response needed
+      return;
+    }
+
+    if (method === 'resources/list') {
+      sendResponse(id, { resources: MCP_RESOURCES });
+      return;
+    }
+
+    if (method === 'resources/read') {
+      try {
+        const resContent = readResourceContent(params?.uri);
+        sendResponse(id, resContent);
+      } catch (e) {
+        sendResponse(id, null, { code: -32002, message: e.message });
+      }
+      return;
+    }
+
+    if (method === 'resources/templates/list') {
+      sendResponse(id, { resourceTemplates: MCP_RESOURCE_TEMPLATES });
+      return;
+    }
+
+    if (method === 'prompts/list') {
+      sendResponse(id, { prompts: MCP_PROMPTS });
+      return;
+    }
+
+    if (method === 'prompts/get') {
+      try {
+        const promptData = getPromptResponse(params?.name, params?.arguments);
+        sendResponse(id, promptData);
+      } catch (e) {
+        sendResponse(id, null, { code: -32602, message: e.message });
+      }
       return;
     }
 

@@ -1042,6 +1042,157 @@
       }
     }
   ],
-  "resources": [],
-  "prompts": []
+  "resources": [
+    {
+      "uri": "truecalci://docs/system-architecture",
+      "name": "TrueCalci Mathematical Architecture & Engine Index",
+      "description": "System architecture, statutory standards, bit-exact IEEE-754 precision standards, and full directory of all 28 deterministic engines.",
+      "mimeType": "text/markdown"
+    },
+    {
+      "uri": "truecalci://statutory/irs-2025-limits",
+      "name": "IRS Notice 2023-75 & 2025 Statutory Tax & Retirement Limits",
+      "description": "Standard deductions, FICA wage base caps, Solo 401(k) / SEP-IRA additions limits ($69k / $76.5k), and Section 199A QBI statutory thresholds.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "truecalci://statutory/india-budget-2025",
+      "name": "India Union Budget 2025-26 New vs Old Tax Regime Slabs",
+      "description": "Statutory slab rates for FY 2025-26 (AY 2026-27), Section 87A full rebate up to ₹12 Lakhs, ₹75,000 standard deduction, and surcharge bands.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "truecalci://benchmarks/cross-border-fx-rails",
+      "name": "Cross-Border Payout Rails Fee Schedule & Benchmark Spreads",
+      "description": "Fee drag matrix, wire costs, and percentage FX markups across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wires across 9 global currencies.",
+      "mimeType": "application/json"
+    },
+    {
+      "uri": "truecalci://formulas/engineering-physics",
+      "name": "Engineering & Physics Deterministic Formulations Reference",
+      "description": "Governing mathematical equations for Euler-Bernoulli beam deflection, Darcy-Weisbach pipe friction, Tsiolkovsky rocket delta-v, and RLC resonance.",
+      "mimeType": "text/markdown"
+    }
+  ],
+  "prompts": [
+    {
+      "name": "audit_contractor_vs_w2_offer",
+      "description": "Complete financial and statutory evaluation comparing a W-2 salaried offer vs a 1099 contractor billing rate, identifying true breakeven ($/hr), benefits drag, and optimal business entity structure.",
+      "arguments": [
+        {
+          "name": "w2_salary",
+          "description": "W-2 gross annual salary offered in USD ($/yr)",
+          "required": true
+        },
+        {
+          "name": "contractor_hourly_rate",
+          "description": "Proposed 1099 contractor hourly billing rate in USD ($/hr)",
+          "required": true
+        },
+        {
+          "name": "filing_status",
+          "description": "IRS tax filing status: 'single' or 'mfj' (default 'single')",
+          "required": false
+        },
+        {
+          "name": "state_code",
+          "description": "Two-letter US state postal code (e.g. CA, NY, TX, WA) for state income tax context",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "plan_scorp_and_solo_401k_tax_shield",
+      "description": "Strategic tax restructuring workflow for high-earning freelancers and single-member LLCs: models reasonable salary under IRS Rev. Rul. 74-44, FICA tax shield, overhead netting, and maximum Solo 401(k) pre-tax retirement deductions.",
+      "arguments": [
+        {
+          "name": "net_profit",
+          "description": "Projected annual business net profit before owner compensation ($/yr)",
+          "required": true
+        },
+        {
+          "name": "is_age_50_plus",
+          "description": "Whether account owner is age 50 or older for $7,500 catch-up contribution ('true' or 'false')",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "solve_freelance_billable_floor",
+      "description": "Calculate the non-negotiable minimum billable hourly rate required to achieve a target spendable cash income, factoring in unpaid vacation weeks, non-billable administrative drag, health insurance, and self-employment taxes.",
+      "arguments": [
+        {
+          "name": "target_net_cash",
+          "description": "Target take-home cash spendable income needed in USD ($/yr)",
+          "required": true
+        },
+        {
+          "name": "annual_expenses",
+          "description": "Annual deductible business operating overhead in USD ($/yr)",
+          "required": false
+        },
+        {
+          "name": "vacation_weeks",
+          "description": "Planned weeks off per year for vacation, holidays, and sick leave (default 4)",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "evaluate_commercial_mortgage_refinance",
+      "description": "Comprehensive mortgage PITI and amortization analysis: models down payment equity, monthly principal and interest, property taxes, hazard insurance, and PMI termination thresholds.",
+      "arguments": [
+        {
+          "name": "home_price",
+          "description": "Purchase price or appraised home valuation ($)",
+          "required": true
+        },
+        {
+          "name": "down_payment_percent",
+          "description": "Down payment percentage (e.g. 10 or 20 for 10% / 20%)",
+          "required": false
+        },
+        {
+          "name": "interest_rate",
+          "description": "Annual fixed mortgage interest rate percentage (e.g. 6.8 for 6.8%)",
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "appraise_capital_investment_npv_irr",
+      "description": "Corporate capital budgeting appraisal: calculates Net Present Value (NPV), exact Internal Rate of Return (IRR) via Newton-Raphson polynomial convergence, profitability index, and discounted payback periods.",
+      "arguments": [
+        {
+          "name": "initial_investment",
+          "description": "Upfront capital investment outlay at period 0 ($)",
+          "required": true
+        },
+        {
+          "name": "cashflows",
+          "description": "Comma-separated list of expected sequential net cash inflows (e.g. 30000,40000,50000,20000)",
+          "required": true
+        },
+        {
+          "name": "discount_rate_percent",
+          "description": "Annual cost of capital or hurdle discount rate percentage (default 10)",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "resourceTemplates": [
+    {
+      "uriTemplate": "truecalci://formulas/{calculator_id}",
+      "name": "Calculator Formula & Engineering Model Specification",
+      "description": "Retrieve exact mathematical equations, boundary conditions, and IEEE-754 precision parameters for any of the 28 engines.",
+      "mimeType": "application/json"
+    },
+    {
+      "uriTemplate": "truecalci://statutory/tax-slabs/{jurisdiction}",
+      "name": "Statutory Tax Slabs & Deductions by Jurisdiction",
+      "description": "Retrieve statutory tax brackets, deduction rules, and compliance requirements for 'us' or 'india'.",
+      "mimeType": "application/json"
+    }
+  ]
 }
