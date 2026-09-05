@@ -8,7 +8,11 @@
     "truecalci-mcp": "./mcp-server.mjs"
   },
   "scripts": {
-    "test": "node tests/test_suite.mjs",
+    "test": "node scripts/audit_registries_and_links.mjs && node tests/test_suite.mjs",
+    "audit:links": "node scripts/audit_registries_and_links.mjs",
+    "sync": "node scripts/sync_public_deploy.mjs",
+    "preflight": "node scripts/sync_public_deploy.mjs && node scripts/audit_registries_and_links.mjs && node tests/test_suite.mjs",
+    "deploy": "npm run preflight && wrangler deploy",
     "start": "node server.mjs",
     "mcp": "node mcp-server.mjs"
   },

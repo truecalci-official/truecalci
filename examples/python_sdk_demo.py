@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TrueCalci Python SDK Demonstration & Verification
-Runs comprehensive calculations across all 24 deterministic engines using the user's active API key.
+Runs comprehensive calculations across all 27 deterministic engines using the user's active API key.
 """
 
 import sys

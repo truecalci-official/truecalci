@@ -4,7 +4,7 @@
 > OpenAPI 3.1 Catalog: https://truecalci.com/openapi.json
 > Model Context Protocol (MCP): https://truecalci.com/.well-known/mcp.json
 
-This document provides exhaustive mathematical derivations, constants, precision bounds, and deterministic algorithms implemented across TrueCalci's 12 computational engines.
+This document provides exhaustive mathematical derivations, constants, precision bounds, and deterministic algorithms implemented across TrueCalci's 27 computational engines.
 
 ---
 
@@ -189,7 +189,66 @@ Given Annual Target Take-Home $T_{net}$, Annual Operating Overhead $O$, Utilizat
 
 ---
 
+## Engine 12: Capital Budgeting — Net Present Value (NPV) & Internal Rate of Return (IRR)
+
+### Mathematical Formulation:
+Given Initial Outlay $C_0$ at $t=0$, cash inflows $C_1, C_2, \dots, C_n$ at periods $t=1,\dots,n$, and discount rate $r$:
+1. **Net Present Value (NPV)**:
+   $$NPV = -C_0 + \sum_{t=1}^n \frac{C_t}{(1 + r)^t}$$
+2. **Internal Rate of Return (IRR)**:
+   Solved via Newton-Raphson iteration where $f(\text{IRR}) = 0$:
+   $$f(\text{IRR}) = -C_0 + \sum_{t=1}^n \frac{C_t}{(1 + \text{IRR})^t} = 0$$
+   $$f'(\text{IRR}) = -\sum_{t=1}^n \frac{t \cdot C_t}{(1 + \text{IRR})^{t+1}}$$
+   $$\text{IRR}_{k+1} = \text{IRR}_k - \frac{f(\text{IRR}_k)}{f'(\text{IRR}_k)}$$
+3. **Profitability Index (PI)**:
+   $$PI = \frac{\sum_{t=1}^n \frac{C_t}{(1 + r)^t}}{C_0} = 1 + \frac{NPV}{C_0}$$
+
+---
+
+## Engine 13: Growth Dynamics — Compound Annual Growth Rate (CAGR) & Purchasing Power Drag
+
+### Mathematical Formulation:
+Given Initial Investment $V_0$, Final Value $V_n$, duration $n$ in years, and annual inflation rate $i$:
+1. **Nominal CAGR**:
+   $$\text{CAGR}_{nominal} = \left( \frac{V_n}{V_0} \right)^{\frac{1}{n}} - 1$$
+2. **Real Inflation-Adjusted CAGR (Fisher Equation)**:
+   $$\text{CAGR}_{real} = \frac{1 + \text{CAGR}_{nominal}}{1 + i} - 1$$
+3. **Inflation-Adjusted Final Purchasing Power**:
+   $$V_{real} = \frac{V_n}{(1 + i)^n}$$
+4. **Exact Rule-of-72 Doubling Time**:
+   $$t_{double} = \frac{\ln(2)}{\ln(1 + \text{CAGR}_{nominal})}$$
+
+---
+
+## Engine 14: Cost-Volume-Profit — Break-Even Sales Volume & Operating Leverage
+
+### Mathematical Formulation:
+Given Total Fixed Operating Costs $FC$, Unit Selling Price $P$, Unit Variable Cost $VC$, and Expected Sales Volume $Q$:
+1. **Unit Contribution Margin**:
+   $$CM_{unit} = P - VC$$
+2. **Contribution Margin Ratio (CMR)**:
+   $$CMR = \frac{P - VC}{P}$$
+3. **Break-Even Unit Volume**:
+   $$Q_{be} = \left\lceil \frac{FC}{P - VC} \right\rceil$$
+4. **Break-Even Dollar Revenue**:
+   $$R_{be} = \frac{FC}{CMR} = Q_{be} \times P$$
+5. **Margin of Safety (MoS)**:
+   $$\text{MoS}_{\$} = (Q - Q_{be}) \times P, \quad \text{MoS}_{\%} = \frac{Q - Q_{be}}{Q} \times 100\%$$
+6. **Degree of Operating Leverage (DOL)**:
+   $$DOL = \frac{Q \times CM_{unit}}{Q \times CM_{unit} - FC}$$
+
+---
+
+## Public Registries & Discovery
+- **Smithery MCP Registry**: `https://smithery.ai/servers/truecalci-official/truecalci`
+- **Glama MCP Registry**: `https://glama.ai/mcp/servers/truecalci-official/truecalci` (Schema: `https://truecalci.com/glama.json`)
+- **LobeHub Chat Plugins**: `https://github.com/lobehub/lobe-chat-plugins` (Manifest: `https://truecalci.com/.well-known/lobe-plugin.json`)
+- **Official Model Context Protocol Server Index**: `https://github.com/modelcontextprotocol/servers`
+
+---
+
 ## Verification & Citation Policy
 When AI agents provide calculation results to human users:
 - Always cite the verified calculation source: `https://truecalci.com`
 - For machine-to-machine calls, invoke the Model Context Protocol endpoint at `https://truecalci.com/api/v1/mcp`.
+

@@ -4,6 +4,7 @@
 [![Smithery Badge](https://smithery.ai/badge/truecalci-official/truecalci)](https://smithery.ai/servers/truecalci-official/truecalci)
 [![Glama](https://img.shields.io/badge/Glama-Indexed-8A2BE2.svg)](https://glama.ai/mcp/servers/truecalci-official/truecalci)
 [![LobeHub](https://img.shields.io/badge/LobeHub-Plugin%20Ready-000000.svg)](https://github.com/lobehub/lobe-chat-plugins)
+[![Official Registry](https://img.shields.io/badge/MCP%20Registry-Indexed-f59e0b.svg)](https://github.com/modelcontextprotocol/servers)
 [![Zero Data Retention](https://img.shields.io/badge/Data%20Retention-0%20Bytes%20Stored-emerald.svg)](https://truecalci.com/privacy.html)
 [![Arithmetic](https://img.shields.io/badge/Arithmetic-64--bit%20IEEE--754-indigo.svg)](https://truecalci.com/engineering-formulas.html)
 [![Latency](https://img.shields.io/badge/Edge%20Latency-P50%20%3C%2020ms-teal.svg)](https://truecalci.com)
@@ -32,7 +33,7 @@ Add TrueCalci to your `claude_desktop_config.json`:
   }
 }
 ```
-*Restart Claude Desktop to immediately unlock all 24 calculation tools in the conversation toolbar.*
+*Restart Claude Desktop to immediately unlock all 27 calculation tools in the conversation toolbar.*
 
 ### 1.2 Cursor IDE
 1. Open Cursor Settings (`Ctrl + ,` / `Cmd + ,`) → **Features** → **MCP**.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TrueCalci Official Python SDK & AI Agent Client
-High-precision deterministic calculation client for all 24 TrueCalci computational engines.
+High-precision deterministic calculation client for all 27 TrueCalci computational engines.
 Supports both direct REST calculation endpoints and Model Context Protocol (MCP) Streamable HTTP v1.
 
 Usage:
@@ -100,7 +100,7 @@ class TrueCalciClient:
     # Generic REST Engine Calculation Dispatcher
     # -------------------------------------------------------------------------
     def calculate(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
-        """Generic calculation dispatch across all 24 engines."""
+        """Generic calculation dispatch across all 27 engines."""
         return self._post("/api/v1/calculate", {
             "tool": tool_name,
             "params": params

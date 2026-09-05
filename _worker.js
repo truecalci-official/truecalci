@@ -1036,12 +1036,16 @@ export default {
     // 3.4. Dedicated Standalone Pricing Page Route (/pricing & /pricing.html)
     // -------------------------------------------------------------------------
     if (cleanPath === "/pricing" || cleanPath === "/pricing.html") {
-      const pageRes = await env.ASSETS.fetch(new Request(new URL("/pricing.html", request.url), request));
+      let pageRes = await env.ASSETS.fetch(new Request(new URL("/pricing", request.url), request));
+      if (!pageRes.ok || (pageRes.status >= 300 && pageRes.status < 400)) {
+        pageRes = await env.ASSETS.fetch(new Request(new URL("/pricing.html", request.url), request));
+      }
       const newHeaders = new Headers(pageRes.headers);
+      newHeaders.delete("Location");
       newHeaders.set("Content-Type", "text/html; charset=utf-8");
       newHeaders.set("Link", LINK_HEADER);
       return new Response(pageRes.body, {
-        status: 200,
+        status: pageRes.status >= 200 && pageRes.status < 300 ? pageRes.status : 200,
         headers: newHeaders
       });
     }

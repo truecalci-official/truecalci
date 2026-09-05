@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -90,5 +91,10 @@ if (driftCount > 0) {
 }
 
 console.log('  ✔ Zero drift detected across all synced files');
-console.log('\n🎉 public_deploy/ is completely synchronized with production files!');
+console.log('\n🎉 public_deploy/ is completely synchronized with production files!\n');
+
+// Automatically run the full registry and cross-link integrity audit
+console.log('Running automated registry & cross-link integrity audit...\n');
+execSync('node scripts/audit_registries_and_links.mjs', { stdio: 'inherit' });
+
 

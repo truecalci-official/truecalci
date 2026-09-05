@@ -16,6 +16,10 @@
       "description": "Global Primary Edge (Cloudflare Anycast)"
     }
   ],
+  "externalDocs": {
+    "description": "TrueCalci MCP Server and Registry Listings (Smithery, Glama, LobeHub)",
+    "url": "https://truecalci.com/docs.html#mcp-protocol"
+  },
   "paths": {
     "/api/contractor-parity": {
       "post": {

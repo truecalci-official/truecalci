@@ -1,7 +1,7 @@
 /* ==========================================================================
    TrueCalci — workstation.js
    Dependency-free, deterministic Workstation Studio driver.
-   Supports all 24 production computational engines, dynamic multi-currency,
+   Supports all 27 production computational engines, dynamic multi-currency,
    ephemeral RAM recalculations, derivation drawer, hash routing, and Dodo billing flows.
    ========================================================================== */
 (function () {

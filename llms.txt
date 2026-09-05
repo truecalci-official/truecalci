@@ -18,6 +18,9 @@
 - [Ordinary Least Squares Linear Regression](https://truecalci.com/#regression): Bivariate linear model fitting with slope, intercept, Pearson r, and R-squared.
 - [Indian Income Tax (Budget 2025-26)](https://truecalci.com/#tax): Statutory New Tax Regime slabs, standard deduction (₹75,000), Section 87A rebate, and HNI surcharges.
 - [SIP & Step-Up Compounding](https://truecalci.com/#sip): Mutual fund systematic investment plan with annual step-up percentage and wealth gain ratio breakdown.
+- [Net Present Value (NPV) & Internal Rate of Return (IRR)](https://truecalci.com/docs.html#rest-api): DCF capital budgeting solver with Newton-Raphson polynomial root-finding, profitability index (PI), and payback periods.
+- [Compound Annual Growth Rate (CAGR) & Inflation Drag](https://truecalci.com/docs.html#rest-api): Geometric annualized return, real Fisher inflation-adjusted purchasing power, and exact doubling period.
+- [Break-Even Sales Volume & Contribution Margin](https://truecalci.com/docs.html#rest-api): Cost-volume-profit (CVP) analysis, unit contribution margin, contribution margin ratio, margin of safety, and degree of operating leverage (DOL).
 
 ## Machine-Readable API & Protocols
 - [OpenAPI 3.1 Catalog](https://truecalci.com/openapi.json): Machine-readable REST API schema for all calculation endpoints.
@@ -26,3 +29,10 @@
 - [API Catalog](https://truecalci.com/.well-known/api-catalog): RFC 9727 linkset directory of services.
 - [Agent Authentication](https://truecalci.com/auth.md): Registration guidelines, bearer tokens, and OAuth metadata discovery.
 - [Unabridged Technical Handbook](https://truecalci.com/llms-full.txt): Complete mathematical formulas, LaTeX derivations, and unit bounds.
+
+## Public Registries & Discovery
+- [Smithery MCP Registry](https://smithery.ai/servers/truecalci-official/truecalci): Verified remote MCP endpoint (100% score).
+- [Glama MCP Registry](https://glama.ai/mcp/servers/truecalci-official/truecalci): Verified & indexed MCP server schema (`https://truecalci.com/glama.json`).
+- [LobeHub Chat Plugins](https://github.com/lobehub/lobe-chat-plugins): Native plugin manifest (`https://truecalci.com/.well-known/lobe-plugin.json`).
+- [Official Model Context Protocol Servers](https://github.com/modelcontextprotocol/servers): Official directory listing for TrueCalci.
+

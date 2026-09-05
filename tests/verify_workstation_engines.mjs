@@ -1,6 +1,6 @@
 /**
  * TrueCalci Workstation Studio — Automated Engine & Resilience Verification
- * Validates all 24 computational engines, stage rendering, dirty localStorage resilience,
+ * Validates all 27 computational engines, stage rendering, dirty localStorage resilience,
  * and hash routing coverage.
  */
 

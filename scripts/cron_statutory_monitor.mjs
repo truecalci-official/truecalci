@@ -1,7 +1,7 @@
 /**
  * TrueCalci Automated Statutory Reference & Regulatory Link Freshness Monitor
  * Cron Worker Task:
- * - Scans official statutory links for all 24 computational engines.
+ * - Scans official statutory links for all 27 computational engines.
  * - Verifies statutory parameter integrity (tax slabs, OASDI caps, FEIE caps, PE days).
  * - Detects broken links, redirects, and updated official publications.
  * - Emits a health report to data/statutory_health.json for observability & analytics.
