@@ -50,7 +50,7 @@ export class ViewEnterpriseHome {
             </button>
             <button id="hero-btn-launch-workstation" type="button" style="padding: 12px 26px; font-size: 0.94rem; font-weight: 700; border-radius: 8px; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%) !important; color: #ffffff !important; border: none !important; cursor: pointer; display: inline-flex; align-items: center; gap: 9px; box-shadow: 0 4px 16px rgba(0, 102, 255, 0.4) !important; transition: all 0.15s ease;">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
-              <span>Launch Workstation Studio (24 Engines) →</span>
+              <span>Launch Workstation Studio (25 Engines) →</span>
             </button>
           </div>
 

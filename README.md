@@ -148,7 +148,7 @@ truecalci/
 
 Billing, taxation, invoicing, and PCI-compliant checkout are managed via **Dodo Payments** as the Merchant of Record. TrueCalci never sees or stores card numbers.
 
-* **Free Sandbox**: 500 requests/month, 20 req/min concurrency ceiling, all 24 engines, no card required.
+* **Free Sandbox**: 500 requests/month, 20 req/min concurrency ceiling, all 25 engines, no card required.
 * **Developer Starter**: 30,000 prepaid requests pool, 300 req/min concurrency, email support.
 * **Pro Agency & Scale**: 180,000 prepaid requests pool, 1,000 req/min concurrency, prioritized routing.
 * **Enterprise PAYG**: Uncapped request volume, private edge instances, shared Slack/Teams channel.
@@ -157,7 +157,7 @@ Billing, taxation, invoicing, and PCI-compliant checkout are managed via **Dodo 
 
 ## 6. Verification & Automated Testing
 
-Run the mathematical verification suite covering all 24 engines:
+Run the mathematical verification suite covering all 25 engines:
 ```bash
 npm test
 # or: node tests/test_suite.mjs

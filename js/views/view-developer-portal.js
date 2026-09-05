@@ -10,48 +10,47 @@ export class ViewDeveloperPortal {
     this.selectedTool = "contractor_parity";
     this.activeCodeTab = "mcp_claude";
     
-    // Dynamic persistent usage tracking
+    // Dynamic persistent usage tracking (anonymous or authenticated)
     const savedUsage = localStorage.getItem("tc_edge_usage_count");
-    this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 14;
+    this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 0;
     
     // Check existing authentication state
     this.isLoggedIn = localStorage.getItem("tc_dev_auth") === "true";
-    this.devUser = JSON.parse(localStorage.getItem("tc_dev_user") || '{}');
+    this.devUser = this.isLoggedIn ? JSON.parse(localStorage.getItem("tc_dev_user") || 'null') : null;
 
-    // Auto-detect checkout return or pending checkout tier
+    // Detect actual verified checkout completion or authenticated session
     try {
       const hashQuery = window.location.hash.includes("?") ? window.location.hash.split("?")[1] : "";
       const searchParams = new URLSearchParams(window.location.search);
       const hashParams = new URLSearchParams(hashQuery);
-      const isCheckoutSuccess = searchParams.get("status") === "success" || 
-                                hashParams.get("status") === "success" || 
-                                searchParams.get("payment") === "success" || 
-                                hashParams.get("payment") === "success" ||
-                                localStorage.getItem("tc_pending_checkout_tier") !== null;
+      const isCheckoutSuccess = (searchParams.get("status") === "success" || 
+                                 hashParams.get("status") === "success" || 
+                                 searchParams.get("payment") === "success" || 
+                                 hashParams.get("payment") === "success") &&
+                                (searchParams.get("customer_id") || hashParams.get("customer_id") || searchParams.get("session_id"));
 
-      const activeTier = searchParams.get("tier") || hashParams.get("tier") || localStorage.getItem("tc_pending_checkout_tier") || localStorage.getItem("tc_active_tier") || (this.devUser && this.devUser.tierId) || "pro";
-      const cycle = searchParams.get("cycle") || hashParams.get("cycle") || localStorage.getItem("tc_pending_checkout_cycle") || "monthly";
+      const activeTier = searchParams.get("tier") || hashParams.get("tier") || localStorage.getItem("tc_active_tier");
+      const cycle = searchParams.get("cycle") || hashParams.get("cycle") || "monthly";
 
-      if (isCheckoutSuccess || activeTier === "pro") {
+      if (isCheckoutSuccess && activeTier) {
         const isAnnual = cycle === "annual";
         const upgradedUser = {
-          name: this.devUser.name || "Developer",
-          handle: this.devUser.handle || "developer",
-          email: this.devUser.email || "developer@truecalci.com",
-          provider: this.devUser.provider || "github",
-          avatar_url: this.devUser.avatar_url || "https://avatars.githubusercontent.com/u/982734?v=4",
+          name: this.devUser?.name || "Developer",
+          handle: this.devUser?.handle || "developer",
+          email: this.devUser?.email || searchParams.get("email") || "subscriber@truecalci.com",
+          provider: this.devUser?.provider || "dodo_mor",
+          avatar_url: this.devUser?.avatar_url || "https://avatars.githubusercontent.com/u/982734?v=4",
           tier: activeTier === "pro" 
             ? `Pro Agency & Scale (${isAnnual ? 'Annual' : 'Monthly'})` 
             : `Developer Starter (${isAnnual ? 'Annual' : 'Monthly'})`,
           tierId: activeTier,
-          quotaLimit: activeTier === "pro" ? 15000 : 2500,
-          apiKey: this.devUser.apiKey || `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`,
+          quotaLimit: activeTier === "pro" ? 10000 : 2500,
+          apiKey: `tc_live_${activeTier}_${Math.random().toString(36).substring(2, 12)}`,
           dodoCustomerId: searchParams.get("customer_id") || hashParams.get("customer_id") || `cus_dodo_${Date.now()}`
         };
         localStorage.setItem("tc_dev_user", JSON.stringify(upgradedUser));
         localStorage.setItem("tc_dev_auth", "true");
         localStorage.setItem("tc_active_tier", activeTier);
-        localStorage.removeItem("tc_pending_checkout_tier");
         this.isLoggedIn = true;
         this.devUser = upgradedUser;
       }
@@ -59,17 +58,11 @@ export class ViewDeveloperPortal {
       console.warn("Could not check checkout return params:", e);
     }
 
-    // Derive quota from active tier
+    // Set quota limit based on honest authentication state
     if (this.isLoggedIn && this.devUser) {
-      if (this.devUser.tierId === "pro" || this.devUser.tierId === "metered") {
-        this.quotaLimit = 15000;
-      } else if (this.devUser.tierId === "starter") {
-        this.quotaLimit = 2500;
-      } else {
-        this.quotaLimit = 15000;
-      }
+      this.quotaLimit = this.devUser.quotaLimit || (this.devUser.tierId === "pro" ? 10000 : 2500);
     } else {
-      this.quotaLimit = 100;
+      this.quotaLimit = 60; // Anonymous sliding window rate limit
     }
   }
 

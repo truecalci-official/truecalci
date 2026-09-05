@@ -16,6 +16,7 @@ import { RetirementEngine } from './js/engines/retirement-engine.js';
 import { BillableRateEngine } from './js/engines/billable-engine.js';
 import { FXInvoicingEngine } from './js/engines/fx-engine.js';
 import { FinOpsEngine } from './js/engines/finops-engines.js';
+import { validateEngineInput, ValidationError } from './js/validation/engine-validator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -464,6 +465,7 @@ const TOOL_DEFINITIONS = [
 ];
 
 function executeCalculation(toolName, params) {
+  validateEngineInput(toolName, params);
   switch (toolName) {
     case 'contractor_takehome_matrix':
     case 'contractor_parity':
@@ -651,31 +653,16 @@ function executeCalculation(toolName, params) {
     case 'calci991_solve':
     case 'casio': {
       const casio = new CasioCalciEngine();
-      if (params.type === 'simultaneous2') {
+      if (params.expression) {
+        return casio.parseAndSolve(String(params.expression));
+      }
+      if (params.type === 'simultaneous2' || params.type === 'simultaneous' || params.a2 !== undefined) {
         return casio.solveSimultaneous2(
-          Number(params.a || 1), Number(params.b || 1), Number(params.c || 5),
-          Number(params.a2 || 1), Number(params.b2 || -1), Number(params.c2 || 1)
+          Number(params.a ?? params.a1), Number(params.b ?? params.b1), Number(params.c ?? params.c1),
+          Number(params.a2), Number(params.b2), Number(params.c2)
         );
       }
-      if (params.expression) {
-        const expr = String(params.expression).replace(/\s+/g, '').replace(/=0$/, '');
-        const quadMatch = expr.match(/^([+-]?\d*)x\^?2([+-]\d*)x([+-]\d+)$/i);
-        if (quadMatch) {
-          let a = quadMatch[1] === '' || quadMatch[1] === '+' ? 1 : (quadMatch[1] === '-' ? -1 : Number(quadMatch[1]));
-          let b = quadMatch[2] === '+' ? 1 : (quadMatch[2] === '-' ? -1 : Number(quadMatch[2]));
-          let c = Number(quadMatch[3]);
-          return casio.solveQuadratic(a, b, c);
-        }
-        const linMatch = String(params.expression).match(/([+-]?\d*)x\s*([+-]\s*\d+)?\s*=\s*([+-]?\d+)/i);
-        if (linMatch) {
-          let a = linMatch[1] === '' || linMatch[1] === '+' ? 1 : (linMatch[1] === '-' ? -1 : Number(linMatch[1]));
-          let b = linMatch[2] ? Number(linMatch[2].replace(/\s+/g, '')) : 0;
-          let c = Number(linMatch[3]);
-          const root = (c - b) / a;
-          return [root.toFixed(4)];
-        }
-      }
-      return casio.solveQuadratic(Number(params.a ?? 1), Number(params.b ?? -5), Number(params.c ?? 6));
+      return casio.solveQuadratic(Number(params.a), Number(params.b), Number(params.c));
     }
 
     case 'beam_bending':
@@ -1227,6 +1214,23 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (pathname.startsWith('/api/admin/') || pathname === '/api/telemetry') {
+    const authHeader = req.headers['authorization'] || '';
+    const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+    const adminSecret = process.env.ADMIN_KEY || 'tc_admin_live_sec_key_2026';
+    const isAdminAuthed = token === adminSecret || req.headers['x-admin-key'] === adminSecret;
+
+    if (!isAdminAuthed) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        success: false,
+        error: 'Unauthorized',
+        message: 'Admin authorization required. Please provide a valid Authorization: Bearer <ADMIN_KEY> header.'
+      }));
+      return;
+    }
+  }
+
   if (pathname === '/api/admin/telemetry' || pathname === '/api/telemetry') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
@@ -1270,6 +1274,7 @@ const server = http.createServer(async (req, res) => {
       { id: 'feie_nomad_tracker', name: 'FEIE Foreign Earned Income Tracker', category: 'Cross-Border Labor', status: 'online', avgLatencyUs: 88 },
       { id: 'token_arbitrage', name: 'AI LLM Inference Cost & Arbitrage', category: 'AI Economics', status: 'online', avgLatencyUs: 154 },
       { id: 'startup_runway', name: 'Startup Runway & Dynamic Burn Engine', category: 'Venture Capital', status: 'online', avgLatencyUs: 112 },
+      { id: 'b2b_withholding_risk', name: 'Form W-8BEN B2B Cross-Border Withholding Risk', category: 'International Tax', status: 'online', avgLatencyUs: 158 },
       { id: 'vat_sales_tax', name: 'Global VAT, GST & Sales Tax Engine', category: 'Global Statutory', status: 'online', avgLatencyUs: 92 },
       { id: 'mortgage_piti', name: 'US Mortgage PITI & Amortization Solver', category: 'Real Estate', status: 'online', avgLatencyUs: 178 },
       { id: 'compound_growth', name: 'Compound Growth & Wealth Accumulator', category: 'Private Wealth', status: 'online', avgLatencyUs: 76 },
@@ -1745,7 +1750,12 @@ const server = http.createServer(async (req, res) => {
         }, null, 2));
       } catch (err) {
         res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
+        res.end(JSON.stringify({
+          success: false,
+          error: err.name || 'ValidationError',
+          message: err.message,
+          details: err.details || null
+        }, null, 2));
       }
     };
 

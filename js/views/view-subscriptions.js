@@ -13,53 +13,44 @@ export class ViewSubscriptions {
   }
 
   initSubscription() {
-    let user = JSON.parse(localStorage.getItem("tc_dev_user") || '{}');
-    const activeTier = localStorage.getItem("tc_active_tier") || user.tierId || "pro";
-    const isAnnual = localStorage.getItem("tc_pending_checkout_cycle") === "annual";
-
-    // Ensure user has Pro Agency & Scale active (as verified by Dodo Payments checkout)
-    if (!user.tierId || user.tierId === "starter" || activeTier === "pro") {
-      user.tier = `Pro Agency & Scale (${isAnnual ? 'Annual' : 'Monthly'})`;
-      user.tierId = "pro";
-      user.quotaLimit = 15000;
-      if (!user.apiKey) {
-        user.apiKey = `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`;
-      }
-      localStorage.setItem("tc_dev_user", JSON.stringify(user));
-      localStorage.setItem("tc_dev_auth", "true");
-      localStorage.setItem("tc_active_tier", "pro");
-    }
-
+    const isAuth = localStorage.getItem("tc_dev_auth") === "true";
+    let user = isAuth ? JSON.parse(localStorage.getItem("tc_dev_user") || 'null') : null;
+    this.isAuthenticated = Boolean(isAuth && user && user.tierId);
     this.user = user;
+
     const savedUsage = localStorage.getItem("tc_edge_usage_count");
-    this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 14;
-    this.quotaLimit = user.quotaLimit || 15000;
-    this.apiKey = user.apiKey || `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`;
+    this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 0;
+    this.quotaLimit = user?.quotaLimit || 60;
+    this.apiKey = user?.apiKey || "";
     this.isKeyRevealed = false;
 
-    // Billing details
-    this.subscription = {
-      planName: user.tier || "Pro Agency & Scale (Monthly)",
-      tierId: user.tierId || "pro",
-      status: "Active",
-      amountFormatted: "₹0.00",
-      originalAmount: "₹442.43",
-      cycle: isAnnual ? "Annual" : "Monthly",
-      currency: "INR",
-      paymentDate: "Sept 3, 2026",
-      nextBillingDate: "Oct 3, 2026",
-      dodoStatusUrl: "https://checkout.dodopayments.com/status/nmFmnYOY/succeeded",
-      invoiceNumber: "INV-TC-2026-9824",
-      paymentMethod: "UPI / Card via Dodo Payments"
-    };
+    if (this.isAuthenticated && user) {
+      const isAnnual = user.tier?.includes("Annual");
+      this.subscription = {
+        planName: user.tier || "Developer Starter",
+        tierId: user.tierId || "starter",
+        status: "Active",
+        amountFormatted: user.tierId === "pro" ? "$15.00" : "$5.00",
+        originalAmount: user.tierId === "pro" ? "$15.00" : "$5.00",
+        cycle: isAnnual ? "Annual" : "Monthly",
+        currency: "USD",
+        paymentDate: "Verified",
+        nextBillingDate: "Monthly auto-renewal",
+        dodoStatusUrl: "https://checkout.dodopayments.com/status/verified",
+        invoiceNumber: `INV-TC-2026-${Date.now().toString().slice(-4)}`,
+        paymentMethod: "Card / UPI via Dodo Payments"
+      };
+    } else {
+      this.subscription = null;
+    }
   }
 
   render() {
     const remaining = Math.max(0, this.quotaLimit - this.currentUsage);
     const usagePercent = Math.min(100, Math.round((this.currentUsage / this.quotaLimit) * 100));
-    const maskedKey = this.isKeyRevealed 
+    const maskedKey = this.apiKey ? (this.isKeyRevealed 
       ? this.apiKey 
-      : this.apiKey.substring(0, 14) + "••••••••••••••••••••••••";
+      : this.apiKey.substring(0, 14) + "••••••••••••••••••••••••") : "No API key issued (Sign in or subscribe)";
 
     this.containerEl.innerHTML = `
       <div class="subscriptions-container" style="max-width: 1200px; margin: 0 auto; padding: 32px 20px 80px;">
@@ -69,18 +60,18 @@ export class ViewSubscriptions {
           <div>
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
               <h1 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">Subscriptions & Billing</h1>
-              <span style="font-size: 0.74rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);">
-                ● Active Subscription
+              <span style="font-size: 0.74rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; ${this.isAuthenticated ? 'background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3);' : 'background: rgba(100, 116, 139, 0.15); color: var(--text-secondary); border: 1px solid var(--border-color);'}">
+                ● ${this.isAuthenticated ? 'Active Subscription' : 'Free Guest Sandbox'}
               </span>
             </div>
             <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary);">
-              Manage your deterministic compute subscription, live API keys, token usage, and official tax invoices.
+              ${this.isAuthenticated ? 'Manage your deterministic compute subscription, live API keys, token usage, and official tax invoices.' : 'Browse in anonymous mode (60 requests/minute per IP) or subscribe to receive a dedicated production API key.'}
             </p>
           </div>
           
           <div style="display: flex; gap: 10px;">
             <button id="sub-upgrade-plan-btn" type="button" style="padding: 8px 16px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; background: var(--accent-primary); color: #fff; border: none; cursor: pointer;">
-              Change Plan / Billing
+              ${this.isAuthenticated ? 'Change Plan / Billing' : 'Choose a Plan ($5 / $15)'}
             </button>
             <button id="sub-open-docs-btn" type="button" style="padding: 8px 16px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">
               API Documentation →
@@ -97,31 +88,27 @@ export class ViewSubscriptions {
               <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                 <div>
                   <span style="font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-primary);">Current Active Plan</span>
-                  <h3 style="margin: 4px 0 0; font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">${this.subscription.planName}</h3>
+                  <h3 style="margin: 4px 0 0; font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">${this.subscription ? this.subscription.planName : 'Free Anonymous Tier'}</h3>
                 </div>
                 <div style="text-align: right;">
-                  <span style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${this.subscription.amountFormatted}</span>
-                  <span style="font-size: 0.8rem; color: var(--text-muted);">/ month</span>
-                  <div style="font-size: 0.72rem; color: #10b981; font-weight: 600;">100% OFF (Coupon: ZEROTEST)</div>
+                  <span style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">${this.subscription ? this.subscription.amountFormatted : '$0.00'}</span>
+                  <span style="font-size: 0.8rem; color: var(--text-muted);">${this.subscription ? '/ month' : 'free forever'}</span>
+                  <div style="font-size: 0.72rem; color: #10b981; font-weight: 600;">${this.subscription ? 'Verified Dodo MoR Active' : 'No Credit Card Needed'}</div>
                 </div>
               </div>
 
               <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.82rem;">
                   <span style="color: var(--text-secondary);">Subscription Status</span>
-                  <strong style="color: #10b981;">Active • Auto-Renewing</strong>
+                  <strong style="color: ${this.subscription ? '#10b981' : 'var(--text-secondary)'};">${this.subscription ? 'Active • Auto-Renewing' : 'Anonymous / No Active Subscription'}</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.82rem;">
                   <span style="color: var(--text-secondary);">Payment Method</span>
-                  <strong style="color: var(--text-primary);">${this.subscription.paymentMethod}</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.82rem;">
-                  <span style="color: var(--text-secondary);">Last Billed</span>
-                  <strong style="color: var(--text-primary);">${this.subscription.paymentDate}</strong>
+                  <strong style="color: var(--text-primary);">${this.subscription ? this.subscription.paymentMethod : 'None Required for Public Tier'}</strong>
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.82rem;">
-                  <span style="color: var(--text-secondary);">Next Billing / Reset</span>
-                  <strong style="color: var(--text-primary);">${this.subscription.nextBillingDate}</strong>
+                  <span style="color: var(--text-secondary);">Rate Limit</span>
+                  <strong style="color: var(--text-primary);">${this.quotaLimit.toLocaleString()} ${this.subscription ? 'requests/mo' : 'req/min per IP'}</strong>
                 </div>
               </div>
             </div>
@@ -168,7 +155,7 @@ export class ViewSubscriptions {
 
             <div style="font-size: 0.76rem; color: var(--text-muted); display: flex; align-items: center; gap: 6px;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-              <span>Usage resets automatically on ${this.subscription.nextBillingDate} (00:00 UTC).</span>
+              <span>Usage resets automatically on ${this.subscription ? this.subscription.nextBillingDate : 'every minute'} (00:00 UTC).</span>
             </div>
           </div>
         </div>
@@ -179,9 +166,10 @@ export class ViewSubscriptions {
             <div>
               <h3 style="margin: 0; font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">Production Live API Key</h3>
               <p style="margin: 2px 0 0; font-size: 0.8rem; color: var(--text-secondary);">
-                Authenticate your AI agent, Cursor, Claude Desktop, and backend requests.
+                ${this.isAuthenticated ? 'Authenticate your AI agent, Cursor, Claude Desktop, and backend requests.' : 'Unauthenticated mode active. Subscribe to receive a persistent dedicated bearer token.'}
               </p>
             </div>
+            ${this.isAuthenticated ? `
             <div style="display: flex; gap: 8px;">
               <button id="sub-key-reveal-btn" type="button" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; background: var(--bg-subtle); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer;">
                 ${this.isKeyRevealed ? 'Hide Key' : 'Reveal Key'}
@@ -193,11 +181,20 @@ export class ViewSubscriptions {
                 Roll / Reset Key
               </button>
             </div>
+            ` : `
+            <div>
+              <button id="sub-upgrade-key-btn" type="button" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #fff; border: none; cursor: pointer;">
+                Get API Key ($5/mo) →
+              </button>
+            </div>
+            `}
           </div>
 
-          <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 16px; font-family: var(--font-mono); font-size: 0.88rem; color: var(--text-primary); display: flex; align-items: center; justify-content: space-between; overflow-x: auto;">
-            <span id="sub-api-key-text" style="letter-spacing: 0.05em;">${maskedKey}</span>
-            <span style="font-size: 0.72rem; color: #10b981; font-weight: 600; margin-left: 12px; white-space: nowrap;">● ACTIVE</span>
+          <div style="background: var(--bg-app); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 16px; font-family: var(--font-mono); font-size: 0.86rem; color: var(--text-primary); display: flex; justify-content: space-between; align-items: center;">
+            <span id="sub-api-key-text" style="letter-spacing: 0.04em;">${maskedKey}</span>
+            <span style="font-size: 0.72rem; color: ${this.isAuthenticated ? '#10b981' : 'var(--text-muted)'}; font-weight: 700; text-transform: uppercase;">
+              ${this.isAuthenticated ? 'LIVE • PROD' : 'ANONYMOUS KEYLESS'}
+            </span>
           </div>
         </div>
 
@@ -312,6 +309,11 @@ export class ViewSubscriptions {
 
     // Upgrade Plan Button -> #pricing
     document.getElementById("sub-upgrade-plan-btn")?.addEventListener("click", () => {
+      if (this.onNavigate) this.onNavigate("pricing");
+      else window.location.hash = "#pricing";
+    });
+
+    document.getElementById("sub-upgrade-key-btn")?.addEventListener("click", () => {
       if (this.onNavigate) this.onNavigate("pricing");
       else window.location.hash = "#pricing";
     });

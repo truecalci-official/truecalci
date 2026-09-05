@@ -13,6 +13,7 @@ const filesToSync = [
   'robots.txt',
   'sitemap.xml',
   '_headers',
+  'openapi.json',
   'index.html',
   'workstation.html',
   'pricing.html',
@@ -53,5 +54,10 @@ console.log('  ✔ Synced js/ directory recursively');
 
 copyRecursive(path.join(rootDir, 'css'), path.join(deployDir, 'css'));
 console.log('  ✔ Synced css/ directory recursively');
+
+if (fs.existsSync(path.join(rootDir, '.well-known'))) {
+  copyRecursive(path.join(rootDir, '.well-known'), path.join(deployDir, '.well-known'));
+  console.log('  ✔ Synced .well-known/ directory recursively');
+}
 
 console.log('\n🎉 public_deploy/ is completely synchronized with production files!');

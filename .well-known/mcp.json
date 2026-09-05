@@ -6,12 +6,11 @@
   "publisher": "TrueCalci Team",
   "homepage": "https://truecalci.com",
   "transport": {
-    "type": "stdio",
-    "command": "npx",
-    "args": ["-y", "@truecalci/mcp-server"]
+    "type": "http",
+    "url": "https://truecalci.com/api/v1/mcp"
   },
   "remoteTransport": {
-    "type": "sse",
+    "type": "http",
     "endpoint": "https://truecalci.com/api/v1/mcp"
   },
   "tools": [

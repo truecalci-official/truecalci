@@ -23,6 +23,7 @@ import { RetirementEngine } from './js/engines/retirement-engine.js';
 import { BillableRateEngine } from './js/engines/billable-engine.js';
 import { FXInvoicingEngine } from './js/engines/fx-engine.js';
 import { FinOpsEngine } from './js/engines/finops-engines.js';
+import { validateEngineInput, ValidationError } from './js/validation/engine-validator.js';
 
 const MCP_TOOLS = [
   {
@@ -466,8 +467,45 @@ const MCP_TOOLS = [
   }
 ];
 
+const KNOWN_TOOLS = new Set([
+  'contractor_parity', 'contractor_takehome_matrix',
+  'scorp_optimizer', 'scorp', 'truecalci_scorp_optimizer',
+  'solo_401k_shield', 'retirement', 'truecalci_solo_401k_shield',
+  'fx_invoicing', 'fx', 'truecalci_fx_invoicing',
+  'billable_floor', 'billable', 'truecalci_billable_floor',
+  'mortgage_piti', 'mortgage',
+  'vat_sales_tax', 'vat', 'truecalci_vat_sales_tax',
+  'tip_splitter', 'tip',
+  'compound_wealth', 'compound',
+  'gst_calculator', 'gst_split', 'gst', 'truecalci_gst_calculator',
+  'indian_income_tax', 'tax_in', 'tax', 'truecalci_indian_income_tax',
+  'sip_investment', 'sip',
+  'home_loan_emi', 'emi',
+  'ppf_calculator', 'ppf', 'truecalci_ppf_calculator',
+  'ssy_calculator', 'ssy', 'truecalci_ssy_calculator',
+  'fd_calculator', 'fd', 'truecalci_fd_calculator',
+  'gold_jewellery', 'gold', 'gold_india', 'truecalci_gold_jewellery',
+  'casio_solve_quadratic', 'casio_991_solve', 'calci991_solve', 'casio',
+  'beam_bending',
+  'projectile_motion',
+  'black_scholes', 'black_scholes_options',
+  'linear_regression',
+  'pipe_flow',
+  'rlc_circuit',
+  'rocket_deltav',
+  'ai_token_arbitrage', 'ai_tokens', 'token_arbitrage',
+  'startup_runway_dilution', 'startup_runway', 'dilution_solver',
+  'b2b_withholding_risk', 'b2b_wht', 'withholding_risk',
+  'feie_nomad_tracker', 'feie', 'nomad_tracker',
+  'cloud_egress_finops', 'cloud_egress', 'egress_finops'
+]);
+
 function handleToolCall(name, args) {
   const norm = name.replace(/^truecalci_/, '').toLowerCase();
+  if (!KNOWN_TOOLS.has(norm) && !KNOWN_TOOLS.has(name.toLowerCase())) {
+    throw new Error(`Unknown tool: ${name}`);
+  }
+  validateEngineInput(norm, args);
   switch (norm) {
     case 'contractor_parity':
     case 'contractor_takehome_matrix':
@@ -646,10 +684,13 @@ function handleToolCall(name, args) {
     case 'calci991_solve':
     case 'casio': {
       const casio = new CasioCalciEngine();
-      if (args.type === 'simultaneous2') {
+      if (args.expression) {
+        return casio.parseAndSolve(String(args.expression));
+      }
+      if (args.type === 'simultaneous2' || args.type === 'simultaneous' || args.a2 !== undefined) {
         return casio.solveSimultaneous2(
-          Number(args.a || 1), Number(args.b || 1), Number(args.c || 5),
-          Number(args.a2 || 1), Number(args.b2 || -1), Number(args.c2 || 1)
+          Number(args.a ?? args.a1), Number(args.b ?? args.b1), Number(args.c ?? args.c1),
+          Number(args.a2), Number(args.b2), Number(args.c2)
         );
       }
       return casio.solveQuadratic(Number(args.a), Number(args.b), Number(args.c));

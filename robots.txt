@@ -56,4 +56,3 @@ Allow: /
 
 # Canonical Sitemaps (Only valid non-record RFC 9309 extension)
 Sitemap: https://truecalci.com/sitemap.xml
-Sitemap: https://truecalci.in/sitemap.xml

@@ -4,22 +4,44 @@
  */
 
 export class RetirementEngine {
-  static LIMITS_2024 = {
-    employeeDeferralLimit: 23000,
-    catchUpAge50PlusLimit: 7500,
-    totalPlanMaxLimit: 69000,
-    totalPlanMaxAge50Plus: 76500,
-    employerMaxPercentCorp: 0.25,        // 25% of W-2 salary
-    employerMaxPercentUnincorporated: 0.20 // 20% of adjusted net profit
+  static LIMITS_BY_YEAR = {
+    2024: {
+      employeeDeferralLimit: 23000,
+      catchUpAge50PlusLimit: 7500,
+      totalPlanMaxLimit: 69000,
+      totalPlanMaxAge50Plus: 76500,
+      ssWageCap: 168600,
+      employerMaxPercentCorp: 0.25,
+      employerMaxPercentUnincorporated: 0.20
+    },
+    2025: {
+      employeeDeferralLimit: 23500,
+      catchUpAge50PlusLimit: 7500,
+      totalPlanMaxLimit: 70000,
+      totalPlanMaxAge50Plus: 77500,
+      ssWageCap: 176100,
+      employerMaxPercentCorp: 0.25,
+      employerMaxPercentUnincorporated: 0.20
+    },
+    2026: {
+      employeeDeferralLimit: 24000,
+      catchUpAge50PlusLimit: 8000,
+      totalPlanMaxLimit: 71500,
+      totalPlanMaxAge50Plus: 79500,
+      ssWageCap: 181800,
+      employerMaxPercentCorp: 0.25,
+      employerMaxPercentUnincorporated: 0.20
+    }
   };
 
   static calculate(options = {}) {
+    const taxYear = Number(options.taxYear || 2025);
+    const limits = this.LIMITS_BY_YEAR[taxYear] || this.LIMITS_BY_YEAR[2025];
     const netEarnings = Math.max(0, Number(options.netEarnings !== undefined ? options.netEarnings : 120000));
     const isCorp = options.entityType === "scorp"; // S-Corp W-2 vs Sole Prop / LLC
     const isAge50Plus = options.isAge50Plus === true;
     const marginalTaxRate = Math.min(60, Math.max(0, Number(options.marginalTaxRatePercent !== undefined ? options.marginalTaxRatePercent : 28))) / 100;
 
-    const limits = this.LIMITS_2024;
     const employeeCap = limits.employeeDeferralLimit + (isAge50Plus ? limits.catchUpAge50PlusLimit : 0);
     const overallCap = isAge50Plus ? limits.totalPlanMaxAge50Plus : limits.totalPlanMaxLimit;
 
@@ -27,7 +49,7 @@ export class RetirementEngine {
     if (!isCorp) {
       // Unincorporated: Plan compensation is Net Profit minus 1/2 of SECA tax
       const secaBase = netEarnings * 0.9235;
-      const ssTax = Math.min(secaBase, 168600) * 0.124;
+      const ssTax = Math.min(secaBase, limits.ssWageCap) * 0.124;
       const medTax = secaBase * 0.029;
       const halfSeca = (ssTax + medTax) * 0.5;
       planCompensation = Math.max(0, netEarnings - halfSeca);
@@ -50,6 +72,8 @@ export class RetirementEngine {
     const extraTaxCashSaved = Math.round(extraShelter * marginalTaxRate);
 
     return {
+      effectiveTaxYear: taxYear,
+      statutoryLimits: limits,
       netEarnings,
       planCompensation: Math.round(planCompensation),
       entityType: isCorp ? "S-Corporation" : "Sole Proprietor / LLC",

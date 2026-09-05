@@ -5,10 +5,10 @@
  */
 
 import { spawn } from 'child_process';
-import { GlobalFinanceEngine } from './js/engines/global-finance.js';
-import { IndianFinanceEngine } from './js/engines/indian-finance.js';
-import { EngineeringPhysicsEngine } from './js/engines/engineering-physics.js';
-import { StatisticsOptionsEngine } from './js/engines/statistics-options.js';
+import { GlobalFinanceEngine } from '../js/engines/global-finance.js';
+import { IndianFinanceEngine } from '../js/engines/indian-finance.js';
+import { EngineeringPhysicsEngine } from '../js/engines/engineering-physics.js';
+import { StatisticsOptionsEngine } from '../js/engines/statistics-options.js';
 
 console.log("================================================================================");
 console.log("RUNNING STRICT ADVERSARIAL STRESS TESTS FOR TRUECALCI (CRITIC PROTOCOL)");

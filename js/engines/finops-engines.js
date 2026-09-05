@@ -20,12 +20,17 @@ export class FinOpsEngine {
     const isBatch = params.isBatch === true || params.isBatch === "true";
 
     const models = {
+      "claude-3-7-sonnet": { name: "Claude 3.7 Sonnet (Reasoning)", provider: "Anthropic", prompt: 3.00, completion: 15.00, cacheRead: 0.30, batchDiscount: 0.50 },
       "claude-3-5-sonnet": { name: "Claude 3.5 Sonnet", provider: "Anthropic", prompt: 3.00, completion: 15.00, cacheRead: 0.30, batchDiscount: 0.50 },
-      "gpt-4o": { name: "GPT-4o", provider: "OpenAI", prompt: 2.50, completion: 10.00, cacheRead: 1.25, batchDiscount: 0.50 },
-      "deepseek-v3": { name: "DeepSeek V3", provider: "DeepSeek", prompt: 0.14, completion: 0.28, cacheRead: 0.014, batchDiscount: 0.50 },
-      "deepseek-r1": { name: "DeepSeek R1 (Reasoning)", provider: "DeepSeek", prompt: 0.55, completion: 2.19, cacheRead: 0.14, batchDiscount: 0.50 },
+      "claude-3-5-haiku": { name: "Claude 3.5 Haiku", provider: "Anthropic", prompt: 0.80, completion: 4.00, cacheRead: 0.08, batchDiscount: 0.50 },
+      "claude-opus-4": { name: "Claude Opus", provider: "Anthropic", prompt: 15.00, completion: 75.00, cacheRead: 1.50, batchDiscount: 0.50 },
+      "gpt-4o": { name: "GPT-4o (Omni)", provider: "OpenAI", prompt: 2.50, completion: 10.00, cacheRead: 1.25, batchDiscount: 0.50 },
+      "gpt-4o-mini": { name: "GPT-4o mini", provider: "OpenAI", prompt: 0.15, completion: 0.60, cacheRead: 0.075, batchDiscount: 0.50 },
+      "gemini-2-0-flash": { name: "Gemini 2.0 Flash", provider: "Google", prompt: 0.10, completion: 0.40, cacheRead: 0.025, batchDiscount: 0.50 },
+      "gemini-1-5-flash": { name: "Gemini 1.5 Flash", provider: "Google", prompt: 0.075, completion: 0.30, cacheRead: 0.01875, batchDiscount: 0.50 },
       "gemini-1-5-pro": { name: "Gemini 1.5 Pro", provider: "Google", prompt: 1.25, completion: 5.00, cacheRead: 0.3125, batchDiscount: 0.50 },
-      "gemini-1-5-flash": { name: "Gemini 1.5 Flash", provider: "Google", prompt: 0.075, completion: 0.30, cacheRead: 0.01875, batchDiscount: 0.50 }
+      "deepseek-v3": { name: "DeepSeek V3", provider: "DeepSeek", prompt: 0.14, completion: 0.28, cacheRead: 0.014, batchDiscount: 0.50 },
+      "deepseek-r1": { name: "DeepSeek R1 (Reasoning)", provider: "DeepSeek", prompt: 0.55, completion: 2.19, cacheRead: 0.14, batchDiscount: 0.50 }
     };
 
     const matrix = {};
@@ -75,6 +80,7 @@ export class FinOpsEngine {
 
     return {
       engine: "ai_token_arbitrage",
+      pricingEffectiveDate: "2026-Q1",
       inputs: { promptTokens, completionTokens, cacheHitRatio, isBatch },
       matrix,
       arbitrage: {
@@ -85,6 +91,32 @@ export class FinOpsEngine {
         verdict: `Optimizing model tier and prompt caching reduces token spend by up to ${disparityMultiplier}x.`
       }
     };
+  }
+
+  // IRS Form 2555 Stacking Rule Helper
+  static computeIrsSingleTax(taxable) {
+    if (taxable <= 0) return 0;
+    const brackets = [
+      { limit: 11925, rate: 0.10 },
+      { limit: 48475, rate: 0.12 },
+      { limit: 103350, rate: 0.22 },
+      { limit: 197300, rate: 0.24 },
+      { limit: 250525, rate: 0.32 },
+      { limit: 626350, rate: 0.35 },
+      { limit: Infinity, rate: 0.37 }
+    ];
+    let tax = 0;
+    let prev = 0;
+    for (const b of brackets) {
+      if (taxable > prev) {
+        const taxableInBracket = Math.min(taxable, b.limit) - prev;
+        tax += taxableInBracket * b.rate;
+        prev = b.limit;
+      } else {
+        break;
+      }
+    }
+    return Math.round(tax);
   }
 
   // ---------------------------------------------------------------------------
@@ -189,15 +221,13 @@ export class FinOpsEngine {
   }
 
   // ---------------------------------------------------------------------------
-  // 4. IRS Form 2555 FEIE Digital Nomad Tracker
+  // 4. IRS Form 2555 FEIE Digital Nomad Tracker (Form 2555 Progressive Stacking)
   // ---------------------------------------------------------------------------
   static calculateFeieNomadTracker(params = {}) {
     const foreignEarnedIncome = Math.max(0, Number(params.foreignEarnedIncome ?? 160000));
     const daysOutsideUS = Math.max(0, Number(params.daysOutsideUSInRollingPeriod ?? 334));
     const taxYear = Number(params.taxYear || 2025);
     const stateDomicile = String(params.stateDomicile || "CA").toUpperCase();
-    const rawMarginal = Number(params.effectiveTaxBracketPercent ?? 24.0);
-    const marginalRate = Math.min(1, Math.max(0, rawMarginal > 1 ? rawMarginal / 100 : rawMarginal));
 
     const statutoryCaps = {
       2024: 126500,
@@ -205,17 +235,36 @@ export class FinOpsEngine {
       2026: 133000
     };
     const cap = statutoryCaps[taxYear] || 130000;
+    const stdDeduction = taxYear >= 2025 ? 15000 : 14600;
 
     const qualifiesPhysicalPresence = daysOutsideUS >= 330;
     const maxExclusionClaimable = qualifiesPhysicalPresence ? Math.min(foreignEarnedIncome, cap) : 0;
-    const taxableFederalIncomeRemainder = foreignEarnedIncome - maxExclusionClaimable;
-    const federalTaxSavingsEst = Math.round(maxExclusionClaimable * marginalRate);
+    const grossRemainder = foreignEarnedIncome - maxExclusionClaimable;
+    const taxableFederalIncomeRemainder = Math.max(0, grossRemainder - stdDeduction);
+
+    // IRS Form 2555 Foreign Earned Income Tax Worksheet (Progressive Stacking Rule):
+    // Line 3: Taxable income without FEIE
+    const taxableWithoutFeie = Math.max(0, foreignEarnedIncome - stdDeduction);
+    // Line 4: Tax on Line 3
+    const taxWithoutFeie = this.computeIrsSingleTax(taxableWithoutFeie);
+    // Line 5: Tax on excluded amount (sits at bottom of tax brackets)
+    const taxOnExcludedAmount = this.computeIrsSingleTax(maxExclusionClaimable);
+    // Line 6: Actual Form 2555 tax liability
+    const actualTaxWithFeie = Math.max(0, taxWithoutFeie - taxOnExcludedAmount);
+    // Statutory savings under stacking rule
+    const federalTaxSavingsEst = taxWithoutFeie - actualTaxWithFeie; // equals taxOnExcludedAmount
+
+    // Comparative: Naive flat 24% calculation to highlight the Form 2555 Stacking Trap
+    const naiveSavings24Pct = Math.round(maxExclusionClaimable * 0.24);
+    const stackingOverstatementDeficit = Math.max(0, naiveSavings24Pct - federalTaxSavingsEst);
 
     const stickyStates = ["CA", "NY", "VA", "SC"];
     const isStickyDomicile = stickyStates.includes(stateDomicile);
 
     return {
       engine: "feie_nomad_tracker",
+      effectiveTaxYear: taxYear,
+      statutoryStackingRuleApplied: true,
       physicalPresenceTest: {
         daysOutsideUS,
         statutoryRequirementDays: 330,
@@ -227,8 +276,21 @@ export class FinOpsEngine {
         statutoryCapUsd: cap,
         foreignEarnedIncomeUsd: foreignEarnedIncome,
         excludedAmountUsd: maxExclusionClaimable,
-        taxableRemainderUsd: taxableFederalIncomeRemainder,
-        estimatedFederalTaxSavingsUsd: federalTaxSavingsEst
+        taxableRemainderUsd: grossRemainder,
+        taxableIncomeAfterDeductionsUsd: taxableFederalIncomeRemainder,
+        taxWithoutFeieUsd: taxWithoutFeie,
+        actualTaxLiabilityWithFeieUsd: actualTaxWithFeie,
+        estimatedFederalTaxSavingsUsd: params.effectiveTaxBracketPercent ? Math.round(maxExclusionClaimable * (Number(params.effectiveTaxBracketPercent) / 100)) : federalTaxSavingsEst,
+        statutoryStackedSavingsUsd: federalTaxSavingsEst,
+        form2555StackingAnalysis: {
+          irsWorksheetRule: "Form 2555 Line 44/45 Stacking: Excluded income absorbs lower brackets; remaining income taxed at higher marginal rates.",
+          statutorySavingsUsd: federalTaxSavingsEst,
+          naiveFlat24PctSavingsUsd: naiveSavings24Pct,
+          stackingPenaltyUsd: stackingOverstatementDeficit,
+          advisory: stackingOverstatementDeficit > 0 
+            ? `IRS Form 2555 stacking reduces benefit by $${stackingOverstatementDeficit.toLocaleString()} compared to naive flat 24% estimation.`
+            : "Stacking rule verified."
+        }
       },
       stateAuditRisk: {
         stateDomicile,

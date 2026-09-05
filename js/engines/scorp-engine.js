@@ -4,15 +4,37 @@
  */
 
 export class SCorpEngine {
-  static TAX_CONFIG_2024 = {
-    socialSecurityWageCap: 168600,
-    socialSecurityRate: 0.124,
-    medicareRate: 0.029,
-    additionalMedicareThreshold: 200000,
-    additionalMedicareRate: 0.009,
-    typicalPayrollAnnualFee: 600, // Gusto / OnPay
-    typicalCpa1120SFee: 1500,     // S-Corp corporate tax filing
-    typicalStateFranchiseFee: 200 // Average state fee
+  static TAX_CONFIGS = {
+    2024: {
+      socialSecurityWageCap: 168600,
+      socialSecurityRate: 0.124,
+      medicareRate: 0.029,
+      additionalMedicareThreshold: 200000,
+      additionalMedicareRate: 0.009,
+      typicalPayrollAnnualFee: 600,
+      typicalCpa1120SFee: 1500,
+      typicalStateFranchiseFee: 200
+    },
+    2025: {
+      socialSecurityWageCap: 176100,
+      socialSecurityRate: 0.124,
+      medicareRate: 0.029,
+      additionalMedicareThreshold: 200000,
+      additionalMedicareRate: 0.009,
+      typicalPayrollAnnualFee: 600,
+      typicalCpa1120SFee: 1500,
+      typicalStateFranchiseFee: 200
+    },
+    2026: {
+      socialSecurityWageCap: 181800,
+      socialSecurityRate: 0.124,
+      medicareRate: 0.029,
+      additionalMedicareThreshold: 200000,
+      additionalMedicareRate: 0.009,
+      typicalPayrollAnnualFee: 600,
+      typicalCpa1120SFee: 1500,
+      typicalStateFranchiseFee: 200
+    }
   };
 
   /**
@@ -27,8 +49,9 @@ export class SCorpEngine {
   }
 
   static calculate(options = {}) {
+    const taxYear = Number(options.taxYear || 2025);
+    const cfg = this.TAX_CONFIGS[taxYear] || this.TAX_CONFIGS[2025];
     const netProfit = Math.max(0, Number(options.netProfit !== undefined ? options.netProfit : 150000));
-    const cfg = this.TAX_CONFIG_2024;
 
     // 1. LLC / Sole Proprietor Baseline
     const llcSecaBase = netProfit * 0.9235;
@@ -98,6 +121,8 @@ export class SCorpEngine {
     }
 
     return {
+      effectiveTaxYear: taxYear,
+      statutoryWageBase: cfg.socialSecurityWageCap,
       netProfit,
       llc: {
         totalSecaTax: totalLlcSecaTax,

@@ -522,12 +522,16 @@ assert(scorp.savings.grossFicaSavings >= 8500 && scorp.savings.grossFicaSavings 
 assert(scorp.savings.breakevenProfitThreshold >= 40000 && scorp.savings.breakevenProfitThreshold <= 45000, `Mathematical breakeven threshold is ~$41k (got ${scorp.savings.breakevenProfitThreshold})`);
 assert(scorp.savings.recommendedProfitThreshold === 80000, "CPA recommended threshold is $80,000");
 
-// 10.2 Solo 401(k) vs. SEP-IRA Shield
-const ret = RetirementEngine.calculate({ netEarnings: 120000, entityType: "llc", isAge50Plus: false, marginalTaxRatePercent: 29 });
-assert(ret.sepIra.maxContribution >= 22000 && ret.sepIra.maxContribution <= 22500, `SEP-IRA max deduction is ~$22,304 (got ${ret.sepIra.maxContribution})`);
-assert(ret.solo401k.maxContribution >= 45000 && ret.solo401k.maxContribution <= 46000, `Solo 401(k) max deduction is ~$45,304 (got ${ret.solo401k.maxContribution})`);
-assert(ret.comparison.extraShelter === 23000, "Solo 401(k) shields exact $23,000 employee deferral");
-assert(ret.comparison.extraTaxCashSaved >= 6600 && ret.comparison.extraTaxCashSaved <= 6700, `Extra cold cash tax saved is ~$6,670 (got ${ret.comparison.extraTaxCashSaved})`);
+// 10.2 Solo 401(k) vs. SEP-IRA Shield (2024 baseline and 2025/2026 statutory limits)
+const ret2024 = RetirementEngine.calculate({ netEarnings: 120000, entityType: "llc", isAge50Plus: false, marginalTaxRatePercent: 29, taxYear: 2024 });
+assert(ret2024.sepIra.maxContribution >= 22000 && ret2024.sepIra.maxContribution <= 22500, `SEP-IRA max deduction is ~$22,304 (got ${ret2024.sepIra.maxContribution})`);
+assert(ret2024.solo401k.maxContribution >= 45000 && ret2024.solo401k.maxContribution <= 46000, `Solo 401(k) max deduction is ~$45,304 (got ${ret2024.solo401k.maxContribution})`);
+assert(ret2024.comparison.extraShelter === 23000, "Solo 401(k) 2024 shields exact $23,000 employee deferral");
+assert(ret2024.comparison.extraTaxCashSaved >= 6600 && ret2024.comparison.extraTaxCashSaved <= 6700, `Extra cold cash tax saved is ~$6,670 (got ${ret2024.comparison.extraTaxCashSaved})`);
+
+const ret2025 = RetirementEngine.calculate({ netEarnings: 120000, entityType: "llc", isAge50Plus: false, marginalTaxRatePercent: 29, taxYear: 2025 });
+assert(ret2025.comparison.extraShelter === 23500, "Solo 401(k) 2025 shields exact $23,500 employee deferral");
+assert(ret2025.effectiveTaxYear === 2025, "Effective tax year is stamped 2025");
 
 // 10.3 Cross-Border FX Invoicing Rail Drag
 const fx = FXInvoicingEngine.calculate({ invoiceUsd: 10000, targetCurrency: "EUR" });

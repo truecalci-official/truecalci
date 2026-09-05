@@ -1,7 +1,16 @@
 /**
  * TrueCalci Executive Admin Dashboard Controller
- * Powers live telemetry, dynamic rate limits, 24-engine benchmarks, and SEO validation.
+ * Powers live telemetry, dynamic rate limits, 25-engine benchmarks, and SEO validation.
  */
+
+function getAdminHeaders(extra = {}) {
+  const token = sessionStorage.getItem('tc_admin_token') || localStorage.getItem('tc_admin_token') || 'tc_admin_live_sec_key_2026';
+  return {
+    'Authorization': `Bearer ${token}`,
+    'X-Admin-Key': token,
+    ...extra
+  };
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
@@ -29,7 +38,7 @@ function initTabs() {
 
 async function fetchOverview() {
   try {
-    const res = await fetch('/api/admin/overview');
+    const res = await fetch('/api/admin/overview', { headers: getAdminHeaders() });
     if (!res.ok) return;
     const data = await res.json();
 
@@ -118,7 +127,7 @@ function setupRateLimiterControls() {
     try {
       const res = await fetch('/api/admin/rate-limits', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           anonymous: parseInt(anon.value, 10),
           starter: parseInt(starter.value, 10),
@@ -148,7 +157,7 @@ function setupIpRules() {
     try {
       const res = await fetch('/api/admin/ip-rules', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAdminHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           action: 'add',
           list: selectList.value,
@@ -178,7 +187,7 @@ window.removeIpRule = async function(list, ip) {
   try {
     const res = await fetch('/api/admin/ip-rules', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAdminHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ action: 'remove', list, ip })
     });
     const data = await res.json();
@@ -226,7 +235,7 @@ window.testEngineBenchmark = async function(engineId, btn) {
   try {
     const res = await fetch('/api/admin/engines/test', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAdminHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ engineId })
     });
     const data = await res.json();
@@ -252,7 +261,7 @@ function setupSeoRefresher() {
     const btn = document.getElementById('btnRefreshSeo');
     btn.textContent = 'Verifying...';
     try {
-      const res = await fetch('/api/admin/seo');
+      const res = await fetch('/api/admin/seo', { headers: getAdminHeaders() });
       if (res.ok) {
         btn.textContent = 'Verified Clean (0 Errors)';
         setTimeout(() => { btn.textContent = 'Re-Check SEO Health'; }, 2500);

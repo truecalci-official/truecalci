@@ -380,16 +380,24 @@ export class CasioCalciEngine {
 
   // Quadratic equation solver: ax² + bx + c = 0
   solveQuadratic(a, b, c) {
-    if (a === 0) return ["Not quadratic"];
+    if (a === 0 || isNaN(a) || isNaN(b) || isNaN(c)) {
+      throw new Error("Invalid quadratic coefficients. 'a' cannot be zero and coefficients must be numbers.");
+    }
     const d = b * b - 4 * a * c;
     if (d >= 0) {
       const x1 = (-b + Math.sqrt(d)) / (2 * a);
       const x2 = (-b - Math.sqrt(d)) / (2 * a);
-      return [x1.toFixed(4), x2.toFixed(4)];
+      const res = [x1.toFixed(4), x2.toFixed(4)];
+      res.roots = [x1, x2];
+      res.discriminant = d;
+      return res;
     } else {
       const real = (-b / (2 * a)).toFixed(4);
       const imag = (Math.sqrt(-d) / (2 * a)).toFixed(4);
-      return [`${real} + ${imag}i`, `${real} - ${imag}i`];
+      const res = [`${real} + ${imag}i`, `${real} - ${imag}i`];
+      res.complex = true;
+      res.discriminant = d;
+      return res;
     }
   }
 
@@ -397,11 +405,146 @@ export class CasioCalciEngine {
   // a1*x + b1*y = c1
   // a2*x + b2*y = c2
   solveSimultaneous2(a1, b1, c1, a2, b2, c2) {
+    if ([a1, b1, c1, a2, b2, c2].some(v => isNaN(v) || v === undefined || v === null)) {
+      throw new Error("Invalid simultaneous equation parameters. All coefficients (a1, b1, c1, a2, b2, c2) must be valid numbers.");
+    }
     const det = a1 * b2 - a2 * b1;
-    if (det === 0) return ["No unique solution"];
+    if (Math.abs(det) < 1e-12) {
+      throw new Error("No unique solution: system determinant is zero (parallel or coincident lines).");
+    }
     const x = (c1 * b2 - c2 * b1) / det;
     const y = (a1 * c2 - a2 * c1) / det;
-    return [x.toFixed(4), y.toFixed(4)];
+    const xStr = x.toFixed(4);
+    const yStr = y.toFixed(4);
+    const res = [xStr, yStr];
+    res.x = Number(x.toFixed(6));
+    res.y = Number(y.toFixed(6));
+    res.det = det;
+    res.formatted = [`x = ${Number.isInteger(x) ? x : xStr}`, `y = ${Number.isInteger(y) ? y : yStr}`];
+    return res;
+  }
+
+  // Natural language equation solver
+  parseAndSolve(exprStr) {
+    if (!exprStr || typeof exprStr !== "string") {
+      throw new Error("Missing or invalid equation expression string.");
+    }
+    const clean = exprStr.trim();
+
+    // Check for 2-equation simultaneous system: separated by ';' or ','
+    if (clean.includes(";") || (clean.includes(",") && (clean.match(/=/g) || []).length === 2)) {
+      const parts = clean.split(/[;,]/).map(s => s.trim()).filter(Boolean);
+      if (parts.length === 2 && parts[0].includes("=") && parts[1].includes("=")) {
+        const eq1 = this.parseLinearCoeffs2D(parts[0]);
+        const eq2 = this.parseLinearCoeffs2D(parts[1]);
+        const res = this.solveSimultaneous2(eq1.a, eq1.b, eq1.c, eq2.a, eq2.b, eq2.c);
+        res.type = "simultaneous_2d";
+        return res;
+      }
+    }
+
+    // Check for quadratic equation
+    const noSpaces = clean.replace(/\s+/g, "");
+    if (noSpaces.includes("x^2") || noSpaces.includes("x2") || noSpaces.includes("x²")) {
+      const quadCoeffs = this.parseQuadraticCoeffs(noSpaces);
+      if (quadCoeffs) {
+        const res = this.solveQuadratic(quadCoeffs.a, quadCoeffs.b, quadCoeffs.c);
+        res.type = "quadratic";
+        return res;
+      }
+    }
+
+    // Check for single variable linear equation: e.g. "2x + 8 = 24" or "ax + b = c"
+    if (clean.includes("=")) {
+      const linResult = this.parseLinear1D(clean);
+      if (linResult !== null) {
+        const rootStr = linResult.toFixed(4);
+        const res = [rootStr];
+        res.x = linResult;
+        res.type = "linear_1d";
+        res.solution = [rootStr];
+        res.formatted = [`x = ${Number.isInteger(linResult) ? linResult : rootStr}`];
+        return res;
+      }
+    }
+
+    throw new Error(`Unable to parse natural language equation: "${clean}". Expected forms: "ax^2 + bx + c = 0", "ax + b = c", or "a1*x + b1*y = c1; a2*x + b2*y = c2".`);
+  }
+
+  parseLinearCoeffs2D(eqStr) {
+    // Normalizes "2x+3y=13" or "x-y=1" or "-x+2y=-5" -> { a, b, c }
+    const parts = eqStr.split("=");
+    if (parts.length !== 2) throw new Error(`Invalid equation: ${eqStr}`);
+    const lhs = parts[0].replace(/\s+/g, "");
+    const rhsVal = Number(parts[1].trim());
+    if (isNaN(rhsVal)) throw new Error(`Invalid RHS in equation: ${eqStr}`);
+
+    let a = 0;
+    let b = 0;
+
+    // Match all terms on LHS: e.g. +2x, -3y, +x, -y
+    const termRegex = /([+-]?\d*(?:\.\d+)?)([xy])/gi;
+    let match;
+    let matchedAny = false;
+    while ((match = termRegex.exec(lhs)) !== null) {
+      matchedAny = true;
+      let coefStr = match[1];
+      const variable = match[2].toLowerCase();
+      let coef = 1;
+      if (coefStr === "" || coefStr === "+") coef = 1;
+      else if (coefStr === "-") coef = -1;
+      else coef = Number(coefStr);
+
+      if (variable === "x") a += coef;
+      else if (variable === "y") b += coef;
+    }
+
+    if (!matchedAny) throw new Error(`Could not identify x or y terms in: ${eqStr}`);
+    return { a, b, c: rhsVal };
+  }
+
+  parseLinear1D(eqStr) {
+    const parts = eqStr.split("=");
+    if (parts.length !== 2) return null;
+    const lhs = parts[0].replace(/\s+/g, "");
+    const rhsVal = Number(parts[1].trim());
+    if (isNaN(rhsVal)) return null;
+
+    // Pattern for ax + b = c or ax - b = c or ax = c
+    const match = lhs.match(/^([+-]?\d*(?:\.\d+)?)x(?:([+-]\d*(?:\.\d+)?))?$/i);
+    if (!match) return null;
+
+    let a = 1;
+    if (match[1] === "" || match[1] === "+") a = 1;
+    else if (match[1] === "-") a = -1;
+    else a = Number(match[1]);
+
+    const b = match[2] ? Number(match[2]) : 0;
+    if (a === 0 || isNaN(a) || isNaN(b)) return null;
+
+    return (rhsVal - b) / a;
+  }
+
+  parseQuadraticCoeffs(str) {
+    const eq = str.replace(/=0$/, "");
+    // Standard quadratic match: ax^2 + bx + c
+    const m = eq.match(/^([+-]?\d*(?:\.\d+)?)x\^?2(?:([+-]\d*(?:\.\d+)?)x)?(?:([+-]\d*(?:\.\d+)?))?$/i);
+    if (!m) return null;
+
+    let a = 1;
+    if (m[1] === "" || m[1] === "+") a = 1;
+    else if (m[1] === "-") a = -1;
+    else a = Number(m[1]);
+
+    let b = 0;
+    if (m[2]) {
+      if (m[2] === "+") b = 1;
+      else if (m[2] === "-") b = -1;
+      else b = Number(m[2]);
+    }
+
+    let c = m[3] ? Number(m[3]) : 0;
+    return { a, b, c };
   }
 
   // Status flags for 2-line LCD display

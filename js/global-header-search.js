@@ -31,7 +31,7 @@
     { title: "Euler-Bernoulli Beam Deflection & Stress", code: "BEAM-16", category: "Engineering Mathematics", url: "/workstation.html#beam-16" },
     { title: "2D Ballistic Projectile Kinematics", code: "BAL-17", category: "Engineering Mathematics", url: "/workstation.html#bal-17" },
     // Pages & Resources
-    { title: "Workstation Studio — 24 Engines", code: "APP", category: "Product", url: "/workstation.html" },
+    { title: "Workstation Studio — 25 Engines", code: "APP", category: "Product", url: "/workstation.html" },
     { title: "Engineering Mathematics & Formulas Handbook", code: "DOCS", category: "Resources", url: "/engineering-formulas.html" },
     { title: "Official Documentation & API Specs", code: "API", category: "Resources", url: "/docs.html" },
     { title: "Pricing & Compute Plans (USD / INR)", code: "BILL", category: "Pricing", url: "/pricing.html" },

@@ -22,6 +22,7 @@ import { EngineeringPhysicsEngine } from "./js/engines/engineering-physics.js";
 import { StatisticsOptionsEngine } from "./js/engines/statistics-options.js";
 import { ProgrammerEngine, UnitConverterEngine } from "./js/engines/programmer-engine.js";
 import { FinOpsEngine } from "./js/engines/finops-engines.js";
+import { validateEngineInput, ValidationError } from "./js/validation/engine-validator.js";
 
 // -----------------------------------------------------------------------------
 // Tool Definitions (MCP Schema & OpenAPI 3.1 Standards)
@@ -557,6 +558,7 @@ function checkRateLimit(clientIdentity) {
 // Deterministic Execution Dispatcher
 // -----------------------------------------------------------------------------
 function executeTool(toolName, params) {
+  validateEngineInput(toolName, params);
   const t = toolName.toLowerCase();
   
   if (t === "contractor_parity" || t === "contractor_takehome_matrix") {
@@ -691,23 +693,16 @@ function executeTool(toolName, params) {
 
   if (t === "casio_991_solve" || t === "calci991_solve" || t === "casio") {
     const casio = new CasioCalciEngine();
-    if (params.type === "simultaneous2") {
+    if (params.expression) {
+      return casio.parseAndSolve(String(params.expression));
+    }
+    if (params.type === "simultaneous2" || params.type === "simultaneous" || params.a2 !== undefined) {
       return casio.solveSimultaneous2(
-        Number(params.a || 1), Number(params.b || 1), Number(params.c || 5),
-        Number(params.a2 || 1), Number(params.b2 || -1), Number(params.c2 || 1)
+        Number(params.a ?? params.a1), Number(params.b ?? params.b1), Number(params.c ?? params.c1),
+        Number(params.a2), Number(params.b2), Number(params.c2)
       );
     }
-    if (params.expression) {
-      const expr = String(params.expression).replace(/\s+/g, '').replace(/=0$/, '');
-      const quadMatch = expr.match(/^([+-]?\d*)x\^?2([+-]\d*)x([+-]\d+)$/i);
-      if (quadMatch) {
-        let a = quadMatch[1] === '' || quadMatch[1] === '+' ? 1 : (quadMatch[1] === '-' ? -1 : Number(quadMatch[1]));
-        let b = quadMatch[2] === '+' ? 1 : (quadMatch[2] === '-' ? -1 : Number(quadMatch[2]));
-        let c = Number(quadMatch[3]);
-        return casio.solveQuadratic(a, b, c);
-      }
-    }
-    return casio.solveQuadratic(Number(params.a ?? 1), Number(params.b ?? -5), Number(params.c ?? 6));
+    return casio.solveQuadratic(Number(params.a), Number(params.b), Number(params.c));
   }
 
   if (t === "beam_bending") {
@@ -888,6 +883,25 @@ export default {
     // 3. Live Admin Business Telemetry & Economics Endpoint
     // -------------------------------------------------------------------------
     if (url.pathname === "/api/admin/telemetry" || url.pathname === "/api/telemetry") {
+      const authHeader = request.headers.get("Authorization") || "";
+      const adminKey = request.headers.get("X-Admin-Key") || "";
+      const expectedKey = (env && env.ADMIN_KEY) ? env.ADMIN_KEY : "tc_admin_live_sec_key_2026";
+      const token = authHeader.startsWith("Bearer ") ? authHeader.substring(7).trim() : adminKey.trim();
+      if (!token || token !== expectedKey) {
+        return new Response(JSON.stringify({
+          status: "error",
+          code: "unauthorized",
+          message: "Unauthorized: Admin authentication required via Bearer token or X-Admin-Key header"
+        }), {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-store"
+          }
+        });
+      }
+
       const totalRequests = telemetry.baselineRequests + telemetry.sessionRequests;
       const allowedRequests = (telemetry.baselineRequests - 30) + telemetry.sessionAllowed;
       const blockedRequests = 30 + telemetry.sessionBlocked;
@@ -1449,8 +1463,39 @@ export default {
       "/api/v1/finops/egress": "cloud_egress_finops"
     };
 
-    if (url.pathname === "/api/v1/calculate" || API_ROUTES[url.pathname]) {
-      let toolName = API_ROUTES[url.pathname];
+    let computeTool = null;
+    if (url.pathname.startsWith("/api/v1/compute/")) {
+      const slug = url.pathname.slice("/api/v1/compute/".length).toLowerCase();
+      const COMPUTE_SLUG_MAP = {
+        'contractor.parity': 'contractor_parity',
+        'contractor_parity': 'contractor_parity',
+        'scorp.optimize': 'scorp_optimizer',
+        'solo401k.max': 'solo_401k_shield',
+        'fx.raildrag': 'fx_invoicing',
+        'billable.floor': 'billable_floor',
+        'incometax.115bac': 'tax_in',
+        'tax_in': 'tax_in',
+        'gst.split': 'gst_calculator',
+        'gst': 'gst_calculator',
+        'sip.stepup': 'sip_investment',
+        'fd.maturity': 'compound_wealth',
+        'mortgage.piti': 'mortgage_piti',
+        'vat.compute': 'vat_sales_tax',
+        'tip.split': 'tip_splitter',
+        'compound.401k': 'compound_wealth',
+        'homeloan.emi': 'home_loan_emi',
+        'ai.tokens': 'ai_token_arbitrage',
+        'startup.runway': 'startup_runway_dilution',
+        'b2b.wht': 'b2b_withholding_risk',
+        'feie.nomad': 'feie_nomad_tracker',
+        'cloud.egress': 'cloud_egress_finops',
+        'sci991.eval': 'casio_991_solve'
+      };
+      computeTool = COMPUTE_SLUG_MAP[slug] || slug.replace(/[.-]/g, '_');
+    }
+
+    if (url.pathname === "/api/v1/calculate" || API_ROUTES[url.pathname] || computeTool) {
+      let toolName = computeTool || API_ROUTES[url.pathname];
       let params = {};
 
       if (request.method === "POST") {
