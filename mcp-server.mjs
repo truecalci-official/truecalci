@@ -464,6 +464,47 @@ const MCP_TOOLS = [
       },
       required: ["grams", "ratePerGram"]
     }
+  },
+  {
+    name: "truecalci_npv_irr",
+    description: "Calculate Net Present Value (NPV) and Internal Rate of Return (IRR) via iterative Newton-Raphson polynomial convergence for capital budgeting, investment appraisal, and payback periods.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialInvestment: { type: "number", default: 100000, description: "Initial capital outlay at period 0 ($)" },
+        cashflows: { type: "array", items: { type: "number" }, default: [30000, 40000, 50000, 20000], description: "Series of sequential cash inflows ($)" },
+        discountRatePercent: { type: "number", default: 10.0, description: "Annual hurdle / discount rate %" }
+      },
+      required: ["initialInvestment", "cashflows"]
+    }
+  },
+  {
+    name: "truecalci_cagr_inflation",
+    description: "Calculate Compound Annual Growth Rate (CAGR), real inflation-adjusted purchasing power (Fisher effect), and exact investment doubling horizon.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialValue: { type: "number", default: 50000, description: "Beginning portfolio / asset valuation ($)" },
+        finalValue: { type: "number", default: 100000, description: "Ending portfolio / asset valuation ($)" },
+        periodsYears: { type: "number", default: 5, description: "Duration in years" },
+        inflationRatePercent: { type: "number", default: 2.5, description: "Annualized expected inflation rate %" }
+      },
+      required: ["initialValue", "finalValue", "periodsYears"]
+    }
+  },
+  {
+    name: "truecalci_breakeven_margin",
+    description: "Calculate business break-even threshold in units and revenue, contribution margin ratio, operational margin of safety, and operating leverage degree.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        fixedCosts: { type: "number", default: 10000, description: "Total fixed periodic operating costs ($)" },
+        unitPrice: { type: "number", default: 50, description: "Selling price per unit ($)" },
+        unitVariableCost: { type: "number", default: 20, description: "Variable cost incurred per unit ($)" },
+        expectedUnitsSold: { type: "number", default: 500, description: "Projected unit sales volume for margin of safety analysis" }
+      },
+      required: ["fixedCosts", "unitPrice", "unitVariableCost"]
+    }
   }
 ];
 
@@ -497,7 +538,10 @@ const KNOWN_TOOLS = new Set([
   'startup_runway_dilution', 'startup_runway', 'dilution_solver',
   'b2b_withholding_risk', 'b2b_wht', 'withholding_risk',
   'feie_nomad_tracker', 'feie', 'nomad_tracker',
-  'cloud_egress_finops', 'cloud_egress', 'egress_finops'
+  'cloud_egress_finops', 'cloud_egress', 'egress_finops',
+  'npv_irr', 'npv', 'irr', 'truecalci_npv_irr',
+  'cagr_inflation', 'cagr', 'inflation_adjusted', 'truecalci_cagr_inflation',
+  'breakeven_margin', 'breakeven', 'margin_of_safety', 'truecalci_breakeven_margin'
 ]);
 
 function handleToolCall(name, args) {
@@ -763,6 +807,35 @@ function handleToolCall(name, args) {
     case 'cloud_egress':
     case 'egress_finops':
       return FinOpsEngine.calculateCloudEgressFinOps(args);
+    case 'npv_irr':
+    case 'npv':
+    case 'irr':
+    case 'truecalci_npv_irr':
+      return GlobalFinanceEngine.calculateNpvIrr({
+        initialInvestment: Number(args.initialInvestment),
+        cashflows: args.cashflows || (args.flows ? (Array.isArray(args.flows) ? args.flows : String(args.flows).split(',').map(Number)) : []),
+        discountRatePercent: args.discountRatePercent !== undefined ? Number(args.discountRatePercent) : 10
+      });
+    case 'cagr_inflation':
+    case 'cagr':
+    case 'inflation_adjusted':
+    case 'truecalci_cagr_inflation':
+      return GlobalFinanceEngine.calculateCagrInflation({
+        initialValue: Number(args.initialValue),
+        finalValue: Number(args.finalValue),
+        periodsYears: Number(args.periodsYears || args.years || args.tenureYears),
+        inflationRatePercent: args.inflationRatePercent !== undefined ? Number(args.inflationRatePercent) : 2.5
+      });
+    case 'breakeven_margin':
+    case 'breakeven':
+    case 'margin_of_safety':
+    case 'truecalci_breakeven_margin':
+      return GlobalFinanceEngine.calculateBreakEven({
+        fixedCosts: Number(args.fixedCosts),
+        unitPrice: Number(args.unitPrice || args.price),
+        unitVariableCost: Number(args.unitVariableCost || args.variableCost),
+        expectedUnitsSold: Number(args.expectedUnitsSold || 0)
+      });
     default:
       throw new Error(`Unknown tool: ${name}`);
   }

@@ -360,6 +360,35 @@ export function validateEngineInput(toolName, params) {
       break;
     }
 
+    case "npv_irr":
+    case "npv": {
+      const c0 = Number(params.initialInvestment);
+      if (isNaN(c0) || c0 < 0) {
+        throw new ValidationError("Parameter 'initialInvestment' is required and must be non-negative.", { tool: t });
+      }
+      break;
+    }
+
+    case "cagr_inflation":
+    case "cagr": {
+      const v0 = Number(params.initialValue);
+      const tY = Number(params.periodsYears ?? params.years ?? params.tenureYears);
+      if (isNaN(v0) || v0 <= 0 || isNaN(tY) || tY <= 0) {
+        throw new ValidationError("Parameters 'initialValue' and 'periodsYears' must be positive numbers > 0.", { tool: t });
+      }
+      break;
+    }
+
+    case "breakeven_margin":
+    case "breakeven": {
+      const price = Number(params.unitPrice ?? params.price);
+      const vc = Number(params.unitVariableCost ?? params.variableCost ?? 0);
+      if (isNaN(price) || price <= vc) {
+        throw new ValidationError("Parameter 'unitPrice' must be strictly greater than 'unitVariableCost'.", { tool: t });
+      }
+      break;
+    }
+
     default:
       // Allow unrecognized or generic extensions if non-empty
       break;
@@ -399,7 +428,10 @@ function getRequiredFields(toolName) {
     startup_runway_dilution: ["monthlyGrossBurn"],
     b2b_withholding_risk: ["invoiceNetRequired"],
     feie_nomad_tracker: ["foreignEarnedIncome"],
-    cloud_egress_finops: ["monthlyEgressGb"]
+    cloud_egress_finops: ["monthlyEgressGb"],
+    npv_irr: ["initialInvestment", "cashflows"],
+    cagr_inflation: ["initialValue", "finalValue", "periodsYears"],
+    breakeven_margin: ["fixedCosts", "unitPrice", "unitVariableCost"]
   };
   const t = String(toolName || "").toLowerCase().replace(/[.-]/g, "_");
   return map[t] || ["valid input parameters"];

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "name": "truecalci",
+  "title": "TrueCalci — Deterministic Compute Engine for AI Agents & Enterprise",
+  "description": "27 zero-hallucination deterministic calculation engines over the Model Context Protocol (MCP). Sub-millisecond execution, zero disk retention, and bit-exact IEEE-754 precision across US W-2/1099 contractor parity, S-Corp salaries, capital budgeting (NPV/IRR, CAGR, Break-Even), and engineering math.",
+  "version": "2.6.1",
+  "homepage": "https://truecalci.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/truecalci-official/truecalci"
+  },
+  "license": "MIT",
+  "transport": {
+    "type": "http",
+    "endpoint": "https://truecalci.com/api/v1/mcp",
+    "protocol": "streamable-http",
+    "sse": true
+  },
+  "endpoints": {
+    "mcp": "https://truecalci.com/api/v1/mcp",
+    "health": "https://truecalci.com/api/v1/health",
+    "tools": "https://truecalci.com/api/v1/tools",
+    "openapi": "https://truecalci.com/openapi.json"
+  },
+  "capabilities": {
+    "tools": {
+      "listChanged": false
+    },
+    "logging": {},
+    "resources": {}
+  },
+  "categories": [
+    "finance",
+    "developer-tools",
+    "productivity",
+    "engineering",
+    "tax"
+  ],
+  "tags": [
+    "deterministic-compute",
+    "financial-engine",
+    "tax-brackets",
+    "npv-irr",
+    "contractor-parity",
+    "statutory-math",
+    "cloudflare-worker"
+  ]
+}

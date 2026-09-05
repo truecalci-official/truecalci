@@ -2,14 +2,16 @@
 
 [![MCP Compatible](https://img.shields.io/badge/MCP-Streamable%20HTTP%20%26%20stdio-blue.svg)](https://modelcontextprotocol.io)
 [![Smithery Badge](https://smithery.ai/badge/truecalci-official/truecalci)](https://smithery.ai/servers/truecalci-official/truecalci)
+[![Glama](https://img.shields.io/badge/Glama-Indexed-8A2BE2.svg)](https://glama.ai/mcp/servers/truecalci-official/truecalci)
+[![LobeHub](https://img.shields.io/badge/LobeHub-Plugin%20Ready-000000.svg)](https://github.com/lobehub/lobe-chat-plugins)
 [![Zero Data Retention](https://img.shields.io/badge/Data%20Retention-0%20Bytes%20Stored-emerald.svg)](https://truecalci.com/privacy.html)
 [![Arithmetic](https://img.shields.io/badge/Arithmetic-64--bit%20IEEE--754-indigo.svg)](https://truecalci.com/engineering-formulas.html)
 [![Latency](https://img.shields.io/badge/Edge%20Latency-P50%20%3C%2020ms-teal.svg)](https://truecalci.com)
-[![Engines](https://img.shields.io/badge/Engines-24%20Deterministic-orange.svg)](#registered-mcp-tool-catalog)
+[![Engines](https://img.shields.io/badge/Engines-27%20Deterministic-orange.svg)](#registered-mcp-tool-catalog)
 [![License](https://img.shields.io/badge/License-MIT-gray.svg)](LICENSE)
 
 > **Give your agent arithmetic it can be held to.**  
-> LLMs hallucinate statutory tax brackets, compound schedules, and cross-border currency drag. TrueCalci mounts **twenty-four deterministic mathematical engines** as typed tools over the open **Model Context Protocol (MCP)** at `https://truecalci.com/api/v1/mcp`. Same input, same output, sub-millisecond edge compute, zero disk retention.
+> LLMs hallucinate statutory tax brackets, compound schedules, and cross-border currency drag. TrueCalci mounts **twenty-seven deterministic mathematical engines** as typed tools over the open **Model Context Protocol (MCP)** at `https://truecalci.com/api/v1/mcp`. Same input, same output, sub-millisecond edge compute, zero disk retention.
 
 ---
 
@@ -83,6 +85,10 @@ All engines return structured JSON containing inputs, calculated line items, mar
 | `homeloan_emi` | Reducing balance loan amortization with prepayment tenure reduction | `principal`, `annualInterestRate`, `tenureYears`, `monthlyPrepayment` | Monthly EMI, interest-to-principal ratio, tenure shaved via prepayments |
 | `land_convert` | Indian land and agricultural measurement conversions | `value`, `fromUnit`, `toUnit` (`gaj`, `bigha`, `guntha`, `acre`, `sqft`) | Standardized square feet, acres, and regional conversion factors |
 | `sci991_eval` | Scientific V.P.A.M. & 64-Bit Programmer bitwise arithmetic | `expression` or `decimalValue`, `operation` (`hex`, `bin`, `oct`, `bitwise`) | Analytical solution, quadratic roots, numerical calculus, 2's complement |
+| `npv_irr` | Capital budgeting & investment appraisal via Newton-Raphson polynomial solver | `initialInvestment`, `cashflows` (array), `discountRatePercent` | Net Present Value ($), exact IRR %, Profitability Index (PI), payback periods |
+| `cagr_inflation` | Real purchasing power retention & Fisher-deflated annualized returns | `initialValue`, `finalValue`, `periodsYears`, `inflationRatePercent` | Nominal CAGR %, real CAGR %, terminal purchasing power ($), exact doubling years |
+| `breakeven_margin` | Managerial economics break-even thresholds and operational safety margin | `fixedCosts`, `unitPrice`, `unitVariableCost`, `expectedUnitsSold` | Break-even unit volume, break-even revenue, margin of safety %, degree of operating leverage |
+
 
 ---
 

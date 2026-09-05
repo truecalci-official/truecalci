@@ -13,7 +13,7 @@
   },
   "transport": {
     "type": "http",
-    "url": "https://truecalci.com/mcp"
+    "url": "https://truecalci.com/api/v1/mcp"
   },
   "tools": [
     {
@@ -921,6 +921,110 @@
             "description": "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)"
           }
         }
+      }
+    },
+    {
+      "name": "npv_irr",
+      "description": "Calculate Net Present Value (NPV) and Internal Rate of Return (IRR) via iterative Newton-Raphson polynomial convergence for capital budgeting, investment appraisal, and payback periods.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "initialInvestment": {
+            "type": "number",
+            "default": 100000,
+            "description": "Initial capital outlay at period 0 ($)"
+          },
+          "cashflows": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "default": [
+              30000,
+              40000,
+              50000,
+              20000
+            ],
+            "description": "Series of sequential cash inflows ($)"
+          },
+          "discountRatePercent": {
+            "type": "number",
+            "default": 10,
+            "description": "Annual hurdle / discount rate %"
+          }
+        },
+        "required": [
+          "initialInvestment",
+          "cashflows"
+        ]
+      }
+    },
+    {
+      "name": "cagr_inflation",
+      "description": "Calculate Compound Annual Growth Rate (CAGR), real inflation-adjusted purchasing power (Fisher effect), and exact investment doubling horizon.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "initialValue": {
+            "type": "number",
+            "default": 50000,
+            "description": "Beginning portfolio / asset valuation ($)"
+          },
+          "finalValue": {
+            "type": "number",
+            "default": 100000,
+            "description": "Ending portfolio / asset valuation ($)"
+          },
+          "periodsYears": {
+            "type": "number",
+            "default": 5,
+            "description": "Duration in years"
+          },
+          "inflationRatePercent": {
+            "type": "number",
+            "default": 2.5,
+            "description": "Annualized expected inflation rate %"
+          }
+        },
+        "required": [
+          "initialValue",
+          "finalValue",
+          "periodsYears"
+        ]
+      }
+    },
+    {
+      "name": "breakeven_margin",
+      "description": "Calculate business break-even threshold in units and revenue, contribution margin ratio, operational margin of safety, and operating leverage degree.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "fixedCosts": {
+            "type": "number",
+            "default": 10000,
+            "description": "Total fixed periodic operating costs ($)"
+          },
+          "unitPrice": {
+            "type": "number",
+            "default": 50,
+            "description": "Selling price per unit ($)"
+          },
+          "unitVariableCost": {
+            "type": "number",
+            "default": 20,
+            "description": "Variable cost incurred per unit ($)"
+          },
+          "expectedUnitsSold": {
+            "type": "number",
+            "default": 500,
+            "description": "Projected unit sales volume for margin of safety analysis"
+          }
+        },
+        "required": [
+          "fixedCosts",
+          "unitPrice",
+          "unitVariableCost"
+        ]
       }
     }
   ],

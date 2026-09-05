@@ -399,6 +399,47 @@ const MCP_TOOL_DEFINITIONS = [
         cacheHitRatio: { type: "number", default: 0.85, description: "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)" }
       }
     }
+  },
+  {
+    name: "npv_irr",
+    description: "Calculate Net Present Value (NPV) and Internal Rate of Return (IRR) via iterative Newton-Raphson polynomial convergence for capital budgeting, investment appraisal, and payback periods.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialInvestment: { type: "number", default: 100000, description: "Initial capital outlay / outflow at period 0 ($)" },
+        cashflows: { type: "array", items: { type: "number" }, default: [30000, 40000, 50000, 20000], description: "Series of sequential cash inflows ($)" },
+        discountRatePercent: { type: "number", default: 10.0, description: "Annual hurdle / discount rate %" }
+      },
+      required: ["initialInvestment", "cashflows"]
+    }
+  },
+  {
+    name: "cagr_inflation",
+    description: "Calculate Compound Annual Growth Rate (CAGR), real inflation-adjusted purchasing power (Fisher effect), and exact investment doubling horizon.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        initialValue: { type: "number", default: 50000, description: "Beginning portfolio / asset valuation ($)" },
+        finalValue: { type: "number", default: 100000, description: "Ending portfolio / asset valuation ($)" },
+        periodsYears: { type: "number", default: 5, description: "Duration in years" },
+        inflationRatePercent: { type: "number", default: 2.5, description: "Annualized expected inflation rate %" }
+      },
+      required: ["initialValue", "finalValue", "periodsYears"]
+    }
+  },
+  {
+    name: "breakeven_margin",
+    description: "Calculate business break-even threshold in units and revenue, contribution margin ratio, operational margin of safety, and operating leverage degree.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        fixedCosts: { type: "number", default: 10000, description: "Total fixed periodic operating costs ($)" },
+        unitPrice: { type: "number", default: 50, description: "Selling price per unit ($)" },
+        unitVariableCost: { type: "number", default: 20, description: "Variable cost incurred per unit ($)" },
+        expectedUnitsSold: { type: "number", default: 500, description: "Projected unit sales volume for margin of safety analysis" }
+      },
+      required: ["fixedCosts", "unitPrice", "unitVariableCost"]
+    }
   }
 ];
 
@@ -784,6 +825,32 @@ function executeTool(toolName, params) {
 
   if (t === "cloud_egress_finops" || t === "cloud_egress" || t === "egress_finops") {
     return FinOpsEngine.calculateCloudEgressFinOps(params);
+  }
+
+  if (t === "npv_irr" || t === "npv" || t === "irr") {
+    return GlobalFinanceEngine.calculateNpvIrr({
+      initialInvestment: Number(params.initialInvestment),
+      cashflows: params.cashflows || (params.flows ? (Array.isArray(params.flows) ? params.flows : String(params.flows).split(',').map(Number)) : []),
+      discountRatePercent: params.discountRatePercent !== undefined ? Number(params.discountRatePercent) : 10
+    });
+  }
+
+  if (t === "cagr_inflation" || t === "cagr" || t === "inflation_adjusted") {
+    return GlobalFinanceEngine.calculateCagrInflation({
+      initialValue: Number(params.initialValue),
+      finalValue: Number(params.finalValue),
+      periodsYears: Number(params.periodsYears || params.years || params.tenureYears),
+      inflationRatePercent: params.inflationRatePercent !== undefined ? Number(params.inflationRatePercent) : 2.5
+    });
+  }
+
+  if (t === "breakeven_margin" || t === "breakeven" || t === "margin_of_safety") {
+    return GlobalFinanceEngine.calculateBreakEven({
+      fixedCosts: Number(params.fixedCosts),
+      unitPrice: Number(params.unitPrice || params.price),
+      unitVariableCost: Number(params.unitVariableCost || params.variableCost),
+      expectedUnitsSold: Number(params.expectedUnitsSold || 0)
+    });
   }
 
   throw new Error(`Tool '${toolName}' not found.`);
@@ -1283,7 +1350,7 @@ export default {
         },
         transport: {
           type: "http",
-          url: "https://truecalci.com/mcp"
+          url: "https://truecalci.com/api/v1/mcp"
         },
         protocolVersion: "2024-11-05",
         tools: MCP_TOOL_DEFINITIONS,
@@ -1304,7 +1371,7 @@ export default {
     if (isMcpRoute) {
       if (request.method === "GET") {
         if (accept.includes("text/event-stream")) {
-          return new Response("event: endpoint\ndata: https://truecalci.com/mcp\n\n", {
+          return new Response("event: endpoint\ndata: https://truecalci.com/api/v1/mcp\n\n", {
             status: 200,
             headers: {
               "Content-Type": "text/event-stream; charset=utf-8",
@@ -1562,7 +1629,16 @@ export default {
       "/api/v1/finops/feie": "feie_nomad_tracker",
       "/api/v1/cloud_egress_finops": "cloud_egress_finops",
       "/api/v1/cloud-egress-finops": "cloud_egress_finops",
-      "/api/v1/finops/egress": "cloud_egress_finops"
+      "/api/v1/finops/egress": "cloud_egress_finops",
+      "/api/v1/npv-irr": "npv_irr",
+      "/api/v1/npv_irr": "npv_irr",
+      "/api/v1/npv": "npv_irr",
+      "/api/v1/cagr-inflation": "cagr_inflation",
+      "/api/v1/cagr_inflation": "cagr_inflation",
+      "/api/v1/cagr": "cagr_inflation",
+      "/api/v1/breakeven-margin": "breakeven_margin",
+      "/api/v1/breakeven_margin": "breakeven_margin",
+      "/api/v1/breakeven": "breakeven_margin"
     };
 
     let computeTool = null;
@@ -1591,7 +1667,13 @@ export default {
         'b2b.wht': 'b2b_withholding_risk',
         'feie.nomad': 'feie_nomad_tracker',
         'cloud.egress': 'cloud_egress_finops',
-        'sci991.eval': 'casio_991_solve'
+        'sci991.eval': 'casio_991_solve',
+        'npv.irr': 'npv_irr',
+        'npv_irr': 'npv_irr',
+        'cagr.inflation': 'cagr_inflation',
+        'cagr_inflation': 'cagr_inflation',
+        'breakeven.margin': 'breakeven_margin',
+        'breakeven_margin': 'breakeven_margin'
       };
       computeTool = COMPUTE_SLUG_MAP[slug] || slug.replace(/[.-]/g, '_');
     }

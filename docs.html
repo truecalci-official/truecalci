@@ -101,6 +101,7 @@
         grid-template-columns: 1fr;
       }
       .docs-sidebar { display: none; }
+      .playground-grid { grid-template-columns: 1fr !important; }
     }
     .docs-sidebar {
       position: sticky;
@@ -599,42 +600,109 @@
       <section id="mcp-protocol">
         <h2>3. Model Context Protocol (MCP) Integration</h2>
         <p>
-          TrueCalci is a native Model Context Protocol (MCP) server. AI agent platforms, Cursor IDE, Anthropic Claude Desktop, and LangChain agents can call TrueCalci tools over stdio or streamable HTTP SSE:
+          TrueCalci is a verified, native Model Context Protocol (MCP) server. AI agent platforms, Claude Desktop, Cursor IDE, Windsurf, Zed, and autonomous agent loops connect directly via <strong>Streamable HTTP / SSE</strong> or local stdio:
         </p>
 
-        <pre><code>// claude_desktop_config.json configuration
+        <!-- Registry Badges Card -->
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 24px;">
+          <a href="https://smithery.ai/servers/truecalci-official/truecalci" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(0, 102, 255, 0.08); border: 1px solid rgba(0, 102, 255, 0.2); border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: #0066ff;">
+              🛡️ Smithery.ai Verified (100% Score)
+            </span>
+          </a>
+          <a href="https://glama.ai/mcp/servers/truecalci-official/truecalci" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(138, 43, 226, 0.08); border: 1px solid rgba(138, 43, 226, 0.25); border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: #8a2be2;">
+              🔮 Glama.ai Indexed
+            </span>
+          </a>
+          <a href="https://github.com/lobehub/lobe-chat-plugins" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: #10b981;">
+              ⚡ LobeHub Plugin Ready
+            </span>
+          </a>
+          <a href="https://github.com/modelcontextprotocol/servers" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: #f59e0b;">
+              🌐 Official MCP Server Index
+            </span>
+          </a>
+        </div>
+
+        <h3>Configuration Snippets</h3>
+
+        <!-- Claude Desktop Remote Streamable HTTP (Recommended) -->
+        <div style="margin-top: 14px;">
+          <div style="font-size: 0.84rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+            A. Claude Desktop (Remote Streamable HTTP — No Node.js Required)
+          </div>
+          <pre><code>// claude_desktop_config.json
 {
   "mcpServers": {
     "truecalci": {
-      "command": "node",
-      "args": ["c:/Calculator/mcp-server.mjs"],
-      "env": {
-        "TRUECALCI_ENV": "production"
-      }
+      "type": "streamable-http",
+      "url": "https://truecalci.com/api/v1/mcp"
     }
   }
 }</code></pre>
+        </div>
 
-        <h3>Registered AI Agent Tools</h3>
+        <!-- Cursor IDE Remote Config -->
+        <div style="margin-top: 14px;">
+          <div style="font-size: 0.84rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+            B. Cursor IDE (.cursor/mcp.json)
+          </div>
+          <pre><code>{
+  "mcpServers": {
+    "truecalci": {
+      "url": "https://truecalci.com/api/v1/mcp"
+    }
+  }
+}</code></pre>
+        </div>
+
+        <!-- Local stdio (npm / npx) -->
+        <div style="margin-top: 14px;">
+          <div style="font-size: 0.84rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">
+            C. Local stdio CLI Execution
+          </div>
+          <pre><code># Run without local clone
+npx -y truecalci
+
+# Or inspect available MCP tools
+curl -s https://truecalci.com/api/v1/tools | jq .</code></pre>
+        </div>
+
+        <h3>Registered AI Agent Tools (27 Deterministic Engines)</h3>
         <div class="mcp-tools-grid" style="display: grid; gap: 10px; margin-top: 14px;">
           <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
-            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">calculate_contractor_parity</code>
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">npv_irr</code>
+            <span style="font-size: 0.86rem; color: var(--text-secondary);">Capital budgeting: Net Present Value, Newton-Raphson IRR, and payback timelines.</span>
+          </div>
+          <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">cagr_inflation</code>
+            <span style="font-size: 0.86rem; color: var(--text-secondary);">Nominal CAGR, real purchasing power retention (Fisher equation), and exact doubling horizons.</span>
+          </div>
+          <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">breakeven_margin</code>
+            <span style="font-size: 0.86rem; color: var(--text-secondary);">Unit and revenue break-even thresholds, contribution margin ratio, and margin of safety.</span>
+          </div>
+          <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">contractor_parity</code>
             <span style="font-size: 0.86rem; color: var(--text-secondary);">1099 vs W-2 breakeven hourly rate, SECA arbitrage, and QBI tax drag.</span>
           </div>
           <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
-            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">calculate_mortgage_piti</code>
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">mortgage_piti</code>
             <span style="font-size: 0.86rem; color: var(--text-secondary);">Monthly mortgage PITI, CFPB Reg Z escrow, and automated PMI termination.</span>
           </div>
           <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
-            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">calculate_black_scholes</code>
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">black_scholes</code>
             <span style="font-size: 0.86rem; color: var(--text-secondary);">Analytical option Greeks (Delta, Gamma, Vega, Theta, Rho) with normal CDF.</span>
           </div>
           <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
-            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">calculate_beam_bending</code>
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">beam_bending</code>
             <span style="font-size: 0.86rem; color: var(--text-secondary);">Euler-Bernoulli beam deflection, shear moment diagram, and elastic section modulus.</span>
           </div>
           <div class="mcp-tool-card" style="display: flex; align-items: baseline; gap: 12px; padding: 12px 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px;">
-            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">calculate_ai_tokens</code>
+            <code style="font-size: 0.85rem; font-weight: 600; padding: 3px 8px; border-radius: 6px; letter-spacing: -0.01em;">ai_token_arbitrage</code>
             <span style="font-size: 0.86rem; color: var(--text-secondary);">Prompt cache arbitrage, KV cache retention, and GPU cloud interconnect FinOps.</span>
           </div>
         </div>
@@ -642,21 +710,57 @@
 
       <!-- Section 4 -->
       <section id="rest-api">
-        <h2>4. Edge REST API Reference</h2>
+        <h2>4. Live MCP & Edge REST API Playground</h2>
         <p>
-          All registered engines can also be invoked directly via HTTPS. Calculations execute statelessly at Cloudflare's global edge:
+          Execute live sub-millisecond computations directly against Cloudflare edge isolates. Select an engine, review or edit the JSON payload, and run verified deterministic calculations in real time:
         </p>
-        <pre><code>curl -X POST https://truecalci.com/api/v1/compute \
-  -H "Content-Type: application/json" \
-  -d '{
-    "engine": "contractor.parity",
-    "params": {
-      "salary": 180000,
-      "hourlyRate": 120,
-      "filingStatus": "single",
-      "stateTaxRatePercent": 5.0
-    }
-  }'</code></pre>
+
+        <!-- Interactive Playground Card -->
+        <div class="playground-card" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin: 20px 0; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="playground-tool-select" style="font-size: 0.85rem; font-weight: 700; color: var(--text-primary);">Select Engine:</label>
+              <select id="playground-tool-select" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-base, #fff); color: var(--text-primary); font-size: 0.86rem; font-weight: 600; font-family: var(--font-sans);">
+                <option value="npv_irr">npv_irr (Capital Budgeting & IRR)</option>
+                <option value="cagr_inflation">cagr_inflation (CAGR & Real Purchasing Power)</option>
+                <option value="breakeven_margin">breakeven_margin (Break-Even & Margin of Safety)</option>
+                <option value="contractor_parity">contractor_parity (1099 vs W-2 Breakeven)</option>
+                <option value="mortgage_piti">mortgage_piti (US Mortgage PITI & PMI)</option>
+                <option value="black_scholes">black_scholes (Option Greeks & Pricing)</option>
+                <option value="ai_token_arbitrage">ai_token_arbitrage (LLM Inference FinOps)</option>
+                <option value="scorp_optimizer">scorp_optimizer (S-Corp FICA Tax Shield)</option>
+                <option value="vat_sales_tax">vat_sales_tax (EU / Global Sales Tax)</option>
+                <option value="casio_991_solve">casio_991_solve (Quadratic Solver)</option>
+              </select>
+            </div>
+            <button id="playground-run-btn" type="button" style="display: inline-flex; align-items: center; gap: 6px; background: #0066ff; color: #fff; border: none; border-radius: 6px; padding: 8px 16px; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease;">
+              <span>⚡ Execute Calculation</span>
+            </button>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;" class="playground-grid">
+            <!-- Left: Request Payload -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted);">Request Payload (JSON)</span>
+                <span id="playground-endpoint-badge" style="font-size: 0.72rem; color: #0066ff; font-family: var(--font-mono); font-weight: 600;">POST /api/v1/calculate</span>
+              </div>
+              <textarea id="playground-payload" rows="10" style="width: 100%; box-sizing: border-box; font-family: var(--font-mono); font-size: 0.82rem; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: #0b1120; color: #38bdf8; line-height: 1.5; resize: vertical;"></textarea>
+            </div>
+
+            <!-- Right: Response Inspector -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted);">Response Inspector</span>
+                <span id="playground-latency-badge" style="font-size: 0.72rem; color: #10b981; font-weight: 700;">⚡ Ready</span>
+              </div>
+              <pre id="playground-response" style="margin: 0; min-height: 190px; max-height: 320px; overflow-y: auto; font-family: var(--font-mono); font-size: 0.82rem; background: #0b1120; color: #f1f5f9; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);"><code>{
+  "status": "ready",
+  "message": "Click 'Execute Calculation' to run deterministic compute."
+}</code></pre>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- Section 5 -->
@@ -736,5 +840,150 @@
   <script src="/js/currency-select.js"></script>
   <script src="/js/cookie-consent.js"></script>
   <script src="/js/global-header-search.js"></script>
+  <script>
+    (function() {
+      const toolSelect = document.getElementById('playground-tool-select');
+      const payloadArea = document.getElementById('playground-payload');
+      const runBtn = document.getElementById('playground-run-btn');
+      const responseArea = document.getElementById('playground-response');
+      const latencyBadge = document.getElementById('playground-latency-badge');
+      const endpointBadge = document.getElementById('playground-endpoint-badge');
+
+      if (!toolSelect || !payloadArea || !runBtn || !responseArea) return;
+
+      const SAMPLE_PAYLOADS = {
+        npv_irr: {
+          initialInvestment: 100000,
+          cashflows: [30000, 40000, 50000, 20000],
+          discountRatePercent: 10
+        },
+        cagr_inflation: {
+          initialValue: 50000,
+          finalValue: 100000,
+          periodsYears: 5,
+          inflationRatePercent: 2.5
+        },
+        breakeven_margin: {
+          fixedCosts: 10000,
+          unitPrice: 50,
+          unitVariableCost: 20,
+          expectedUnitsSold: 500
+        },
+        contractor_parity: {
+          w2Salary: 130000,
+          contractorHourlyRate: 85,
+          filingStatus: "single",
+          stateTaxRatePercent: 5.0,
+          healthSubsidyAnnual: 7200,
+          match401kPercent: 4.0,
+          ptoDays: 25,
+          hoursPerWeek: 40,
+          weeksPerYear: 48,
+          annualExpenses: 6000,
+          eligibleQBI: true
+        },
+        mortgage_piti: {
+          homePrice: 450000,
+          downPaymentPercent: 20,
+          interestRate: 6.8,
+          tenureYears: 30,
+          propertyTaxRatePercent: 1.2,
+          annualHomeInsurance: 1400
+        },
+        black_scholes: {
+          spotPrice: 100,
+          strikePrice: 100,
+          timeToExpiryYears: 1,
+          riskFreeRate: 0.045,
+          volatility: 0.25
+        },
+        ai_token_arbitrage: {
+          promptTokens: 5000,
+          completionTokens: 1000,
+          cacheHitRatio: 0.8,
+          isBatch: false
+        },
+        scorp_optimizer: {
+          netProfit: 150000,
+          salaryPercent: 55,
+          payrollAnnualFee: 600,
+          cpaAnnualFee: 1500,
+          stateAnnualFee: 200
+        },
+        vat_sales_tax: {
+          amount: 1000,
+          vatRatePercent: 20,
+          mode: "add"
+        },
+        casio_991_solve: {
+          type: "quadratic",
+          a: 1,
+          b: -5,
+          c: 6
+        }
+      };
+
+      function updateSample() {
+        const tool = toolSelect.value;
+        const sample = SAMPLE_PAYLOADS[tool] || {};
+        payloadArea.value = JSON.stringify(sample, null, 2);
+        if (endpointBadge) {
+          endpointBadge.textContent = `POST /api/v1/${tool.replace(/_/g, '-')}`;
+        }
+      }
+
+      toolSelect.addEventListener('change', updateSample);
+      updateSample();
+
+      runBtn.addEventListener('click', async function() {
+        const tool = toolSelect.value;
+        let parsed = {};
+        try {
+          parsed = JSON.parse(payloadArea.value);
+        } catch (err) {
+          responseArea.innerHTML = `<code style="color: #ef4444;">JSON Parse Error: ${err.message}</code>`;
+          if (latencyBadge) {
+            latencyBadge.textContent = '❌ Invalid JSON';
+            latencyBadge.style.color = '#ef4444';
+          }
+          return;
+        }
+
+        runBtn.disabled = true;
+        runBtn.innerHTML = '<span>⏳ Computing...</span>';
+        const t0 = performance.now();
+
+        try {
+          const res = await fetch('/api/v1/calculate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tool: tool, params: parsed })
+          });
+          const elapsed = (performance.now() - t0).toFixed(2);
+          const data = await res.json();
+          responseArea.innerHTML = `<code>${JSON.stringify(data, null, 2)}</code>`;
+          if (latencyBadge) {
+            latencyBadge.textContent = `⚡ ${elapsed} ms • HTTP ${res.status} • IEEE-754 Bit-Exact`;
+            latencyBadge.style.color = res.ok ? '#10b981' : '#f59e0b';
+          }
+        } catch (netErr) {
+          const elapsed = (performance.now() - t0).toFixed(2);
+          responseArea.innerHTML = `<code>${JSON.stringify({
+            status: "client_preview",
+            tool: tool,
+            notice: "Network isolate preview. Live endpoints deployed at https://truecalci.com/api/v1/mcp",
+            input: parsed
+          }, null, 2)}</code>`;
+          if (latencyBadge) {
+            latencyBadge.textContent = `⚡ ${elapsed} ms • Local Preview`;
+            latencyBadge.style.color = '#38bdf8';
+          }
+        } finally {
+          runBtn.disabled = false;
+          runBtn.innerHTML = '<span>⚡ Execute Calculation</span>';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

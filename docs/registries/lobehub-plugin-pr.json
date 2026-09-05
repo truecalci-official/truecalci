@@ -1,0 +1,22 @@
+{
+  "identifier": "truecalci-deterministic-compute",
+  "author": "TrueCalci Team",
+  "createdAt": "2026-09-06",
+  "homepage": "https://truecalci.com",
+  "manifest": "https://truecalci.com/.well-known/lobe-plugin.json",
+  "schemaVersion": 1,
+  "meta": {
+    "avatar": "https://truecalci.com/brand-logo.png",
+    "description": "27 zero-hallucination deterministic calculation engines for statutory taxes, capital budgeting (NPV/IRR), contractor parity, and engineering physics.",
+    "tags": [
+      "finance",
+      "tax",
+      "npv-irr",
+      "contractor",
+      "mcp",
+      "calculator",
+      "deterministic"
+    ],
+    "title": "TrueCalci Deterministic Compute"
+  }
+}

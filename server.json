@@ -2,7 +2,7 @@
   "$schema": "https://modelcontextprotocol.io/schema/server.json",
   "name": "io.github.truecalci-official/truecalci",
   "title": "TrueCalci — Deterministic Compute Engine for AI Agents & Enterprise Teams",
-  "description": "24 sub-millisecond, zero-retention statutory, financial, and technical calculation engines over the Model Context Protocol (MCP). Covers US 1099/W-2 parity, S-Corp salaries, multi-model AI token arbitrage, DTAA cross-border withholding tax, and FEIE expat physical presence.",
+  "description": "27 sub-millisecond, zero-retention statutory, financial, and technical calculation engines over the Model Context Protocol (MCP). Covers capital budgeting (NPV/IRR, CAGR, Break-Even), US 1099/W-2 parity, S-Corp salaries, multi-model AI token arbitrage, DTAA cross-border withholding tax, and FEIE expat physical presence.",
   "version": "2.6.1",
   "homepage": "https://truecalci.com",
   "repository": {

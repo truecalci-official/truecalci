@@ -345,6 +345,92 @@
           }
         }
       }
+    },
+    "/api/v1/npv-irr": {
+      "post": {
+        "summary": "Net Present Value & Internal Rate of Return Solver",
+        "description": "Calculates NPV, exact Newton-Raphson IRR, Profitability Index (PI), and payback schedule for capital budgeting.",
+        "operationId": "calculateNpvIrr",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["initialInvestment", "cashflows"],
+                "properties": {
+                  "initialInvestment": { "type": "number", "example": 100000 },
+                  "cashflows": { "type": "array", "items": { "type": "number" }, "example": [30000, 40000, 50000, 20000] },
+                  "discountRatePercent": { "type": "number", "example": 10.0 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "NPV, IRR, profitability index, and payback period"
+          }
+        }
+      }
+    },
+    "/api/v1/cagr-inflation": {
+      "post": {
+        "summary": "CAGR & Inflation-Adjusted Purchasing Power",
+        "description": "Calculates nominal CAGR, real annualized return via Fisher equation, real purchasing power retention, and exact doubling horizon.",
+        "operationId": "calculateCagrInflation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["initialValue", "finalValue", "periodsYears"],
+                "properties": {
+                  "initialValue": { "type": "number", "example": 50000 },
+                  "finalValue": { "type": "number", "example": 100000 },
+                  "periodsYears": { "type": "number", "example": 5 },
+                  "inflationRatePercent": { "type": "number", "example": 2.5 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Nominal and real CAGR, purchasing power retention, and doubling time"
+          }
+        }
+      }
+    },
+    "/api/v1/breakeven-margin": {
+      "post": {
+        "summary": "Break-Even & Margin of Safety Analyzer",
+        "description": "Calculates unit and currency break-even thresholds, contribution margin ratios, operational margin of safety, and operating leverage.",
+        "operationId": "calculateBreakEven",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["fixedCosts", "unitPrice", "unitVariableCost"],
+                "properties": {
+                  "fixedCosts": { "type": "number", "example": 10000 },
+                  "unitPrice": { "type": "number", "example": 50 },
+                  "unitVariableCost": { "type": "number", "example": 20 },
+                  "expectedUnitsSold": { "type": "number", "example": 500 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Break-even units, break-even revenue, and safety margin"
+          }
+        }
+      }
     }
   }
 }

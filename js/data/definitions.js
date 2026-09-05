@@ -284,8 +284,51 @@ export const CALCULATOR_DEFINITIONS = {
       { name: "True Rate Floor", formula: "Binary search solving Hourly_Rate where Net_Spendable_Cash(Rate) ≥ Target_Net_Salary" }
     ],
     workedExample: "To take home $120,000 in spendable cash with 4 weeks vacation, 28% administrative buffer, $8,000 expenses, and $7,200 health insurance: Naive calculation ($120k / 2,080 hrs = $57.69/hr) results in a disastrous -$73,284 cash deficit! The true required billing floor is $139.72/hr across 1,339 realistic billable hours."
+  },
+
+  // 18. Net Present Value (NPV) & Internal Rate of Return (IRR)
+  npv_irr: {
+    title: "NPV & IRR Capital Budgeting Solver",
+    category: "Corporate Finance & Investment Appraisal",
+    disclaimer: "Disclaimer: Discount rates reflect investor hurdle rates or Weighted Average Cost of Capital (WACC). IRR assumes cash reinvestment at the internal rate of return.",
+    overview: "Computes Net Present Value (NPV), exact Internal Rate of Return (IRR) via Newton-Raphson polynomial convergence, Profitability Index (PI), and payback timelines for capital projects.",
+    formulas: [
+      { name: "Net Present Value", formula: "NPV = -C₀ + ∑ [C_t / (1 + r)^t]" },
+      { name: "Internal Rate of Return", formula: "Rate r where NPV(r) = 0 solved iteratively" },
+      { name: "Profitability Index", formula: "PI = PV of Future Cashflows / Initial Investment" }
+    ],
+    workedExample: "An initial investment of $100,000 generating $30k, $40k, $50k, and $20k over 4 years at a 10% hurdle rate yields NPV = +$11,556.59, IRR = 15.32%, and PI = 1.116 (viable project)."
+  },
+
+  // 19. Compound Annual Growth Rate (CAGR) & Real Inflation Return
+  cagr_inflation: {
+    title: "CAGR & Inflation-Adjusted Purchasing Power",
+    category: "Corporate Finance & Investment Appraisal",
+    disclaimer: "Disclaimer: Historical asset growth rates do not guarantee future returns. Inflation adjustments use CPI-indexed annualized rates.",
+    overview: "Calculates nominal CAGR, real annualized return via the Fisher equation, real terminal purchasing power, and exact doubling time horizons.",
+    formulas: [
+      { name: "Nominal CAGR", formula: "CAGR = (V_final / V_initial)^(1 / t) - 1" },
+      { name: "Real CAGR (Fisher Relation)", formula: "r_real = [(1 + r_nominal) / (1 + inflation)] - 1" },
+      { name: "Exact Doubling Time", formula: "t_double = ln(2) / ln(1 + CAGR)" }
+    ],
+    workedExample: "$50,000 growing to $100,000 over 5 years under 3% inflation achieves a nominal CAGR of 14.87%, a real CAGR of 11.52%, and doubles every 5.0 years."
+  },
+
+  // 20. Break-Even Analysis & Margin of Safety
+  breakeven_margin: {
+    title: "Break-Even & Margin of Safety Analyzer",
+    category: "Corporate Finance & Investment Appraisal",
+    disclaimer: "Disclaimer: Assumes linear cost and revenue functions within relevant operating range. Fixed costs are treated as period expenses.",
+    overview: "Computes unit and currency break-even thresholds, contribution margin ratios, operational safety margins, and operating leverage.",
+    formulas: [
+      { name: "Contribution Margin", formula: "CM = Unit_Price - Unit_Variable_Cost" },
+      { name: "Break-Even Units", formula: "Q_be = Fixed_Costs / Unit_CM" },
+      { name: "Margin of Safety %", formula: "MOS = (Expected_Units - Q_be) / Expected_Units × 100%" }
+    ],
+    workedExample: "Fixed costs of $10,000 with a $50 unit price and $20 unit variable cost ($30 CM) requires 334 units ($16,700 revenue) to break even. Selling 500 units yields a 33.2% safety margin."
   }
 };
+
 
 
 

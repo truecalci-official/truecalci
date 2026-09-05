@@ -1,0 +1,26 @@
+{
+  "$schema": "https://chat-plugin-sdk.lobehub.com/schema/manifest.json",
+  "name": "truecalci",
+  "identifier": "truecalci-deterministic-compute",
+  "schemaVersion": 1,
+  "type": "mcp",
+  "meta": {
+    "title": "TrueCalci Precision Compute",
+    "description": "Deterministic statutory tax, capital budgeting (NPV/IRR), remote contractor W-2/1099 parity, and engineering math engines with zero retention.",
+    "avatar": "https://truecalci.com/brand-logo.png",
+    "author": "TrueCalci Team",
+    "tags": [
+      "calculator",
+      "finance",
+      "tax",
+      "npv-irr",
+      "contractor",
+      "mcp",
+      "deterministic"
+    ]
+  },
+  "homepage": "https://truecalci.com",
+  "endpoint": "https://truecalci.com/api/v1/mcp",
+  "openapi": "https://truecalci.com/openapi.json",
+  "version": "2.6.1"
+}

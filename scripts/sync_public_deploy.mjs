@@ -14,6 +14,11 @@ const filesToSync = [
   'sitemap.xml',
   '_headers',
   'openapi.json',
+  'server.json',
+  'glama.json',
+  'package.json',
+  'llms.txt',
+  'llms-full.txt',
   'index.html',
   'workstation.html',
   'pricing.html',
@@ -60,4 +65,30 @@ if (fs.existsSync(path.join(rootDir, '.well-known'))) {
   console.log('  ✔ Synced .well-known/ directory recursively');
 }
 
+// Automated Integrity & Drift Verification Loop
+console.log('\nVerifying byte-level synchronization...');
+let driftCount = 0;
+for (const file of filesToSync) {
+  const src = path.join(rootDir, file);
+  const dest = path.join(deployDir, file);
+  if (!fs.existsSync(dest)) {
+    console.error(`  ❌ Missing in public_deploy: ${file}`);
+    driftCount++;
+  } else {
+    const srcBuf = fs.readFileSync(src);
+    const destBuf = fs.readFileSync(dest);
+    if (!srcBuf.equals(destBuf)) {
+      console.error(`  ❌ Content mismatch in: ${file}`);
+      driftCount++;
+    }
+  }
+}
+
+if (driftCount > 0) {
+  console.error(`\n❌ Synchronization verification failed with ${driftCount} drifted files!`);
+  process.exit(1);
+}
+
+console.log('  ✔ Zero drift detected across all synced files');
 console.log('\n🎉 public_deploy/ is completely synchronized with production files!');
+

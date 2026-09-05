@@ -559,6 +559,61 @@ assert(CALCULATOR_DEFINITIONS.billable !== undefined, "CALCULATOR_DEFINITIONS co
 assert(CALCULATOR_DEFINITIONS.billable.formulas.length >= 4, "billable includes capacity and rate floor formulas");
 
 // -----------------------------------------------------------------------------
+// 11. Testing Capital Budgeting & Enterprise Economics Engines (NPV/IRR, CAGR, Break-Even)
+// -----------------------------------------------------------------------------
+console.log("\n[11] Testing Capital Budgeting & Enterprise Economics Engines...");
+
+// 11.1 NPV & IRR Solver
+const npvTest = GlobalFinanceEngine.calculateNpvIrr({
+  initialInvestment: 100000,
+  cashflows: [30000, 40000, 50000, 20000],
+  discountRatePercent: 10
+});
+assert(npvTest.initialInvestment === 100000, "NPV initial investment is $100,000");
+assert(npvTest.totalInflows === 140000, "Total inflows sum to $140,000");
+assert(npvTest.netCashflow === 40000, "Net undiscounted cashflow is $40,000");
+assert(npvTest.npv > 11500 && npvTest.npv < 11600, `NPV is ~$11,557 (got ${npvTest.npv})`);
+assert(npvTest.irrPercent >= 15.0 && npvTest.irrPercent <= 15.5, `IRR is ~15.32% (got ${npvTest.irrPercent}%)`);
+assert(npvTest.profitabilityIndex >= 1.11 && npvTest.profitabilityIndex <= 1.12, `Profitability index is ~1.116 (got ${npvTest.profitabilityIndex})`);
+assert(npvTest.isViable === true, "NPV > 0 is marked viable");
+assert(npvTest.schedule.length === 4, "Schedule contains 4 periodic cashflows");
+
+// 11.2 CAGR & Real Inflation-Adjusted Return
+const cagrTest = GlobalFinanceEngine.calculateCagrInflation({
+  initialValue: 50000,
+  finalValue: 100000,
+  periodsYears: 5,
+  inflationRatePercent: 3.0
+});
+assert(cagrTest.nominalTotalReturnPercent === 100, "Nominal total return is 100%");
+assert(cagrTest.nominalCagrPercent >= 14.8 && cagrTest.nominalCagrPercent <= 14.9, `Nominal CAGR is ~14.87% (got ${cagrTest.nominalCagrPercent}%)`);
+assert(cagrTest.realCagrPercent >= 11.5 && cagrTest.realCagrPercent <= 11.6, `Real CAGR is ~11.52% (got ${cagrTest.realCagrPercent}%)`);
+assert(cagrTest.realPurchasingPowerValue >= 86000 && cagrTest.realPurchasingPowerValue <= 86500, `Real purchasing power is ~$86,261 (got ${cagrTest.realPurchasingPowerValue})`);
+assert(cagrTest.exactDoublingYears === 5, `Exact doubling time is 5.0 years (got ${cagrTest.exactDoublingYears})`);
+assert(cagrTest.trajectory.length === 6, "Trajectory contains years 0 through 5");
+
+// 11.3 Break-Even & Margin of Safety
+const beTest = GlobalFinanceEngine.calculateBreakEven({
+  fixedCosts: 10000,
+  unitPrice: 50,
+  unitVariableCost: 20,
+  expectedUnitsSold: 500
+});
+assert(beTest.unitContributionMargin === 30, "Unit contribution margin is $30 ($50 - $20)");
+assert(beTest.contributionMarginRatioPercent === 60, "Contribution margin ratio is 60%");
+assert(beTest.breakEvenUnits === 334, `Break-even units is 334 (got ${beTest.breakEvenUnits})`);
+assert(beTest.breakEvenRevenue === 16700, `Break-even revenue is $16,700 (got ${beTest.breakEvenRevenue})`);
+assert(beTest.marginOfSafetyUnits === 166, `Margin of safety units is 166 (got ${beTest.marginOfSafetyUnits})`);
+assert(beTest.marginOfSafetyPercent >= 33.0 && beTest.marginOfSafetyPercent <= 33.5, `Margin of safety % is ~33.2% (got ${beTest.marginOfSafetyPercent}%)`);
+assert(beTest.expectedProfit === 5000, `Expected profit is $5,000 (got ${beTest.expectedProfit})`);
+assert(beTest.degreeOfOperatingLeverage === 3, `Operating leverage DOL is 3.0 (got ${beTest.degreeOfOperatingLeverage})`);
+
+// 11.4 Definitions Check
+assert(CALCULATOR_DEFINITIONS.npv_irr !== undefined, "CALCULATOR_DEFINITIONS contains npv_irr");
+assert(CALCULATOR_DEFINITIONS.cagr_inflation !== undefined, "CALCULATOR_DEFINITIONS contains cagr_inflation");
+assert(CALCULATOR_DEFINITIONS.breakeven_margin !== undefined, "CALCULATOR_DEFINITIONS contains breakeven_margin");
+
+// -----------------------------------------------------------------------------
 // Summary
 // -----------------------------------------------------------------------------
 console.log("\n================================================================================");
