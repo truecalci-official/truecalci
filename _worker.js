@@ -29,416 +29,1026 @@ import { validateEngineInput, ValidationError } from "./js/validation/engine-val
 // -----------------------------------------------------------------------------
 const MCP_TOOL_DEFINITIONS = [
   {
-    name: "contractor_parity",
-    description: "Calculate tax, benefits parity, and net spendable cash between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven billing rate ($/hr).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        w2Salary: { type: "number", default: 130000, description: "W-2 gross annual salary in USD ($/yr)" },
-        contractorHourlyRate: { type: "number", default: 85, description: "1099 contractor hourly billing rate in USD ($/hr)" },
-        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single", description: "Tax filing status" },
-        stateTaxRatePercent: { type: "number", default: 5.0, description: "State income tax rate %" },
-        healthSubsidyAnnual: { type: "number", default: 7200, description: "Annual W-2 employer health insurance subsidy ($/yr)" },
-        match401kPercent: { type: "number", default: 4.0, description: "W-2 employer 401(k) match %" },
-        ptoDays: { type: "number", default: 25, description: "W-2 paid time off days" },
-        hoursPerWeek: { type: "number", default: 40, description: "1099 billable hours per week" },
-        weeksPerYear: { type: "number", default: 48, description: "1099 billable weeks per year" },
-        annualExpenses: { type: "number", default: 6000, description: "1099 deductible business expenses ($/yr)" },
-        eligibleQBI: { type: "boolean", default: true, description: "Eligible for Section 199A 20% QBI deduction" },
-        targetCurrency: { type: "string", default: "EUR", description: "Target currency for international cross-border FX drag" },
-        selectedRail: { type: "string", enum: ["wise", "deel", "payoneer", "stripe", "paypal", "wire"], default: "wise" }
-      },
-      required: ["w2Salary", "contractorHourlyRate"]
-    }
-  },
-  {
-    name: "scorp_optimizer",
-    description: "Calculate S-Corporation reasonable salary split, FICA tax shield, overhead netting (CPA and payroll fees), and mathematical breakeven profit threshold under IRS Rev. Rul. 74-44.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        netProfit: { type: "number", default: 150000, description: "Annual net business profit in USD ($/yr)" },
-        salaryPercent: { type: "number", default: 55, description: "Reasonable salary percentage % (e.g. 50, 55, 60)" },
-        payrollAnnualFee: { type: "number", default: 600, description: "Annual payroll provider fee ($/yr)" },
-        cpaAnnualFee: { type: "number", default: 1500, description: "Annual CPA corporate Form 1120-S filing fee ($/yr)" },
-        stateAnnualFee: { type: "number", default: 200, description: "Annual state franchise tax / report fee ($/yr)" }
-      },
-      required: ["netProfit"]
-    }
-  },
-  {
-    name: "solo_401k_shield",
-    description: "Calculate Solo 401(k) vs. SEP-IRA maximum legal tax-deductible retirement shelter and immediate cash tax savings under IRS Notice 2023-75 caps ($69,000 / $76,500).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        netEarnings: { type: "number", default: 120000, description: "Annual net business profit or W-2 salary ($/yr)" },
-        entityType: { type: "string", enum: ["llc", "scorp"], default: "llc", description: "Entity structure: 'llc' or 'scorp'" },
-        isAge50Plus: { type: "boolean", default: false, description: "Eligible for $7,500 age 50+ catch-up" },
-        marginalTaxRatePercent: { type: "number", default: 28, description: "Combined federal and state marginal tax bracket %" }
-      },
-      required: ["netEarnings"]
-    }
-  },
-  {
-    name: "fx_invoicing",
-    description: "Deconstruct cross-border contractor invoicing fee drag, comparing landed local currency across Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wire against mid-market benchmark rates.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        invoiceUsd: { type: "number", default: 10000, description: "Gross invoice amount in USD ($)" },
-        targetCurrency: { type: "string", enum: ["EUR", "GBP", "CAD", "AUD", "INR", "SGD", "BRL", "MXN", "PHP"], default: "EUR", description: "Target local payout currency code" }
-      },
-      required: ["invoiceUsd"]
-    }
-  },
-  {
-    name: "billable_floor",
-    description: "Solve the true minimum billable hourly rate required to achieve a target spendable cash income, factoring in 47 working weeks, non-billable buffer drag, business expenses, health insurance, and SECA taxes.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        targetNetCash: { type: "number", default: 120000, description: "Target annual net spendable cash take-home ($/yr)" },
-        annualExpenses: { type: "number", default: 8000, description: "Annual business operating expenses ($/yr)" },
-        healthInsuranceAnnual: { type: "number", default: 7200, description: "Annual out-of-pocket health insurance premium ($/yr)" },
-        vacationWeeks: { type: "number", default: 4, description: "Planned vacation weeks off per year" },
-        nonBillablePercent: { type: "number", default: 28, description: "Percentage of working hours lost to admin, sales, and invoicing %" },
-        filingStatus: { type: "string", enum: ["single", "mfj"], default: "single" }
-      },
-      required: ["targetNetCash"]
-    }
-  },
-  {
-    name: "mortgage_piti",
-    description: "Calculate US monthly mortgage payment (PITI: Principal, Interest, Property Tax, Insurance & PMI) and 30-year amortization schedule.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        homePrice: { type: "number", description: "Purchase price of the home in currency units (e.g. 450000)" },
-        downPaymentPercent: { type: "number", default: 20, description: "Down payment percentage (e.g. 20 for 20%)" },
-        interestRate: { type: "number", description: "Annual interest rate in % (e.g. 6.8)" },
-        tenureYears: { type: "integer", default: 30, description: "Loan duration in years (e.g. 15, 20, 30)" },
-        loanTermYears: { type: "integer", default: 30, description: "Loan duration in years (standard US alias for tenureYears)" },
-        propertyTaxRatePercent: { type: "number", default: 1.2, description: "Annual property tax rate %" },
-        annualHomeInsurance: { type: "number", default: 1400, description: "Annual hazard insurance premium" },
-        annualPmiPercent: { type: "number", default: 0.75, description: "Annual PMI % if down payment < 20%" }
-      },
-      required: ["homePrice", "interestRate"]
-    }
-  },
-  {
-    name: "vat_sales_tax",
-    description: "Calculate European VAT and global Sales Tax in Add Mode (Net -> Gross) or Remove Mode (Gross -> Net) with statutory rate presets.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        amount: { type: "number", description: "Monetary amount" },
-        vatRatePercent: { type: "number", default: 20, description: "Tax rate in % (e.g. 20 for UK/France, 19 for Germany)" },
-        mode: { type: "string", enum: ["add", "remove"], default: "add", description: "'add' to add VAT to net price, 'remove' to extract VAT from gross" }
-      },
-      required: ["amount", "vatRatePercent"]
-    }
-  },
-  {
-    name: "tip_splitter",
-    description: "Calculate restaurant bill tipping, tax inclusion, and per-guest itemized bill split.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        billAmount: { type: "number", description: "Subtotal or total bill before tip" },
-        tipPercent: { type: "number", default: 18, description: "Tip percentage (e.g. 15, 18, 20, 25)" },
-        numPeople: { type: "integer", default: 2, description: "Number of guests dining" }
-      },
-      required: ["billAmount"]
-    }
-  },
-  {
-    name: "compound_wealth",
-    description: "Simulate exponential compounding wealth for 401(k), Roth IRA, UK ISA, or European ETF savings plans (Sparplan).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        principal: { type: "number", default: 10000, description: "Initial principal deposit" },
-        monthlyDeposit: { type: "number", default: 500, description: "Monthly recurring contribution" },
-        annualRatePercent: { type: "number", default: 8, description: "Expected annual return in %" },
-        tenureYears: { type: "integer", default: 15, description: "Duration in years" },
-        compoundFrequency: { type: "integer", default: 12, description: "Compounding frequency per year (12 = monthly)" }
-      },
-      required: ["annualRatePercent", "tenureYears"]
-    }
-  },
-  {
-    name: "indian_income_tax",
-    description: "Compute Indian Income Tax under Budget 2025-26 New Tax Regime (with Section 87A rebate & ₹75,000 standard deduction) vs Old Tax Regime.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        ctc: { type: "number", description: "Annual Cost-to-Company / Gross Salary in INR (₹)" },
-        isSalaried: { type: "boolean", default: true, description: "Whether taxpayer is salaried (eligible for ₹75k standard deduction)" }
-      },
-      required: ["ctc"]
-    }
-  },
-  {
-    name: "sip_investment",
-    description: "Compute Systematic Investment Plan (SIP) mutual fund maturity with optional annual step-up percentage.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        monthlyInvestment: { type: "number", description: "Monthly SIP amount" },
-        annualReturnRate: { type: "number", default: 12, description: "Expected annual return rate in %" },
-        tenureYears: { type: "integer", default: 10, description: "Investment duration in years" },
-        stepUpPercent: { type: "number", default: 0, description: "Annual step-up percentage (e.g. 10 for 10% annual increase)" }
-      },
-      required: ["monthlyInvestment"]
-    }
-  },
-  {
-    name: "home_loan_emi",
-    description: "Compute reducing balance monthly loan EMI and total interest with amortization schedule.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        principal: { type: "number", description: "Loan amount" },
-        interestRatePercent: { type: "number", description: "Annual interest rate %" },
-        tenureYears: { type: "integer", default: 20, description: "Loan term in years" }
-      },
-      required: ["principal", "interestRatePercent"]
-    }
-  },
-  {
-    name: "casio_991_solve",
-    description: "Scientific solver: polynomial quadratic root solver (ax^2 + bx + c = 0) and 2-unknown simultaneous linear equations.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        type: { type: "string", enum: ["quadratic", "simultaneous2"], default: "quadratic" },
-        a: { type: "number" },
-        b: { type: "number" },
-        c: { type: "number" },
-        a2: { type: "number" },
-        b2: { type: "number" },
-        c2: { type: "number" }
-      },
-      required: ["a", "b", "c"]
-    }
-  },
-  {
-    name: "beam_bending",
-    description: "Calculate structural engineering beam deflection, max bending moment, and peak stress (Euler-Bernoulli beam).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        loadNewtons: { type: "number", description: "Point load P in Newtons (N)" },
-        lengthMeters: { type: "number", description: "Beam span L in meters (m)" },
-        elasticModulusGpa: { type: "number", default: 200, description: "Young's Modulus E in GPa (e.g. 200 for structural steel)" },
-        momentOfInertiaCm4: { type: "number", description: "Area moment of inertia I in cm^4" },
-        distanceFromNeutralAxisMm: { type: "number", description: "Distance y to extreme fiber in mm" }
-      },
-      required: ["loadNewtons", "lengthMeters", "momentOfInertiaCm4", "distanceFromNeutralAxisMm"]
-    }
-  },
-  {
-    name: "projectile_motion",
-    description: "Calculate 2D physics projectile kinematics: max height, horizontal range, flight time, and velocity components.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        initialVelocityMs: { type: "number", description: "Initial launch velocity v0 in m/s" },
-        launchAngleDegrees: { type: "number", description: "Launch angle in degrees (0 to 90)" },
-        gravityMs2: { type: "number", default: 9.80665, description: "Gravitational acceleration in m/s^2" }
-      },
-      required: ["initialVelocityMs", "launchAngleDegrees"]
-    }
-  },
-  {
-    name: "black_scholes",
-    description: "Compute quantitative finance European Option prices (Call and Put) and Greeks (Delta, Gamma, Vega, Theta) via Black-Scholes model.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        spotPrice: { type: "number", default: 100, description: "Underlying stock/asset spot price S" },
-        strikePrice: { type: "number", default: 100, description: "Strike price K" },
-        timeToExpiryYears: { type: "number", default: 1, description: "Time to expiration T in years" },
-        riskFreeRate: { type: "number", default: 0.045, description: "Risk-free interest rate r (decimal or %)" },
-        volatility: { type: "number", default: 0.25, description: "Annualized implied volatility sigma (decimal or %)" }
-      },
-      required: ["spotPrice", "strikePrice", "timeToExpiryYears"]
-    }
-  },
-  {
-    name: "linear_regression",
-    description: "Calculate Ordinary Least Squares (OLS) best-fit line (y = mx + c), Pearson correlation coefficient r, and R^2 determination.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        points: {
-          type: "array",
-          items: {
-            type: "object",
-            properties: {
-              x: { type: "number" },
-              y: { type: "number" }
-            },
-            required: ["x", "y"]
-          },
-          description: "Array of {x, y} coordinate pairs (minimum 2 points)"
+    "name": "contractor_parity",
+    "description": "Calculate tax liabilities, statutory benefits, and net take-home cash between W-2 salaried employment and 1099 independent contractor billing, solving the exact breakeven billing rate ($/hr).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes federal FICA (Social Security up to statutory wage base and Medicare), federal income tax brackets, state income tax, employer health subsidy, 401(k) match, PTO value, SECA tax with 50% above-the-line deduction, and Section 199A QBI deduction. Returns net spendable cash for both employment models, complete tax breakdowns, effective tax rates, and the exact breakeven hourly rate.\n\nUsage Guidelines: Use when an individual or hiring manager is deciding between a W-2 salaried offer and a 1099 contractor contract. Do not use for solo freelancer baseline rate setting without a W-2 benchmark; use billable_floor instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "w2Salary": {
+          "type": "number",
+          "default": 130000,
+          "description": "W-2 gross annual salary in USD ($/yr). Must be a positive number."
+        },
+        "contractorHourlyRate": {
+          "type": "number",
+          "default": 85,
+          "description": "1099 contractor hourly billing rate in USD ($/hr). Must be a positive number."
+        },
+        "filingStatus": {
+          "type": "string",
+          "enum": [
+            "single",
+            "mfj"
+          ],
+          "default": "single",
+          "description": "IRS income tax filing status: 'single' for unmarried individual or 'mfj' for married filing jointly."
+        },
+        "stateTaxRatePercent": {
+          "type": "number",
+          "default": 5,
+          "description": "Effective or statutory state income tax rate in percent (e.g. 5.0 for 5%). Set to 0 for states without income tax."
+        },
+        "healthSubsidyAnnual": {
+          "type": "number",
+          "default": 7200,
+          "description": "Annual W-2 employer-paid health insurance subsidy in USD ($/yr)."
+        },
+        "match401kPercent": {
+          "type": "number",
+          "default": 4,
+          "description": "W-2 employer 401(k) retirement match as a percentage of gross salary (e.g. 4.0 for 4%)."
+        },
+        "ptoDays": {
+          "type": "number",
+          "default": 25,
+          "description": "Annual W-2 paid time off days (combined vacation and sick leave)."
+        },
+        "hoursPerWeek": {
+          "type": "number",
+          "default": 40,
+          "description": "Expected billable client hours per week as a 1099 contractor. Must be greater than 0."
+        },
+        "weeksPerYear": {
+          "type": "number",
+          "default": 48,
+          "description": "Active billable working weeks per year as a 1099 contractor (52 minus unpaid vacation and bench time)."
+        },
+        "annualExpenses": {
+          "type": "number",
+          "default": 6000,
+          "description": "Annual tax-deductible business operating expenses in USD ($/yr) (software, hardware, insurance)."
+        },
+        "eligibleQBI": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the 1099 contractor business qualifies for the Section 199A 20% Qualified Business Income deduction."
+        },
+        "targetCurrency": {
+          "type": "string",
+          "default": "EUR",
+          "description": "Target fiat currency code for international cross-border conversion drag (e.g. EUR, GBP, CAD)."
+        },
+        "selectedRail": {
+          "type": "string",
+          "enum": [
+            "wise",
+            "deel",
+            "payoneer",
+            "stripe",
+            "paypal",
+            "wire"
+          ],
+          "default": "wise",
+          "description": "Payment rail provider for international contractor payout: 'wise', 'deel', 'payoneer', 'stripe', 'paypal', or 'wire'."
         }
       },
-      required: ["points"]
+      "required": [
+        "w2Salary",
+        "contractorHourlyRate"
+      ]
     }
   },
   {
-    name: "pipe_flow",
-    description: "Calculate fluid dynamics Darcy-Weisbach friction factor, Reynolds number, head loss, and pressure drop in pipes.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        flowRateM3s: { type: "number", default: 0.05, description: "Volumetric flow rate Q in m^3/s" },
-        pipeDiameterM: { type: "number", default: 0.15, description: "Internal pipe diameter D in meters" },
-        pipeLengthM: { type: "number", default: 100, description: "Total pipe run length L in meters" },
-        fluidDensityKgM3: { type: "number", default: 1000, description: "Fluid density (kg/m^3)" },
-        dynamicViscosityPaS: { type: "number", default: 0.001, description: "Dynamic viscosity (Pa·s)" },
-        pipeRoughnessM: { type: "number", default: 0.000045, description: "Absolute pipe surface roughness (m)" }
+    "name": "scorp_optimizer",
+    "description": "Evaluate S-Corporation tax election viability by calculating reasonable officer salary split, SECA/FICA payroll tax shield, administrative overhead costs, and net tax savings under IRS Rev. Rul. 74-44.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Splits net business profit into W-2 officer wages and Schedule K-1 shareholder distributions. Applies 15.3% FICA to salary only (exempting distributions), accounts for employer-half FICA deduction, deducts annual CPA corporate filing and payroll processing fees, and computes the mathematical breakeven net profit threshold.\n\nUsage Guidelines: Use when a US small business owner, single-member LLC, or high-earning freelancer is considering electing S-Corp status to reduce self-employment taxes. Do not use for retirement account contribution limits; use solo_401k_shield instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "netProfit": {
+          "type": "number",
+          "default": 150000,
+          "description": "Annual net business profit before owner compensation in USD ($/yr). Must be a positive number."
+        },
+        "salaryPercent": {
+          "type": "number",
+          "default": 55,
+          "description": "Officer W-2 reasonable compensation percentage of net profit (e.g. 50, 55, 60%). Must comply with IRS Rev. Rul. 74-44 industry benchmarks."
+        },
+        "payrollAnnualFee": {
+          "type": "number",
+          "default": 600,
+          "description": "Annual software and compliance fee for running compliant W-2 payroll in USD ($/yr) (e.g. Gusto, Rippling)."
+        },
+        "cpaAnnualFee": {
+          "type": "number",
+          "default": 1500,
+          "description": "Annual CPA accounting fee for corporate Form 1120-S preparation and filing in USD ($/yr)."
+        },
+        "stateAnnualFee": {
+          "type": "number",
+          "default": 200,
+          "description": "Annual state franchise tax or corporate filing fee in USD ($/yr) (e.g. $800 in CA, $200 in DE)."
+        }
       },
-      required: ["flowRateM3s", "pipeDiameterM", "pipeLengthM"]
+      "required": [
+        "netProfit"
+      ]
     }
   },
   {
-    name: "rlc_circuit",
-    description: "Compute resonant RLC circuit electrical properties: resonant frequency f0, Q-factor, bandwidth, and AC impedance magnitude.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        resistanceOhms: { type: "number", default: 50, description: "Resistance R in Ohms (Ω)" },
-        inductanceHenrys: { type: "number", default: 0.01, description: "Inductance L in Henrys (H)" },
-        capacitanceFarads: { type: "number", default: 0.000001, description: "Capacitance C in Farads (F)" },
-        frequencyHz: { type: "number", description: "Operating frequency f in Hz (optional)" }
+    "name": "solo_401k_shield",
+    "description": "Maximize tax-deferred retirement sheltering by comparing Solo 401(k) vs. SEP-IRA contribution limits and calculating immediate cash tax savings under statutory IRS Notice 2023-75 caps ($69,000 / $76,500).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes employee elective deferral (up to $23,000 or $30,500 if age 50+) plus employer profit-sharing (20% of adjusted net earnings for LLC/sole prop, 25% of W-2 salary for S-Corp) subject to annual statutory additions cap. Multiplies total deductible contribution by marginal tax rate to return net cash saved.\n\nUsage Guidelines: Use when an owner-only business, independent contractor, or partner wants to optimize pre-tax retirement deductions. Do not use for multi-year exponential compound investment growth modeling; use compound_wealth instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "netEarnings": {
+          "type": "number",
+          "default": 120000,
+          "description": "Annual net business profit (Schedule C) or W-2 officer salary (S-Corp) in USD ($/yr). Must be a positive number."
+        },
+        "entityType": {
+          "type": "string",
+          "enum": [
+            "llc",
+            "scorp"
+          ],
+          "default": "llc",
+          "description": "Legal entity tax structure: 'llc' (sole proprietorship / single-member LLC using 20% adjusted SE earnings) or 'scorp' (corporation using 25% W-2 wage)."
+        },
+        "isAge50Plus": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the account holder is age 50 or older, unlocking the statutory $7,500 catch-up contribution."
+        },
+        "marginalTaxRatePercent": {
+          "type": "number",
+          "default": 28,
+          "description": "Combined federal and state marginal income tax bracket percentage (e.g. 28 for 28%)."
+        }
       },
-      required: ["resistanceOhms", "inductanceHenrys", "capacitanceFarads"]
+      "required": [
+        "netEarnings"
+      ]
     }
   },
   {
-    name: "rocket_deltav",
-    description: "Aerospace & orbital mechanics: calculate Tsiolkovsky rocket equation delta-v budget, mass ratio, and propellant consumption.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        initialMassKg: { type: "number", default: 549054, description: "Wet launch mass m0 in kg" },
-        finalMassKg: { type: "number", default: 22200, description: "Dry burnout mass mf in kg" },
-        specificImpulseSeconds: { type: "number", default: 311, description: "Engine specific impulse Isp in seconds" },
-        gravityMs2: { type: "number", default: 9.80665, description: "Standard gravity g0 in m/s^2" }
+    "name": "fx_invoicing",
+    "description": "Quantify cross-border payment fee drag and calculate net landed local currency across 6 global payout rails (Wise, Deel, Stripe, Payoneer, PayPal, and SWIFT wire) against mid-market FX benchmark rates.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Models fixed per-transaction wire fees, percentage platform fees, and hidden foreign exchange percentage spreads for each provider. Returns ranked table with landed payout amounts, total drag percentage, hidden FX markup, and savings versus worst-case rail.\n\nUsage Guidelines: Use when an international freelancer, remote worker, or cross-border vendor needs to determine the cheapest payout rail or invoice amount in USD. Do not use for domestic US employee vs contractor parity; use contractor_parity instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "invoiceUsd": {
+          "type": "number",
+          "default": 10000,
+          "description": "Gross billed invoice amount in USD ($). Must be a positive number greater than 0."
+        },
+        "targetCurrency": {
+          "type": "string",
+          "enum": [
+            "EUR",
+            "GBP",
+            "CAD",
+            "AUD",
+            "INR",
+            "SGD",
+            "BRL",
+            "MXN",
+            "PHP"
+          ],
+          "default": "EUR",
+          "description": "Payout destination currency code: 'EUR' (Euro), 'GBP' (British Pound), 'CAD' (Canadian Dollar), 'AUD' (Australian Dollar), 'INR' (Indian Rupee), 'SGD' (Singapore Dollar), 'BRL' (Brazilian Real), 'MXN' (Mexican Peso), or 'PHP' (Philippine Peso)."
+        }
       },
-      required: ["initialMassKg", "finalMassKg", "specificImpulseSeconds"]
+      "required": [
+        "invoiceUsd"
+      ]
     }
   },
   {
-    name: "ai_token_arbitrage",
-    description: "Calculate multi-model LLM API token inference costs, prompt caching economics (up to 90% discount), batch discounts, and cost disparity across Claude 3.5 Sonnet, GPT-4o, DeepSeek V3/R1, and Gemini 1.5 Pro/Flash.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        promptTokens: { type: "number", default: 5000, description: "Input prompt token count per API request" },
-        completionTokens: { type: "number", default: 1000, description: "Output completion token count per API request" },
-        cacheHitRatio: { type: "number", default: 0.80, description: "Prompt cache hit ratio (0.0 to 1.0 or 0 to 100%)" },
-        isBatch: { type: "boolean", default: false, description: "Whether asynchronous batch API 50% discount applies" }
+    "name": "billable_floor",
+    "description": "Solve the exact minimum billable hourly rate required to achieve a target net spendable cash income, factoring in unpaid weeks, non-billable administrative drag, deductible overhead, health insurance, and SECA self-employment taxes.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Numerically solves the gross revenue needed so that Gross - Expenses - Health - SECA Tax - Income Tax equals Target Net Cash. Divides required gross revenue by actual billable hours (accounting for vacation weeks and non-billable admin/marketing percentage) to derive the hourly billable floor.\n\nUsage Guidelines: Use when a freelancer, consultant, or agency owner wants to set their baseline hourly rate to support their personal lifestyle budget. Do not use when directly benchmarking against a specific W-2 salary offer; use contractor_parity instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "targetNetCash": {
+          "type": "number",
+          "default": 120000,
+          "description": "Desired annual net spendable cash take-home after all taxes and business expenses in USD ($/yr). Must be positive."
+        },
+        "annualExpenses": {
+          "type": "number",
+          "default": 8000,
+          "description": "Annual tax-deductible business operating expenses in USD ($/yr) (software, office, hardware, insurance)."
+        },
+        "healthInsuranceAnnual": {
+          "type": "number",
+          "default": 7200,
+          "description": "Annual out-of-pocket health insurance premium in USD ($/yr) paid directly by the freelancer."
+        },
+        "vacationWeeks": {
+          "type": "number",
+          "default": 4,
+          "description": "Number of unpaid vacation, holiday, and sick weeks off planned per year (e.g. 4 for 4 weeks)."
+        },
+        "nonBillablePercent": {
+          "type": "number",
+          "default": 28,
+          "description": "Percentage of total working hours lost to non-billable business activities like admin, sales, and invoicing (e.g. 28 for 28%)."
+        },
+        "filingStatus": {
+          "type": "string",
+          "enum": [
+            "single",
+            "mfj"
+          ],
+          "default": "single",
+          "description": "IRS income tax filing status: 'single' for unmarried individual or 'mfj' for married filing jointly."
+        }
+      },
+      "required": [
+        "targetNetCash"
+      ]
+    }
+  },
+  {
+    "name": "mortgage_piti",
+    "description": "Calculate monthly US mortgage payments broken down into PITI (Principal, Interest, Property Taxes, Homeowners Insurance, and Private Mortgage Insurance) along with full 30-year amortization schedule.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes standard monthly amortization using fixed-rate annuity formula, computes annual property taxes divided by 12, monthly hazard insurance, and conditional PMI (applied automatically if down payment is under 20% until 78% LTV threshold). Returns monthly total, principal/interest component, tax/escrow components, total lifetime interest, and payoff schedule.\n\nUsage Guidelines: Use for US residential home purchase financing and refinancing scenarios. Do not use for international reducing-balance loans without escrow/PMI; use home_loan_emi instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "homePrice": {
+          "type": "number",
+          "description": "Total purchase price or appraised property value in currency units (e.g. 450000). Must be positive."
+        },
+        "downPaymentPercent": {
+          "type": "number",
+          "default": 20,
+          "description": "Down payment as a percentage of purchase price (e.g. 20 for 20%). Values below 20 automatically trigger PMI calculations."
+        },
+        "interestRate": {
+          "type": "number",
+          "description": "Annual mortgage interest rate percentage (e.g. 6.8 for 6.8%). Must be positive."
+        },
+        "tenureYears": {
+          "type": "integer",
+          "default": 30,
+          "description": "Loan duration in years (typically 15, 20, or 30)."
+        },
+        "loanTermYears": {
+          "type": "integer",
+          "default": 30,
+          "description": "Standard US alias for tenureYears (loan term in years)."
+        },
+        "propertyTaxRatePercent": {
+          "type": "number",
+          "default": 1.2,
+          "description": "Annual local property tax rate as a percentage of home value (e.g. 1.2 for 1.2%)."
+        },
+        "annualHomeInsurance": {
+          "type": "number",
+          "default": 1400,
+          "description": "Annual hazard/homeowners insurance premium in currency units (e.g. 1400)."
+        },
+        "annualPmiPercent": {
+          "type": "number",
+          "default": 0.75,
+          "description": "Annual Private Mortgage Insurance premium percentage (e.g. 0.75 for 0.75% of original loan amount)."
+        }
+      },
+      "required": [
+        "homePrice",
+        "interestRate"
+      ]
+    }
+  },
+  {
+    "name": "vat_sales_tax",
+    "description": "Calculate European Value Added Tax (VAT) and global sales taxes in either Add Mode (Net price to Gross price) or Remove Mode (Gross price to Net price) with statutory rate verification.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. In 'add' mode: Tax = Amount * (Rate / 100), Total = Amount + Tax. In 'remove' mode: Net = Amount / (1 + Rate / 100), Tax = Amount - Net. Returns exact net, tax amount, and gross values rounded to 2 decimal places.\n\nUsage Guidelines: Use for e-commerce, international invoicing, retail pricing, and VAT compliance calculations. Do not use for restaurant tipping and bill splits; use tip_splitter instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number",
+          "description": "Base monetary amount to calculate tax on (net amount in 'add' mode, gross price in 'remove' mode). Must be positive."
+        },
+        "vatRatePercent": {
+          "type": "number",
+          "default": 20,
+          "description": "Tax rate in percent (e.g. 20 for UK/France, 19 for Germany, 21 for Spain, 8.25 for US state/local)."
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "add",
+            "remove"
+          ],
+          "default": "add",
+          "description": "Calculation mode: 'add' to append tax to net amount, or 'remove' to extract embedded tax from gross amount."
+        }
+      },
+      "required": [
+        "amount",
+        "vatRatePercent"
+      ]
+    }
+  },
+  {
+    "name": "tip_splitter",
+    "description": "Compute restaurant bill gratuity, total payable bill, and fair per-person itemized payment split across dining parties.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Multiplies pre-tip subtotal by tip percentage, computes total bill including tip, and divides by party size to provide per-guest charge with fair penny rounding.\n\nUsage Guidelines: Use for restaurant dining bills, food delivery tips, and group expense splitting. Do not use for commercial corporate tax or VAT; use vat_sales_tax instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "billAmount": {
+          "type": "number",
+          "description": "Pre-tip subtotal or total food and beverage bill in monetary units. Must be positive."
+        },
+        "tipPercent": {
+          "type": "number",
+          "default": 18,
+          "description": "Gratuity percentage to add (e.g. 15, 18, 20, 25%)."
+        },
+        "numPeople": {
+          "type": "integer",
+          "default": 2,
+          "description": "Total number of guests sharing the bill. Must be an integer greater than or equal to 1."
+        }
+      },
+      "required": [
+        "billAmount"
+      ]
+    }
+  },
+  {
+    "name": "compound_wealth",
+    "description": "Simulate long-term compound interest growth for retirement portfolios, 401(k)s, Roth IRAs, UK ISAs, or European ETF savings plans (Sparplan) with recurring monthly deposits.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Applies discrete compound interest formula with periodic annuity deposits: Future Value = P*(1 + r/n)^(n*t) + PMT*(((1 + r/n)^(n*t) - 1)/(r/n)). Returns final accumulated balance, total principal contributed, total compound interest earned, and annual wealth progression milestone table.\n\nUsage Guidelines: Use for multi-year personal wealth projection and retirement nest-egg simulations. Do not use for Indian mutual fund monthly SIPs with annual step-up; use sip_investment instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "principal": {
+          "type": "number",
+          "default": 10000,
+          "description": "Initial lump-sum deposit or starting balance in currency units. Must be non-negative."
+        },
+        "monthlyDeposit": {
+          "type": "number",
+          "default": 500,
+          "description": "Recurring monthly contribution added to the account. Must be non-negative."
+        },
+        "annualRatePercent": {
+          "type": "number",
+          "default": 8,
+          "description": "Expected annualized investment return rate percentage (e.g. 8 for 8%). Must be positive."
+        },
+        "tenureYears": {
+          "type": "integer",
+          "default": 15,
+          "description": "Investment horizon in years (e.g. 10, 20, 30). Must be an integer >= 1."
+        },
+        "compoundFrequency": {
+          "type": "integer",
+          "default": 12,
+          "description": "Number of compounding periods per year (1 for annual, 4 for quarterly, 12 for monthly)."
+        }
+      },
+      "required": [
+        "annualRatePercent",
+        "tenureYears"
+      ]
+    }
+  },
+  {
+    "name": "indian_income_tax",
+    "description": "Compute Indian personal income tax liability comparing the Union Budget 2025-26 New Tax Regime (with Section 87A rebate and ₹75,000 standard deduction) against the Old Tax Regime.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Applies statutory slab rates for FY 2025-26 (AY 2026-27): ₹0-4L Nil, ₹4-8L 5%, ₹8-12L 10%, ₹12-16L 15%, ₹16-20L 20%, ₹20-24L 25%, above ₹24L 30%. Applies full Section 87A rebate if taxable income is up to ₹12 Lakhs, adds 4% Health & Education Cess, and returns side-by-side comparison of old vs new regime with optimal recommendation.\n\nUsage Guidelines: Use when computing personal income tax or payroll deductions for Indian residents and salaried professionals. Do not use for US federal/state taxes; use contractor_parity or solo_401k_shield instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "ctc": {
+          "type": "number",
+          "description": "Annual Cost-to-Company (CTC) / Gross taxable salary in Indian Rupees (INR ₹). Must be a positive number."
+        },
+        "isSalaried": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the taxpayer is a salaried employee (eligible for statutory ₹75,000 standard deduction under the New Regime)."
+        }
+      },
+      "required": [
+        "ctc"
+      ]
+    }
+  },
+  {
+    "name": "sip_investment",
+    "description": "Calculate Systematic Investment Plan (SIP) mutual fund maturity wealth with optional annual percentage step-up (top-up) for compounding wealth growth.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Models monthly SIP compounding using formula FV = P * [((1 + i)^n - 1) / i] * (1 + i). When stepUpPercent > 0, dynamically increases monthly installment each 12-month cycle. Returns maturity amount, total invested capital, total estimated capital gains, and year-by-year accumulation.\n\nUsage Guidelines: Use for mutual fund SIP investments, recurring deposits, and goal-based financial planning. Do not use for US 401(k) / Roth IRA compounding with lump sum; use compound_wealth instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "monthlyInvestment": {
+          "type": "number",
+          "description": "Initial monthly investment installment amount in currency units (e.g. 5000). Must be positive."
+        },
+        "annualReturnRate": {
+          "type": "number",
+          "default": 12,
+          "description": "Expected annualized return rate percentage (e.g. 12 for 12% equity CAGR)."
+        },
+        "tenureYears": {
+          "type": "integer",
+          "default": 10,
+          "description": "Total investment duration in years (e.g. 5, 10, 20). Must be an integer >= 1."
+        },
+        "stepUpPercent": {
+          "type": "number",
+          "default": 0,
+          "description": "Annual percentage increase in monthly contribution (e.g. 10 for 10% annual hike)."
+        }
+      },
+      "required": [
+        "monthlyInvestment"
+      ]
+    }
+  },
+  {
+    "name": "home_loan_emi",
+    "description": "Calculate reducing-balance monthly Equated Monthly Installment (EMI), total interest payable, and amortization schedule for home, auto, or personal loans.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes standard monthly EMI formula: E = P * r * (1 + r)^n / ((1 + r)^n - 1), where r = annualRate / 12 / 100. Returns monthly EMI, total payment (principal + interest), total interest percentage, and first-year amortization breakdown.\n\nUsage Guidelines: Use for general global reducing-balance loans and consumer debt. Do not use for US residential mortgages requiring property tax, hazard insurance, and PMI escrow; use mortgage_piti instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "principal": {
+          "type": "number",
+          "description": "Total borrowed principal loan amount in currency units. Must be a positive number."
+        },
+        "interestRatePercent": {
+          "type": "number",
+          "description": "Annual interest rate percentage (e.g. 8.5 for 8.5%). Must be positive."
+        },
+        "tenureYears": {
+          "type": "integer",
+          "default": 20,
+          "description": "Total loan repayment duration in years (e.g. 15, 20, 30). Must be an integer >= 1."
+        }
+      },
+      "required": [
+        "principal",
+        "interestRatePercent"
+      ]
+    }
+  },
+  {
+    "name": "casio_991_solve",
+    "description": "Solve algebraic polynomial equations: quadratic equations (a*x^2 + b*x + c = 0) and 2-variable simultaneous linear systems (a1*x + b1*y = c1, a2*x + b2*y = c2) with exact real and complex roots.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. For quadratics: evaluates discriminant D = b^2 - 4*a*c; computes real roots or complex conjugates (x1, x2 = (-b ± i*sqrt(|D|)) / (2*a)), and parabola vertex coordinates. For simultaneous systems: evaluates Cramer's determinant rule (D, Dx, Dy) to solve unique solutions or identify singular/parallel systems.\n\nUsage Guidelines: Use when solving quadratic polynomials or 2-unknown linear systems. Do not use for statistical data fitting; use linear_regression instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "quadratic",
+            "simultaneous2"
+          ],
+          "default": "quadratic",
+          "description": "Equation solver mode: 'quadratic' (solve single quadratic equation a*x^2 + b*x + c = 0) or 'simultaneous2' (solve system of 2 linear equations with 2 unknowns)."
+        },
+        "a": {
+          "type": "number",
+          "description": "First coefficient: quadratic coefficient a (for a*x^2, must be non-zero) or first linear equation x-coefficient a1."
+        },
+        "b": {
+          "type": "number",
+          "description": "Second coefficient: linear coefficient b (for b*x) or first linear equation y-coefficient b1."
+        },
+        "c": {
+          "type": "number",
+          "description": "Constant term: constant c (for + c = 0) or first linear equation constant c1 (a1*x + b1*y = c1)."
+        },
+        "a2": {
+          "type": "number",
+          "description": "Second linear equation x-coefficient a2 (required when type is 'simultaneous2', a2*x + b2*y = c2)."
+        },
+        "b2": {
+          "type": "number",
+          "description": "Second linear equation y-coefficient b2 (required when type is 'simultaneous2', a2*x + b2*y = c2)."
+        },
+        "c2": {
+          "type": "number",
+          "description": "Second linear equation constant term c2 (required when type is 'simultaneous2', a2*x + b2*y = c2)."
+        }
+      },
+      "required": [
+        "a",
+        "b",
+        "c"
+      ]
+    }
+  },
+  {
+    "name": "beam_bending",
+    "description": "Calculate structural engineering beam mechanics: maximum elastic deflection, peak bending moment, and maximum flexural stress for a center point load on a simply supported Euler-Bernoulli beam.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates Euler-Bernoulli beam equations: Max Moment M_max = (P * L) / 4; Max Deflection delta_max = (P * L^3) / (48 * E * I); Peak Bending Stress sigma_max = (M_max * y) / I. Converts area moment of inertia from cm^4 to m^4 and extreme fiber distance from mm to m. Returns deflection in mm, moment in N*m, and stress in MPa.\n\nUsage Guidelines: Use for civil, structural, and mechanical engineering beam sizing and load checks. Do not use for fluid pipe friction or pressure drop; use pipe_flow instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "loadNewtons": {
+          "type": "number",
+          "description": "Concentrated point load P applied at the beam center in Newtons (N). Must be positive."
+        },
+        "lengthMeters": {
+          "type": "number",
+          "description": "Unsupported beam span length L between supports in meters (m). Must be positive."
+        },
+        "elasticModulusGpa": {
+          "type": "number",
+          "default": 200,
+          "description": "Material Young's Modulus of Elasticity E in Gigapascals (GPa) (e.g. 200 for structural steel, 69 for aluminum)."
+        },
+        "momentOfInertiaCm4": {
+          "type": "number",
+          "description": "Cross-sectional second moment of area (area moment of inertia) I in cm^4 (e.g. 8640 for W8x31 I-beam). Must be positive."
+        },
+        "distanceFromNeutralAxisMm": {
+          "type": "number",
+          "description": "Perpendicular distance y from the neutral axis to the outermost extreme fiber in millimeters (mm). Must be positive."
+        }
+      },
+      "required": [
+        "loadNewtons",
+        "lengthMeters",
+        "momentOfInertiaCm4",
+        "distanceFromNeutralAxisMm"
+      ]
+    }
+  },
+  {
+    "name": "projectile_motion",
+    "description": "Calculate 2D classical mechanics projectile kinematics: maximum trajectory apex height, horizontal flight range, total time of flight, and terminal impact velocity.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Assumes vacuum projectile motion with constant gravitational acceleration: Flight Time t = (2 * v0 * sin(theta)) / g; Max Height H = (v0 * sin(theta))^2 / (2 * g); Range R = (v0^2 * sin(2*theta)) / g. Returns trajectory coordinates, apex coordinates, and velocity components (vx, vy).\n\nUsage Guidelines: Use for ballistic trajectories, physics problem solving, and aerospace launch kinematics without atmospheric drag. Do not use for orbital delta-v rocket staging; use rocket_deltav instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialVelocityMs": {
+          "type": "number",
+          "description": "Initial launch velocity magnitude v0 in meters per second (m/s). Must be positive."
+        },
+        "launchAngleDegrees": {
+          "type": "number",
+          "description": "Launch elevation angle theta relative to the horizontal plane in degrees (0 to 90 inclusive)."
+        },
+        "gravityMs2": {
+          "type": "number",
+          "default": 9.80665,
+          "description": "Local gravitational acceleration constant g in m/s^2. Default is 9.80665 (standard Earth gravity)."
+        }
+      },
+      "required": [
+        "initialVelocityMs",
+        "launchAngleDegrees"
+      ]
+    }
+  },
+  {
+    "name": "black_scholes",
+    "description": "Compute quantitative finance European option pricing (Call and Put values) and analytical Greeks (Delta, Gamma, Vega, Theta, Rho) via the Black-Scholes-Merton model.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes d1 = (ln(S/K) + (r + sigma^2 / 2)*T) / (sigma * sqrt(T)) and d2 = d1 - sigma * sqrt(T). Evaluates standard normal cumulative distribution N(d) and probability density N'(d) using high-precision polynomial approximations. Returns exact call/put prices, put-call parity check, and all major first- and second-order Greeks.\n\nUsage Guidelines: Use for financial derivatives pricing, risk management, and options strategy hedging. Do not use for project capital budgeting or cash flow discounting; use npv_irr instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "spotPrice": {
+          "type": "number",
+          "default": 100,
+          "description": "Current market spot price of the underlying asset S in currency units. Must be positive."
+        },
+        "strikePrice": {
+          "type": "number",
+          "default": 100,
+          "description": "Agreed option strike exercise price K in currency units. Must be positive."
+        },
+        "timeToExpiryYears": {
+          "type": "number",
+          "default": 1,
+          "description": "Time remaining until contract expiration T in years (e.g. 0.5 for 6 months, 1 for 1 year). Must be positive."
+        },
+        "riskFreeRate": {
+          "type": "number",
+          "default": 0.045,
+          "description": "Annualized risk-free interest rate r expressed as decimal (0.045) or percentage (4.5)."
+        },
+        "volatility": {
+          "type": "number",
+          "default": 0.25,
+          "description": "Annualized implied volatility sigma expressed as decimal (0.25) or percentage (25). Must be positive."
+        }
+      },
+      "required": [
+        "spotPrice",
+        "strikePrice",
+        "timeToExpiryYears"
+      ]
+    }
+  },
+  {
+    "name": "linear_regression",
+    "description": "Compute Ordinary Least Squares (OLS) bivariate linear regression best-fit trend line (y = m*x + c), Pearson correlation coefficient (r), and coefficient of determination (R^2).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates sample means, covariance, and variances to solve slope m = Cov(X,Y) / Var(X) and intercept c = mean(Y) - m*mean(X). Computes Pearson r, R^2, standard error of estimate, and generates predicted y-values for each input x.\n\nUsage Guidelines: Use for trend forecasting, scientific scatter data fitting, and correlation analysis. Do not use for solving analytical quadratic or linear systems; use casio_991_solve instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number",
+                "description": "Independent variable X coordinate value."
+              },
+              "y": {
+                "type": "number",
+                "description": "Dependent variable Y coordinate value."
+              }
+            },
+            "required": [
+              "x",
+              "y"
+            ]
+          },
+          "description": "Array of {x, y} coordinate objects representing bivariate observations. Minimum 2 points required."
+        }
+      },
+      "required": [
+        "points"
+      ]
+    }
+  },
+  {
+    "name": "pipe_flow",
+    "description": "Calculate fluid dynamics Darcy-Weisbach friction factor, Reynolds number (flow regime), head loss, and pressure drop in closed circular pipes.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes cross-sectional area, mean flow velocity v = Q / A, and Reynolds number Re = (rho * v * D) / mu. Identifies laminar (Re < 2000, f = 64/Re) vs turbulent (Re >= 4000, solved via Swamee-Jain explicit approximation of Colebrook-White equation). Returns head loss h_f in meters and pressure drop delta_P in Pascals and bar.\n\nUsage Guidelines: Use for hydraulic design, water supply piping, chemical processing lines, and HVAC pipe sizing. Do not use for structural beam stress; use beam_bending instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "flowRateM3s": {
+          "type": "number",
+          "default": 0.05,
+          "description": "Volumetric fluid flow rate Q in cubic meters per second (m^3/s). Must be positive."
+        },
+        "pipeDiameterM": {
+          "type": "number",
+          "default": 0.15,
+          "description": "Internal pipe diameter D in meters (m). Must be positive."
+        },
+        "pipeLengthM": {
+          "type": "number",
+          "default": 100,
+          "description": "Total linear pipe run length L in meters (m). Must be positive."
+        },
+        "fluidDensityKgM3": {
+          "type": "number",
+          "default": 1000,
+          "description": "Fluid mass density rho in kg/m^3 (e.g. 1000 for water at 20°C)."
+        },
+        "dynamicViscosityPaS": {
+          "type": "number",
+          "default": 0.001,
+          "description": "Dynamic fluid viscosity mu in Pascal-seconds (Pa·s) (e.g. 0.001 for water)."
+        },
+        "pipeRoughnessM": {
+          "type": "number",
+          "default": 0.000045,
+          "description": "Absolute internal pipe wall surface roughness epsilon in meters (e.g. 0.000045 for commercial steel)."
+        }
+      },
+      "required": [
+        "flowRateM3s",
+        "pipeDiameterM",
+        "pipeLengthM"
+      ]
+    }
+  },
+  {
+    "name": "rlc_circuit",
+    "description": "Calculate AC electrical resonance properties for series RLC circuits: resonant frequency (f0), quality factor (Q), bandwidth (BW), and complex impedance magnitude at an operating frequency.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates angular resonant frequency omega0 = 1 / sqrt(L * C) and f0 = omega0 / (2 * pi); Q-factor = (1 / R) * sqrt(L / C); Bandwidth BW = f0 / Q. For a specified frequency f, calculates inductive reactance X_L = 2*pi*f*L, capacitive reactance X_C = 1 / (2*pi*f*C), total impedance Z = sqrt(R^2 + (X_L - X_C)^2), and phase angle phi.\n\nUsage Guidelines: Use for RF tuning, audio filter design, and electrical circuit frequency response analysis. Do not use for power grid transmission lines or mechanical vibrations.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "resistanceOhms": {
+          "type": "number",
+          "default": 50,
+          "description": "Circuit series electrical resistance R in Ohms (Ω). Must be positive."
+        },
+        "inductanceHenrys": {
+          "type": "number",
+          "default": 0.01,
+          "description": "Circuit inductance L in Henrys (H). Must be positive."
+        },
+        "capacitanceFarads": {
+          "type": "number",
+          "default": 0.000001,
+          "description": "Circuit capacitance C in Farads (F). Must be positive."
+        },
+        "frequencyHz": {
+          "type": "number",
+          "description": "Optional operating AC frequency f in Hertz (Hz) to evaluate AC impedance magnitude and phase angle."
+        }
+      },
+      "required": [
+        "resistanceOhms",
+        "inductanceHenrys",
+        "capacitanceFarads"
+      ]
+    }
+  },
+  {
+    "name": "rocket_deltav",
+    "description": "Calculate aerospace orbital mechanics delta-v budget, mass ratio, and propellant consumption using the Tsiolkovsky rocket equation.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates Tsiolkovsky equation: Delta-v = Isp * g0 * ln(m0 / mf). Calculates effective exhaust velocity c = Isp * g0, propellant mass consumed m_p = m0 - mf, and propellant mass fraction. Returns delta-v in m/s and km/s.\n\nUsage Guidelines: Use for rocket stage sizing, orbital insertion maneuver budgets (LEO, GEO, translunar), and mission delta-v planning. Do not use for ballistic atmospheric projectile flight; use projectile_motion instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialMassKg": {
+          "type": "number",
+          "default": 549054,
+          "description": "Wet launch mass m0 including propellant, structure, and payload in kilograms (kg). Must be greater than finalMassKg."
+        },
+        "finalMassKg": {
+          "type": "number",
+          "default": 22200,
+          "description": "Dry burnout mass mf after propellant exhaustion in kilograms (kg). Must be positive."
+        },
+        "specificImpulseSeconds": {
+          "type": "number",
+          "default": 311,
+          "description": "Rocket engine effective specific impulse Isp in seconds (e.g. 311 for Merlin 1D sea level, 450 for RL10 vacuum). Must be positive."
+        },
+        "gravityMs2": {
+          "type": "number",
+          "default": 9.80665,
+          "description": "Standard gravitational acceleration constant g0 in m/s^2. Default is 9.80665."
+        }
+      },
+      "required": [
+        "initialMassKg",
+        "finalMassKg",
+        "specificImpulseSeconds"
+      ]
+    }
+  },
+  {
+    "name": "ai_token_arbitrage",
+    "description": "Calculate multi-provider LLM API inference costs, prompt caching economics (up to 90% discount), batch discounts, and cost disparity across Claude 3.5 Sonnet, GPT-4o, DeepSeek V3/R1, and Gemini 1.5 Pro/Flash.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Models official pricing cards per million input/output tokens. Incorporates prompt cache hit pricing reductions and asynchronous batch API discounts (50%). Returns comprehensive cost comparison matrix, cheapest model recommendation, cache savings, and cost multiples relative to the lowest-cost model.\n\nUsage Guidelines: Use when budgeting AI agent inference costs, evaluating LLM providers, or deciding whether to implement prompt caching. Do not use for general cloud bandwidth transfer costs; use cloud_egress_finops instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "promptTokens": {
+          "type": "number",
+          "default": 5000,
+          "description": "Number of input prompt tokens per API call. Must be an integer >= 0."
+        },
+        "completionTokens": {
+          "type": "number",
+          "default": 1000,
+          "description": "Number of generated output completion tokens per API call. Must be an integer >= 0."
+        },
+        "cacheHitRatio": {
+          "type": "number",
+          "default": 0.8,
+          "description": "Proportion of input prompt tokens served from cache (0.0 to 1.0 or 0 to 100%). Default is 0.80 (80%)."
+        },
+        "isBatch": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether the 50% asynchronous batch processing discount applies."
+        }
       }
     }
   },
   {
-    name: "startup_runway_dilution",
-    description: "Model startup net burn rate, cash runway calendar zero-cash date, Post-Money SAFE cap dilution, and Series A unallocated option pool shuffle dilution waterfall.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        cashOnHand: { type: "number", default: 750000, description: "Current cash in bank in USD ($)" },
-        monthlyGrossBurn: { type: "number", default: 65000, description: "Monthly operating cash outflows ($/mo)" },
-        monthlyRevenue: { type: "number", default: 15000, description: "Monthly recurring revenue MRR ($/mo)" },
-        safeInvestment: { type: "number", default: 1000000, description: "Post-money SAFE investment amount ($)" },
-        postMoneyCap: { type: "number", default: 10000000, description: "Post-money valuation cap ($)" },
-        seriesAInvestment: { type: "number", default: 3000000, description: "Series A new lead investment amount ($)" },
-        seriesAPreMoney: { type: "number", default: 15000000, description: "Series A pre-money agreed valuation ($)" },
-        optionPoolExpansionPercent: { type: "number", default: 10.0, description: "Required unallocated post-close option pool %" }
+    "name": "startup_runway_dilution",
+    "description": "Model early-stage startup cash runway calendar exhaustion date, Post-Money SAFE note conversion cap dilution, and Series A unallocated option pool shuffle waterfall.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes net burn = grossBurn - revenue; Runway months = cashOnHand / netBurn. Models post-money SAFE equity percentage = safeInvestment / postMoneyCap. Simulates Series A pre-money option pool expansion (diluting existing holders prior to lead investor entry) and calculates founder post-financing ownership percentage.\n\nUsage Guidelines: Use for venture capital fundraising planning, startup cash runway tracking, and cap table dilution modeling. Do not use for discounted cash flow or IRR project appraisal; use npv_irr instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "cashOnHand": {
+          "type": "number",
+          "default": 750000,
+          "description": "Current cash reserves in bank in USD ($). Must be positive."
+        },
+        "monthlyGrossBurn": {
+          "type": "number",
+          "default": 65000,
+          "description": "Total monthly cash operating expenses in USD ($/mo). Must be positive."
+        },
+        "monthlyRevenue": {
+          "type": "number",
+          "default": 15000,
+          "description": "Monthly recurring revenue (MRR) or cash collections in USD ($/mo). Default is 15000."
+        },
+        "safeInvestment": {
+          "type": "number",
+          "default": 1000000,
+          "description": "Total capital raised via Post-Money SAFE notes in USD ($)."
+        },
+        "postMoneyCap": {
+          "type": "number",
+          "default": 10000000,
+          "description": "Agreed valuation cap on the Post-Money SAFEs in USD ($)."
+        },
+        "seriesAInvestment": {
+          "type": "number",
+          "default": 3000000,
+          "description": "New equity capital invested by Series A lead investors in USD ($)."
+        },
+        "seriesAPreMoney": {
+          "type": "number",
+          "default": 15000000,
+          "description": "Agreed Series A pre-money company valuation in USD ($)."
+        },
+        "optionPoolExpansionPercent": {
+          "type": "number",
+          "default": 10,
+          "description": "Required post-closing unallocated employee stock option pool percentage (e.g. 10 for 10%)."
+        }
       }
     }
   },
   {
-    name: "b2b_withholding_risk",
-    description: "Compute cross-border B2B software/consulting invoice gross-up, statutory vs DTAA treaty withholding tax rates (Form W-8BEN/W-8BEN-E), and permanent establishment (183-day) tax audit triggers.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        invoiceNetRequired: { type: "number", default: 50000, description: "Net spendable cash payout required by exporter ($)" },
-        statutoryRatePercent: { type: "number", default: 30.0, description: "Source country statutory withholding tax % (default 30%)" },
-        treatyRatePercent: { type: "number", default: 15.0, description: "Bilateral tax treaty reduced WHT rate % (e.g. 15% or 0%)" },
-        daysInCountry: { type: "number", default: 195, description: "Cumulative physical presence days in client country over 12 months" }
+    "name": "b2b_withholding_risk",
+    "description": "Calculate cross-border B2B consulting/software invoice tax gross-up, statutory vs DTAA bilateral tax treaty withholding rates (Form W-8BEN/W-8BEN-E), and Permanent Establishment (183-day) tax audit exposure.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes required gross invoice amount: Gross = Net / (1 - WHT_rate). Analyzes treaty tax relief savings (Statutory WHT vs Treaty WHT) and triggers high-risk Permanent Establishment alert if physical presence exceeds the 183-day international treaty threshold.\n\nUsage Guidelines: Use when exporting services cross-border or structuring international client contracts subject to foreign withholding tax. Do not use for digital nomad individual income tax exclusion; use feie_nomad_tracker instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "invoiceNetRequired": {
+          "type": "number",
+          "default": 50000,
+          "description": "Net spendable cash amount required to be landed in exporter account in USD ($). Must be positive."
+        },
+        "statutoryRatePercent": {
+          "type": "number",
+          "default": 30,
+          "description": "Foreign client country statutory withholding tax rate percentage (e.g. 30 for 30%). Default is 30.0."
+        },
+        "treatyRatePercent": {
+          "type": "number",
+          "default": 15,
+          "description": "Reduced withholding tax rate percentage under applicable bilateral Double Tax Avoidance Agreement (DTAA) (e.g. 0, 10, 15%)."
+        },
+        "daysInCountry": {
+          "type": "number",
+          "default": 195,
+          "description": "Cumulative physical days spent in client jurisdiction over a rolling 12-month period. Values over 183 trigger Permanent Establishment audit risk."
+        }
       }
     }
   },
   {
-    name: "feie_nomad_tracker",
-    description: "Track IRS Form 2555 Foreign Earned Income Exclusion physical presence test (330 full foreign days in rolling 365-day period), statutory exclusion limits ($130k), and sticky domicile audit risks (CA, NY, VA, SC).",
-    inputSchema: {
-      type: "object",
-      properties: {
-        foreignEarnedIncome: { type: "number", default: 160000, description: "Annual foreign earned compensation in USD ($)" },
-        daysOutsideUSInRollingPeriod: { type: "number", default: 334, description: "Full 24-hour days outside the US in rolling 365-day window" },
-        taxYear: { type: "number", default: 2025, description: "Applicable tax year (2024, 2025, or 2026)" },
-        stateDomicile: { type: "string", default: "CA", description: "State of former/current US domicile (e.g. CA, NY, TX, FL)" },
-        effectiveTaxBracketPercent: { type: "number", default: 24.0, description: "Estimated federal marginal tax rate %" }
+    "name": "feie_nomad_tracker",
+    "description": "Track IRS Form 2555 Foreign Earned Income Exclusion (FEIE) Physical Presence Test eligibility (330 full foreign days in rolling 365 days), statutory exclusion cap ($130,000 for 2025), and US sticky domicile audit risks (CA, NY, VA, SC).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates whether daysOutsideUSInRollingPeriod meets the mandatory 330-day threshold. Applies statutory maximum exclusion limit ($126,500 for 2024, $130,000 for 2025), computes tax liability on excess income, and flags aggressive state revenue agency sticky domicile rules.\n\nUsage Guidelines: Use for US citizen digital nomads and expats evaluating foreign earned income tax exemptions under IRS Section 911. Do not use for foreign corporate withholding tax; use b2b_withholding_risk instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "foreignEarnedIncome": {
+          "type": "number",
+          "default": 160000,
+          "description": "Total annual compensation earned while working outside the US in USD ($). Must be positive."
+        },
+        "daysOutsideUSInRollingPeriod": {
+          "type": "number",
+          "default": 334,
+          "description": "Number of full 24-hour qualifying foreign days spent outside the US within any rolling 365-day period. Must be >= 330 to qualify."
+        },
+        "taxYear": {
+          "type": "number",
+          "default": 2025,
+          "description": "Applicable US federal tax filing year (2024, 2025, or 2026)."
+        },
+        "stateDomicile": {
+          "type": "string",
+          "default": "CA",
+          "description": "Two-letter postal code of taxpayer's last or current US state domicile (e.g. CA, NY, TX, FL). High-audit states (CA, NY, VA, SC) trigger domicile warnings."
+        },
+        "effectiveTaxBracketPercent": {
+          "type": "number",
+          "default": 24,
+          "description": "Estimated federal marginal tax rate percentage applied to income exceeding the statutory cap (e.g. 24 for 24%)."
+        }
       }
     }
   },
   {
-    name: "cloud_egress_finops",
-    description: "Analyze tiered public cloud data transfer egress fees vs Cloudflare Zero-Egress Bandwidth Alliance and edge caching proxy, calculating monthly and annual infrastructure cost savings.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        monthlyEgressGB: { type: "number", default: 50000, description: "Monthly internet outbound data transfer in GB (e.g. 50,000 for 50TB)" },
-        cacheHitRatio: { type: "number", default: 0.85, description: "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)" }
+    "name": "cloud_egress_finops",
+    "description": "Analyze tiered AWS/GCP public cloud internet data transfer egress pricing versus Cloudflare Zero-Egress Bandwidth Alliance and edge caching proxies, quantifying monthly and annual infrastructure cost savings.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Calculates tiered AWS/GCP egress charges ($0.09/GB for first 10TB, $0.085/GB for next 40TB, $0.07/GB for next 100TB, $0.05/GB beyond). Models edge cache offload reduction and compares against Cloudflare zero-egress routing. Returns monthly and annual gross egress costs, post-cache costs, and total net savings.\n\nUsage Guidelines: Use for cloud architecture budgeting, FinOps reviews, and evaluating CDN caching or Cloudflare migration economics. Do not use for LLM token pricing; use ai_token_arbitrage instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "monthlyEgressGB": {
+          "type": "number",
+          "default": 50000,
+          "description": "Monthly public internet outbound data transfer volume in Gigabytes (GB) (e.g. 50000 for 50 TB). Must be positive."
+        },
+        "cacheHitRatio": {
+          "type": "number",
+          "default": 0.85,
+          "description": "Expected CDN edge caching hit ratio as a decimal (0.0 to 1.0) or percentage (0 to 100%). Default is 0.85 (85%)."
+        }
       }
     }
   },
   {
-    name: "npv_irr",
-    description: "Calculate Net Present Value (NPV) and Internal Rate of Return (IRR) via iterative Newton-Raphson polynomial convergence for capital budgeting, investment appraisal, and payback periods.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        initialInvestment: { type: "number", default: 100000, description: "Initial capital outlay / outflow at period 0 ($)" },
-        cashflows: { type: "array", items: { type: "number" }, default: [30000, 40000, 50000, 20000], description: "Series of sequential cash inflows ($)" },
-        discountRatePercent: { type: "number", default: 10.0, description: "Annual hurdle / discount rate %" }
+    "name": "npv_irr",
+    "description": "Compute Net Present Value (NPV), Internal Rate of Return (IRR) via iterative Newton-Raphson polynomial convergence, and discounted payback period for capital budgeting and investment appraisal.\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Evaluates NPV = -C0 + sum(Ct / (1 + r)^t). Computes exact IRR by finding the discount rate where NPV equals zero using up to 100 Newton-Raphson iterations with tolerance 1e-7. Returns NPV, IRR percentage, profitability index (PI), and payback period in periods/years.\n\nUsage Guidelines: Use for evaluating capital investments, M&A valuations, corporate projects, and multi-year cash flow hurdle rates. Do not use for simple compound interest projections with fixed monthly deposits; use compound_wealth instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialInvestment": {
+          "type": "number",
+          "default": 100000,
+          "description": "Upfront initial capital outlay at period 0 in currency units. Entered as a positive number (treated as cash outflow). Must be positive."
+        },
+        "cashflows": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "description": "Net cash inflow amount for this sequential period in currency units."
+          },
+          "default": [
+            30000,
+            40000,
+            50000,
+            20000
+          ],
+          "description": "Series of sequential periodic net cash inflows starting from period 1 onwards. Minimum 1 cash flow required."
+        },
+        "discountRatePercent": {
+          "type": "number",
+          "default": 10,
+          "description": "Annual cost of capital or hurdle discount rate percentage (e.g. 10.0 for 10%)."
+        }
       },
-      required: ["initialInvestment", "cashflows"]
+      "required": [
+        "initialInvestment",
+        "cashflows"
+      ]
     }
   },
   {
-    name: "cagr_inflation",
-    description: "Calculate Compound Annual Growth Rate (CAGR), real inflation-adjusted purchasing power (Fisher effect), and exact investment doubling horizon.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        initialValue: { type: "number", default: 50000, description: "Beginning portfolio / asset valuation ($)" },
-        finalValue: { type: "number", default: 100000, description: "Ending portfolio / asset valuation ($)" },
-        periodsYears: { type: "number", default: 5, description: "Duration in years" },
-        inflationRatePercent: { type: "number", default: 2.5, description: "Annualized expected inflation rate %" }
+    "name": "cagr_inflation",
+    "description": "Calculate Compound Annual Growth Rate (CAGR), real inflation-adjusted purchasing power growth (Fisher equation), and exact investment doubling time (Rule of 72 exact logarithmic solution).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes Nominal CAGR = (finalValue / initialValue)^(1 / periodsYears) - 1. Computes Real CAGR using the exact Fisher relation: (1 + Nominal) / (1 + Inflation) - 1. Computes exact doubling horizon = ln(2) / ln(1 + Nominal). Returns nominal CAGR %, real CAGR %, total nominal gain, total real purchasing power gain, and doubling years.\n\nUsage Guidelines: Use for evaluating historical investment portfolio track records, business revenue growth metrics, and inflation drag analysis. Do not use for forward-looking recurring monthly investment projections; use compound_wealth or sip_investment instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "initialValue": {
+          "type": "number",
+          "default": 50000,
+          "description": "Beginning portfolio, asset, or revenue valuation in currency units. Must be positive."
+        },
+        "finalValue": {
+          "type": "number",
+          "default": 100000,
+          "description": "Ending portfolio, asset, or revenue valuation in currency units. Must be positive."
+        },
+        "periodsYears": {
+          "type": "number",
+          "default": 5,
+          "description": "Total elapsed duration in years (can be fractional, e.g. 2.5 or 5). Must be greater than 0."
+        },
+        "inflationRatePercent": {
+          "type": "number",
+          "default": 2.5,
+          "description": "Annualized inflation rate percentage over the period (e.g. 2.5 for 2.5%)."
+        }
       },
-      required: ["initialValue", "finalValue", "periodsYears"]
+      "required": [
+        "initialValue",
+        "finalValue",
+        "periodsYears"
+      ]
     }
   },
   {
-    name: "breakeven_margin",
-    description: "Calculate business break-even threshold in units and revenue, contribution margin ratio, operational margin of safety, and operating leverage degree.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        fixedCosts: { type: "number", default: 10000, description: "Total fixed periodic operating costs ($)" },
-        unitPrice: { type: "number", default: 50, description: "Selling price per unit ($)" },
-        unitVariableCost: { type: "number", default: 20, description: "Variable cost incurred per unit ($)" },
-        expectedUnitsSold: { type: "number", default: 500, description: "Projected unit sales volume for margin of safety analysis" }
+    "name": "breakeven_margin",
+    "description": "Calculate cost-volume-profit break-even thresholds in units and revenue, contribution margin ratio, operational margin of safety, and degree of operating leverage (DOL).\n\nBehavior: Deterministic, idempotent calculation with zero external side effects. Computes Unit Contribution Margin = unitPrice - unitVariableCost; Contribution Margin Ratio = CM / unitPrice; Break-Even Units = fixedCosts / CM; Break-Even Revenue = Break-Even Units * unitPrice. If expected units sold is provided, computes Margin of Safety = (expectedUnits - breakEvenUnits) / expectedUnits and Degree of Operating Leverage. Returns detailed breakdown.\n\nUsage Guidelines: Use for pricing strategy, manufacturing and SaaS unit economics, and operational risk appraisal. Do not use for hourly freelance billing rate minimums; use billable_floor instead.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "fixedCosts": {
+          "type": "number",
+          "default": 10000,
+          "description": "Total periodic fixed operating overhead costs in currency units (rent, salaries, software). Must be positive."
+        },
+        "unitPrice": {
+          "type": "number",
+          "default": 50,
+          "description": "Selling price per individual product or service unit in currency units. Must be greater than unitVariableCost."
+        },
+        "unitVariableCost": {
+          "type": "number",
+          "default": 20,
+          "description": "Direct variable cost incurred per unit produced or delivered in currency units. Must be non-negative."
+        },
+        "expectedUnitsSold": {
+          "type": "number",
+          "default": 500,
+          "description": "Projected sales volume in units to evaluate operational margin of safety and operating leverage."
+        }
       },
-      required: ["fixedCosts", "unitPrice", "unitVariableCost"]
+      "required": [
+        "fixedCosts",
+        "unitPrice",
+        "unitVariableCost"
+      ]
     }
   }
 ];
