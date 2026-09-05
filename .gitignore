@@ -41,3 +41,7 @@ scratch/
 
 # Internal strategy & monetization docs
 docs/internal/
+
+# Agent runtime metadata
+skills-lock.json
+

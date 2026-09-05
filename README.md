@@ -134,14 +134,14 @@ truecalci/
 ├── docs/                        # Public developer and statutory documentation
 │   └── assets/images/           # Documentation screenshots and UI captures
 ├── js/                          # Core Vanilla application code
-│   ├── engines/                 # 24 standalone mathematical calculation engines
+│   ├── engines/                 # 27 standalone mathematical calculation engines
 │   └── app.js                   # Unified application controller
 ├── tests/                       # Automated verification test suite
-│   ├── test_suite.mjs           # Complete 174-assertion determinism test
+│   ├── test_suite.mjs           # Complete 201-assertion determinism test
 │   └── test_adversarial_mcp.mjs # MCP protocol stress and fuzzing suite
-├── CHANGELOG.md                 # Public release version history
-├── SYSTEM_LOG.md                # Permanent engineering commit & deployment ledger
-├── README.md                    # Primary documentation & MCP manifest
+├── server.json                  # Official Model Context Protocol manifest
+├── glama.json                   # Glama.ai MCP Registry manifest
+├── README.md                    # Primary documentation & MCP quickstart
 ├── mcp-server.mjs               # Standalone stdio MCP server for desktop clients
 ├── _worker.js                   # Cloudflare Worker streamable HTTP endpoint
 ├── openapi.json                 # OpenAPI 3.1 schema
@@ -156,9 +156,9 @@ truecalci/
 
 Billing, taxation, invoicing, and PCI-compliant checkout are managed via **Dodo Payments** as the Merchant of Record. TrueCalci never sees or stores card numbers.
 
-* **Free Sandbox**: 500 requests/month, 20 req/min concurrency ceiling, all 25 engines, no card required.
-* **Developer Starter**: 30,000 prepaid requests pool, 300 req/min concurrency, email support.
-* **Pro Agency & Scale**: 180,000 prepaid requests pool, 1,000 req/min concurrency, prioritized routing.
+* **Free Sandbox**: 100 requests/month, 20 req/min concurrency ceiling, all 27 engines, no card required.
+* **Developer Starter**: 2,500 requests/month, 300 req/min concurrency, email support.
+* **Pro Agency & Scale**: 10,000 requests/month, 1,000 req/min concurrency, prioritized routing.
 * **Enterprise PAYG**: Uncapped request volume, private edge instances, shared Slack/Teams channel.
 
 ---

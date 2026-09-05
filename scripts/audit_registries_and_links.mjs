@@ -63,7 +63,20 @@ if (fs.existsSync(glamaJsonPath)) {
   }
 }
 
-// 1.3 .well-known/lobe-plugin.json (LobeHub Chat Plugins spec)
+// 1.3 .well-known/glama.json (Glama Ownership Claim Challenge)
+const glamaClaimPath = path.join(rootDir, '.well-known', 'glama.json');
+check('.well-known/glama.json exists', fs.existsSync(glamaClaimPath), 'Missing .well-known/glama.json');
+if (fs.existsSync(glamaClaimPath)) {
+  try {
+    const glamaClaim = JSON.parse(fs.readFileSync(glamaClaimPath, 'utf8'));
+    check('.well-known/glama.json has schema', glamaClaim.$schema === 'https://glama.ai/mcp/schemas/connector.json', 'Invalid connector schema');
+    check('.well-known/glama.json has claim token', glamaClaim.claim === 'glama_claim_iBvbsb-DZv1iNz-dfcF2iPPHgYZmbQYp', 'Invalid claim token');
+  } catch (e) {
+    check('.well-known/glama.json is valid JSON', false, e.message);
+  }
+}
+
+// 1.4 .well-known/lobe-plugin.json (LobeHub Chat Plugins spec)
 const lobeJsonPath = path.join(rootDir, '.well-known', 'lobe-plugin.json');
 check('lobe-plugin.json exists', fs.existsSync(lobeJsonPath), 'Missing lobe-plugin.json in .well-known/');
 if (fs.existsSync(lobeJsonPath)) {
