@@ -34,7 +34,7 @@ export class ViewSubscriptions {
     const savedUsage = localStorage.getItem("tc_edge_usage_count");
     this.currentUsage = savedUsage !== null ? parseInt(savedUsage, 10) : 14;
     this.quotaLimit = user.quotaLimit || 15000;
-    this.apiKey = user.apiKey || `tc_live_pro_a8f9c2e1b7_d04a`;
+    this.apiKey = user.apiKey || `tc_live_pro_${Math.random().toString(36).substring(2, 12)}_${Math.random().toString(36).substring(2, 10)}`;
     this.isKeyRevealed = false;
 
     // Billing details

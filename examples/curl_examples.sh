@@ -4,8 +4,8 @@
 # Active Tier: Pro Agency & Scale (15,000 req/mo, 1,000 RPM concurrency)
 # ==============================================================================
 
-BASE_URL="https://truecalci.com"
-API_KEY="tc_live_pro_a8f9c2e1b7_d04a"
+BASE_URL="${TRUECALCI_BASE_URL:-https://truecalci.com}"
+API_KEY="${TRUECALCI_API_KEY:-YOUR_TRUECALCI_API_KEY}"
 
 echo "================================================================================"
 echo "TRUECALCI AI AGENT & COMPUTATIONAL SUITE — CURL EXAMPLES"

@@ -449,7 +449,7 @@ export class ViewDeveloperPortal {
     const box = document.getElementById("code-snippet-box");
     if (!box) return;
 
-    const activeKey = (this.devUser && this.devUser.apiKey) || (JSON.parse(localStorage.getItem("tc_dev_user") || '{}')).apiKey || "tc_live_pro_key";
+    const activeKey = (this.devUser && this.devUser.apiKey) || (JSON.parse(localStorage.getItem("tc_dev_user") || '{}')).apiKey || "YOUR_TRUECALCI_API_KEY";
 
     if (this.activeCodeTab === "mcp_claude") {
       box.textContent = JSON.stringify({

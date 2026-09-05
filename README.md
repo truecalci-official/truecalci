@@ -4,11 +4,11 @@
 [![Zero Data Retention](https://img.shields.io/badge/Data%20Retention-0%20Bytes%20Stored-emerald.svg)](https://truecalci.com/privacy.html)
 [![Arithmetic](https://img.shields.io/badge/Arithmetic-64--bit%20IEEE--754-indigo.svg)](https://truecalci.com/engineering-formulas.html)
 [![Latency](https://img.shields.io/badge/Edge%20Latency-P50%20%3C%2020ms-teal.svg)](https://truecalci.com)
-[![Engines](https://img.shields.io/badge/Engines-19%20Statutory%20%26%20Financial-orange.svg)](#registered-mcp-tool-catalog)
+[![Engines](https://img.shields.io/badge/Engines-24%20Deterministic-orange.svg)](#registered-mcp-tool-catalog)
 [![License](https://img.shields.io/badge/License-MIT-gray.svg)](LICENSE)
 
 > **Give your agent arithmetic it can be held to.**  
-> LLMs hallucinate statutory tax brackets, compound schedules, and cross-border currency drag. TrueCalci mounts **nineteen deterministic mathematical engines** as typed tools over the open **Model Context Protocol (MCP)** at `https://truecalci.com/api/v1/mcp`. Same input, same output, sub-millisecond edge compute, zero disk retention.
+> LLMs hallucinate statutory tax brackets, compound schedules, and cross-border currency drag. TrueCalci mounts **twenty-four deterministic mathematical engines** as typed tools over the open **Model Context Protocol (MCP)** at `https://truecalci.com/api/v1/mcp`. Same input, same output, sub-millisecond edge compute, zero disk retention.
 
 ---
 
@@ -29,7 +29,7 @@ Add TrueCalci to your `claude_desktop_config.json`:
   }
 }
 ```
-*Restart Claude Desktop to immediately unlock all 19 calculation tools in the conversation toolbar.*
+*Restart Claude Desktop to immediately unlock all 24 calculation tools in the conversation toolbar.*
 
 ### 1.2 Cursor IDE
 1. Open Cursor Settings (`Ctrl + ,` / `Cmd + ,`) → **Features** → **MCP**.
@@ -52,7 +52,7 @@ node mcp-server.mjs
 
 ---
 
-## 2. Registered MCP Tool Catalog (19 Verified Engines)
+## 2. Registered MCP Tool Catalog (24 Verified Engines)
 
 All engines return structured JSON containing inputs, calculated line items, marginal tax rates, and legal derivation citations.
 
@@ -63,6 +63,11 @@ All engines return structured JSON containing inputs, calculated line items, mar
 | `solo401k_max` | IRS Notice 2023-75 ($23,500 deferral, $70,000 total plan max) | `netEarnings`, `entityType`, `isAge50Plus`, `marginalRate` | Solo 401(k) vs SEP-IRA max deduction, cash tax saved, extra shelter amount |
 | `fx_raildrag` | Mid-market benchmark FX vs Wise, Deel, Payoneer, Stripe, PayPal | `invoiceUsd`, `targetCurrency` (EUR, GBP, INR, CAD, etc.) | Landed local currency, total dollar fee drag, per-invoice and annual cash savings vs worst rail |
 | `billable_floor` | 47 working weeks, non-billable drag, health & overhead buffer | `targetNetCash`, `annualExpenses`, `vacationWeeks`, `nonBillablePct` | True minimum hourly billing floor ($/hr), annual billable hours reality, shortfall alerts |
+| `ai_token_arbitrage` | Multi-model LLM API token inference costs, prompt caching (up to 90%), batch pricing | `promptTokens`, `completionTokens`, `cacheHitRatio`, `isBatch` | Multi-model cost matrix (Claude, GPT-4o, DeepSeek, Gemini), cache savings, batch savings |
+| `startup_runway_dilution` | Net burn rate, calendar zero-cash date, post-money SAFE dilution, option pool shuffle | `cashOnHand`, `monthlyGrossBurn`, `monthlyRevenue`, `safeInvestment` | Monthly net burn, runway months, zero-cash date, dilution waterfall, founder ownership |
+| `b2b_withholding_risk` | Cross-border B2B software invoice gross-up, statutory vs DTAA treaty WHT rates, PE risk | `invoiceNetRequired`, `statutoryRatePercent`, `treatyRatePercent`, `daysInCountry` | Required gross invoice amount, withholding tax deduction, 183-day PE audit risk indicator |
+| `feie_nomad_tracker` | IRS Form 2555 FEIE physical presence test (330 foreign days), exclusion limit ($130k) | `foreignEarnedIncome`, `daysOutsideUSInRollingPeriod`, `taxYear`, `stateDomicile` | Qualification status, days needed/buffer, tax savings, sticky domicile audit warning |
+| `cloud_egress_finops` | Public cloud data transfer egress fees vs Cloudflare Zero-Egress Bandwidth Alliance | `monthlyEgressGB`, `cacheHitRatio` | AWS/GCP/Azure egress cost, CDN cached volume, monthly & annual savings |
 | `mortgage_piti` | US Conventional & FHA Mortgages (Principal, Interest, Property Tax, PMI) | `homePrice`, `downPaymentPercent`, `interestRate`, `tenureYears` | Monthly P&I, monthly PITI, PMI requirement, 30-year amortization schedule |
 | `vat_compute` | EU VAT Directive (Reverse charge, standard, reduced, zero rates) | `amount`, `vatRatePercent`, `mode` (`add` \| `remove`) | Net amount, VAT extracted or added, gross invoice total |
 | `tip_split` | Hospitality & dining arithmetic with customizable per-person split | `billAmount`, `tipPercent`, `numberOfGuests` | Exact tip amount, gross bill, even share per diner |
@@ -121,7 +126,7 @@ truecalci/
 ├── docs/                        # Public developer and statutory documentation
 │   └── assets/images/           # Documentation screenshots and UI captures
 ├── js/                          # Core Vanilla application code
-│   ├── engines/                 # 19 standalone mathematical calculation engines
+│   ├── engines/                 # 24 standalone mathematical calculation engines
 │   └── app.js                   # Unified application controller
 ├── tests/                       # Automated verification test suite
 │   ├── test_suite.mjs           # Complete 174-assertion determinism test
@@ -143,7 +148,7 @@ truecalci/
 
 Billing, taxation, invoicing, and PCI-compliant checkout are managed via **Dodo Payments** as the Merchant of Record. TrueCalci never sees or stores card numbers.
 
-* **Free Sandbox**: 500 requests/month, 20 req/min concurrency ceiling, all 19 engines, no card required.
+* **Free Sandbox**: 500 requests/month, 20 req/min concurrency ceiling, all 24 engines, no card required.
 * **Developer Starter**: 30,000 prepaid requests pool, 300 req/min concurrency, email support.
 * **Pro Agency & Scale**: 180,000 prepaid requests pool, 1,000 req/min concurrency, prioritized routing.
 * **Enterprise PAYG**: Uncapped request volume, private edge instances, shared Slack/Teams channel.
@@ -152,7 +157,7 @@ Billing, taxation, invoicing, and PCI-compliant checkout are managed via **Dodo 
 
 ## 6. Verification & Automated Testing
 
-Run the mathematical verification suite covering all 19 engines:
+Run the mathematical verification suite covering all 24 engines:
 ```bash
 npm test
 # or: node tests/test_suite.mjs

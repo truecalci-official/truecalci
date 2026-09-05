@@ -92,49 +92,31 @@ export class ViewAdminPortal {
   render() {
     const isAuthenticated = sessionStorage.getItem("tc_admin_auth") === "true";
     if (!isAuthenticated) {
-      this.renderLoginGate();
+      this.renderRedirect();
       return;
     }
     this.renderDashboard();
   }
 
-  renderLoginGate() {
+  renderRedirect() {
     this.containerEl.innerHTML = `
       <div style="max-width: 460px; margin: 60px auto; padding: 32px 24px; text-align: center;" class="glass-card">
         <div style="width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 12px; background: var(--accent-light); display: flex; align-items: center; justify-content: center; color: var(--accent-primary);">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
-        <h1 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">Admin Security Access</h1>
+        <h1 style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0;">Executive Admin Console</h1>
         <p style="font-size: 0.84rem; color: var(--text-secondary); margin: 0 0 20px 0; line-height: 1.5;">
-          This internal economic ledger is restricted to platform administrators. Enter your Master Access PIN to unlock live telemetry.
+          The legacy embedded admin panel has been migrated to the standalone Executive Admin Control Center.
         </p>
 
-        <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 12px;">
-          <input type="password" id="admin-pin-input" placeholder="Enter Master Admin PIN..." autocomplete="current-password" autofocus required style="width: 100%; padding: 10px 14px; font-size: 0.9rem; border-radius: 6px; background: var(--bg-app); color: var(--text-primary); border: 1px solid var(--border-color); text-align: center; letter-spacing: 0.2em;">
-          <div id="admin-pin-err" style="display: none; font-size: 0.78rem; color: #f43f5e;">Incorrect PIN. Default is: admin2026</div>
-          <button type="submit" style="padding: 10px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; border: none; cursor: pointer;">
-            Unlock Telemetry Dashboard
-          </button>
-        </form>
+        <a href="/admin.html" class="btn-primary" style="display: inline-block; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; border-radius: 6px; background: #0066ff; color: #ffffff; text-decoration: none;">
+          Launch Executive Admin Console &rarr;
+        </a>
         <div style="margin-top: 18px; font-size: 0.75rem; color: var(--text-muted);">
-          Protected by Cloudflare Edge Security & Session Encryption
+          Protected by Cloudflare Edge & Server Rate Limiting
         </div>
       </div>
     `;
-
-    const form = document.getElementById("admin-login-form");
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const pin = document.getElementById("admin-pin-input").value.trim();
-        if (pin === "admin2026") {
-          sessionStorage.setItem("tc_admin_auth", "true");
-          this.render();
-        } else {
-          document.getElementById("admin-pin-err").style.display = "block";
-        }
-      });
-    }
   }
 
   renderDashboard() {

@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """
 TrueCalci Official Python SDK & AI Agent Client
-High-precision deterministic calculation client for all 16 TrueCalci engines.
+High-precision deterministic calculation client for all 24 TrueCalci computational engines.
 Supports both direct REST calculation endpoints and Model Context Protocol (MCP) Streamable HTTP v1.
 
 Usage:
+    import os
     from truecalci_client import TrueCalciClient
     
-    client = TrueCalciClient(api_key="tc_live_pro_a8f9c2e1b7_d04a")
+    client = TrueCalciClient(api_key=os.environ.get("TRUECALCI_API_KEY", "YOUR_TRUECALCI_API_KEY"))
     res = client.mortgage_piti(home_price=450000, interest_rate=6.8)
     print("Monthly PITI:", res["result"]["monthlyTotalPITI"])
 """
 
+import os
 import json
 import urllib.request
 import urllib.error
@@ -20,8 +22,8 @@ from typing import Dict, Any, Optional, List
 class TrueCalciClient:
     """Official Python client for TrueCalci Computational Engine & MCP Streamable HTTP."""
     
-    def __init__(self, api_key: str = "tc_live_pro_a8f9c2e1b7_d04a", base_url: str = "https://truecalci.com"):
-        self.api_key = api_key
+    def __init__(self, api_key: Optional[str] = None, base_url: str = "https://truecalci.com"):
+        self.api_key = api_key or os.environ.get("TRUECALCI_API_KEY", "YOUR_TRUECALCI_API_KEY")
         self.base_url = base_url.rstrip("/")
         self.headers = {
             "Content-Type": "application/json",
@@ -98,14 +100,14 @@ class TrueCalciClient:
     # Generic REST Engine Calculation Dispatcher
     # -------------------------------------------------------------------------
     def calculate(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
-        """Generic calculation dispatch across all 16 engines."""
+        """Generic calculation dispatch across all 24 engines."""
         return self._post("/api/v1/calculate", {
             "tool": tool_name,
             "params": params
         })
 
     # -------------------------------------------------------------------------
-    # 16 Deterministic Engine Wrapper Methods
+    # Deterministic Engine Wrapper Methods
     # -------------------------------------------------------------------------
     # 1. 1099 vs W-2 Contractor Parity & Breakeven Rate
     def contractor_parity(self, w2_salary: float = 130000, contractor_hourly_rate: float = 85,

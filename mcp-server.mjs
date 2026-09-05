@@ -114,7 +114,8 @@ const MCP_TOOLS = [
         homePrice: { type: "number", description: "Purchase price of the home (e.g. 450000)" },
         downPaymentPercent: { type: "number", default: 20, description: "Down payment % (e.g. 20)" },
         interestRate: { type: "number", description: "Annual interest rate % (e.g. 6.8)" },
-        tenureYears: { type: "integer", default: 30, description: "Loan term in years" }
+        tenureYears: { type: "integer", default: 30, description: "Loan term in years" },
+        loanTermYears: { type: "integer", default: 30, description: "Loan term in years (standard US alias for tenureYears)" }
       },
       required: ["homePrice", "interestRate"]
     }
@@ -541,7 +542,7 @@ function handleToolCall(name, args) {
         homePrice: Number(args.homePrice),
         downPaymentPercent: Number(args.downPaymentPercent || 20),
         interestRate: Number(args.interestRate),
-        tenureYears: Number(args.tenureYears || 30)
+        tenureYears: Number(args.tenureYears || args.loanTermYears || args.termYears || args.years || 30)
       });
     case 'vat_sales_tax':
     case 'vat':
@@ -606,7 +607,7 @@ function handleToolCall(name, args) {
       return IndianFinanceEngine.calculateHomeLoan({
         principal: Number(args.principal),
         annualInterestRate: Number(args.annualInterestRate || args.interestRatePercent || 8.5),
-        tenureYears: Number(args.tenureYears || 20)
+        tenureYears: Number(args.tenureYears || args.loanTermYears || args.termYears || args.years || 20)
       });
     case 'ppf_calculator':
     case 'ppf':

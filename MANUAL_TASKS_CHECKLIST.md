@@ -8,31 +8,27 @@
 
 | Dimension | Task Description | Target Environment | Owner Action Required | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **Admin Security** | Change default Master Admin PIN (`admin2026`) | Local & Edge Worker | Update PIN in source or Cloudflare Access | 🟡 Pending Owner PIN |
+| **Admin Security** | Access Executive Admin Control Center (`admin.html`) | Local & Edge Worker | Accessible via `/admin.html` with rate limiter controls | 🟢 Deployed & Verified |
 | **Monetization** | Dodo Payments API Keys & Webhooks | Dodo Merchant Portal | Retrieve `pk_live`, `sk_live`, `whsec` | 🟡 Ready for Keys |
 | **Cloudflare $5 Paid** | KV Namespace & Cron Triggers | Cloudflare Dashboard | Create KV `TRUECALCI_KV` & verify cron schedule | 🟡 Awaiting Deployment |
-| **Cloudflare Security** | Edge Rate Limiting & Zero Trust | Cloudflare Zero Trust | Protect `/admin` route via email OTP | 🟡 Recommended |
-| **Agent Clients** | Connect Claude Desktop & Cursor IDE | Local Machine | Paste JSON config to enable 19 MCP tools | 🟢 Documented Below |
+| **Cloudflare Security** | Edge Rate Limiting & Zero Trust | Cloudflare Zero Trust | Protect `/admin.html` route via email OTP | 🟡 Recommended |
+| **Agent Clients** | Connect Claude Desktop & Cursor IDE | Local Machine | Paste JSON config to enable 24 MCP tools | 🟢 Documented Below |
 | **Legal Compliance** | Universal Non-Affiliation & CA/CPA Disclaimers | All Views & APIs | Zero trademark names; pure mathematical disclaimers | 🟢 Ready in Spec |
 
 ---
 
-## Task 1: Admin Telemetry Portal Access & Master PIN
+## Task 1: Executive Admin Control Center Access
 
-### Current Credentials
-To view the live telemetry dashboard locally or in staging:
-- **URL**: `https://truecalci.com/#admin` (or `http://localhost:3000/#admin`)
-- **Default PIN**: `admin2026`
+### Access & Security
+To view and manage platform telemetry, rate limiter sliders, and 24-engine benchmarks:
+- **URL**: `https://truecalci.com/admin.html` (or `http://localhost:3000/admin.html`)
+- **Security**: Disallowed from search indexing via RFC 9309 `robots.txt` and protected by server sliding-window rate limiting.
 
-### How to Customize Your Private PIN
-1. Open [`js/views/view-admin-portal.js`](file:///c:/Calculator/js/views/view-admin-portal.js#L130).
-2. On line 130, replace `"admin2026"` with your private master passphrase:
-```javascript
-// c:\Calculator\js\views\view-admin-portal.js (Line 130)
-if (pin === "YOUR_CUSTOM_SECRET_PIN") {
-  this.isAuthenticated = true;
-  this.renderDashboard();
-}
+### Available Controls in Executive Console:
+1. **Dynamic Rate Limiter Sliders**: Adjust per-minute request thresholds across Anonymous, Starter, Pro, and Metered tiers.
+2. **IP Whitelist & Blacklist**: Instantly exempt trusted IPs or block aggressive scrapers.
+3. **24-Engine Benchmark Tester**: Run microsecond latency tests on any calculation engine.
+4. **SEO & Search Console Health**: Live GA4 `G-0CYZYEW5T4` status and RFC 9309 robots.txt compliance checker.
 ```
 
 > **Enterprise Tip (Cloudflare Zero Trust)**:

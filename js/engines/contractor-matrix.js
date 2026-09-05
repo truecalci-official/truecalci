@@ -3,8 +3,8 @@
  * High-Precision 1099 vs. W-2 vs. B2B Pass-Through Tax, FX Drag & Benefits Parity Simulator.
  * 
  * Complies with:
- * - 2024/2025 US Federal Income Tax Brackets (Single & Married Filing Jointly)
- * - FICA & SECA Statutory Caps ($168,600 Social Security Wage Base)
+ * - 2025/2026 US Federal Income Tax Brackets (Single & Married Filing Jointly)
+ * - FICA & SECA Statutory Caps ($176,100 Social Security Wage Base)
  * - 50% Self-Employment Tax Above-the-Line AGI Deduction (IRC § 164(f))
  * - Section 199A Qualified Business Income (QBI) 20% Pass-Through Deduction (IRC § 199A)
  * - Self-Employed Health Insurance Deduction (IRC § 162(l))
@@ -13,36 +13,36 @@
  */
 
 export class ContractorMatrixEngine {
-  // 2024/2025 US Federal Tax Brackets
+  // 2025/2026 US Federal Tax Brackets
   static TAX_BRACKETS = {
     single: [
-      { min: 0, max: 11600, rate: 0.10 },
-      { min: 11600, max: 47150, rate: 0.12 },
-      { min: 47150, max: 100525, rate: 0.22 },
-      { min: 100525, max: 191950, rate: 0.24 },
-      { min: 191950, max: 243725, rate: 0.32 },
-      { min: 243725, max: 609350, rate: 0.35 },
-      { min: 609350, max: Infinity, rate: 0.37 }
+      { min: 0, max: 11925, rate: 0.10 },
+      { min: 11925, max: 48475, rate: 0.12 },
+      { min: 48475, max: 103350, rate: 0.22 },
+      { min: 103350, max: 197300, rate: 0.24 },
+      { min: 197300, max: 250525, rate: 0.32 },
+      { min: 250525, max: 626350, rate: 0.35 },
+      { min: 626350, max: Infinity, rate: 0.37 }
     ],
     mfj: [
-      { min: 0, max: 23200, rate: 0.10 },
-      { min: 23200, max: 94300, rate: 0.12 },
-      { min: 94300, max: 201050, rate: 0.22 },
-      { min: 201050, max: 383900, rate: 0.24 },
-      { min: 383900, max: 487450, rate: 0.32 },
-      { min: 487450, max: 731200, rate: 0.35 },
-      { min: 731200, max: Infinity, rate: 0.37 }
+      { min: 0, max: 23850, rate: 0.10 },
+      { min: 23850, max: 96950, rate: 0.12 },
+      { min: 96950, max: 206700, rate: 0.22 },
+      { min: 206700, max: 394600, rate: 0.24 },
+      { min: 394600, max: 501050, rate: 0.32 },
+      { min: 501050, max: 751600, rate: 0.35 },
+      { min: 751600, max: Infinity, rate: 0.37 }
     ]
   };
 
-  // Standard Deductions (2024/2025)
+  // Standard Deductions (2025/2026)
   static STANDARD_DEDUCTIONS = {
-    single: 14600,
-    mfj: 29200
+    single: 15000,
+    mfj: 30000
   };
 
-  // FICA / SECA Constants
-  static SS_WAGE_BASE_CAP = 168600;
+  // FICA / SECA Constants (2025/2026)
+  static SS_WAGE_BASE_CAP = 176100;
   static SS_RATE_EMPLOYEE = 0.062;
   static SS_RATE_SECA = 0.124;
   static MEDICARE_RATE_EMPLOYEE = 0.0145;
@@ -54,10 +54,10 @@ export class ContractorMatrixEngine {
   };
   static SE_TAXABLE_PORTION = 0.9235;
 
-  // QBI Phase-out Thresholds (SSTB)
+  // QBI Phase-out Thresholds (SSTB 2025/2026)
   static QBI_THRESHOLD = {
-    single: { start: 191950, end: 241950 },
-    mfj: { start: 383900, end: 483900 }
+    single: { start: 197300, end: 247300 },
+    mfj: { start: 394600, end: 494600 }
   };
 
   // FX Rails Fee & Markup Model

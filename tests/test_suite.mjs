@@ -437,8 +437,8 @@ const w2Test = ContractorMatrixEngine.calculateW2({
   ptoDays: 25
 });
 assert(w2Test.grossSalary === 130000, "W-2 gross salary is $130,000");
-assert(w2Test.standardDeduction === 14600, "Single standard deduction is $14,600");
-assert(w2Test.federalTaxableIncome === 115400, "W-2 taxable income is $115,400");
+assert(w2Test.standardDeduction === 15000, "Single standard deduction is $15,000");
+assert(w2Test.federalTaxableIncome === 115000, "W-2 taxable income is $115,000");
 assert(w2Test.taxes.totalFica === 9945, `W-2 Employee FICA is $9,945 (got ${w2Test.taxes.totalFica})`);
 assert(w2Test.taxes.federalTax >= 20000 && w2Test.taxes.federalTax <= 21000, `W-2 federal tax is ~$20,739 (got ${w2Test.taxes.federalTax})`);
 assert(w2Test.cashFlow.annualTakeHomeCash >= 93000 && w2Test.cashFlow.annualTakeHomeCash <= 94000, `W-2 annual take-home is ~$93,547 (got ${w2Test.cashFlow.annualTakeHomeCash})`);

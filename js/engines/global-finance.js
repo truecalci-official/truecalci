@@ -24,14 +24,16 @@ export class GlobalFinanceEngine {
     homePrice,
     downPaymentPercent = 20,
     interestRate,
-    tenureYears = 30,
+    tenureYears,
+    loanTermYears,
     propertyTaxRatePercent = 1.2,
     annualHomeInsurance = 1500,
     annualPmiPercent = 0.75
   }) {
+    const effectiveTenure = Number(tenureYears || loanTermYears || 30);
     const downPayment = homePrice * (downPaymentPercent / 100);
     const principal = Math.max(0, homePrice - downPayment);
-    const totalMonths = tenureYears * 12;
+    const totalMonths = effectiveTenure * 12;
     const monthlyRate = (interestRate / 100) / 12;
 
     // Monthly Principal & Interest (P&I)
@@ -102,6 +104,8 @@ export class GlobalFinanceEngine {
 
     return {
       homePrice,
+      tenureYears: effectiveTenure,
+      loanTermYears: effectiveTenure,
       downPayment: Math.round(downPayment),
       principal: Math.round(principal),
       monthlyPI: Math.round(monthlyPI),

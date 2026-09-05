@@ -1,8 +1,8 @@
 # TrueCalci Precision Computational API & MCP Suite PowerShell Test Runner
 # Active Tier: Pro Agency & Scale (15,000 req/mo, 1,000 RPM concurrency)
 
-$BaseUrl = 'http://127.0.0.1:4000'
-$ApiKey = 'tc_live_pro_a8f9c2e1b7_d04a'
+$BaseUrl = if ($env:TRUECALCI_BASE_URL) { $env:TRUECALCI_BASE_URL } else { 'http://127.0.0.1:4000' }
+$ApiKey = if ($env:TRUECALCI_API_KEY) { $env:TRUECALCI_API_KEY } else { 'YOUR_TRUECALCI_API_KEY' }
 $Headers = @{
     'Content-Type'  = 'application/json'
     'Authorization' = "Bearer $ApiKey"
@@ -10,7 +10,7 @@ $Headers = @{
 
 Write-Host "================================================================================" -ForegroundColor Cyan
 Write-Host "TRUECALCI AI AGENT & COMPUTATIONAL API - POWERSHELL VERIFICATION" -ForegroundColor Cyan
-Write-Host "Host: $BaseUrl | Key: tc_live_pro_..." -ForegroundColor Cyan
+Write-Host "Host: $BaseUrl | Key: $($ApiKey.Substring(0, [Math]::Min(12, $ApiKey.Length)))..." -ForegroundColor Cyan
 Write-Host "================================================================================"
 
 # 1. Health
@@ -29,8 +29,8 @@ $mcpBody = @{
 $mcpInit = Invoke-RestMethod -Uri "$BaseUrl/api/v1/mcp" -Headers $Headers -Method Post -Body $mcpBody
 Write-Host "Server: $($mcpInit.result.serverInfo.name) v$($mcpInit.result.serverInfo.version)" -ForegroundColor Green
 
-# 3. 16 Engines Quick Sample
-Write-Host "`n[3] 16 Deterministic Engines Invocation:" -ForegroundColor Yellow
+# 3. Deterministic Engines Quick Sample
+Write-Host "`n[3] Deterministic Engines Invocation Sample:" -ForegroundColor Yellow
 
 $engines = @(
     @{ tool = "contractor_parity"; params = @{ w2Salary = 130000; contractorHourlyRate = 85 } },
@@ -64,5 +64,5 @@ foreach ($item in $engines) {
 }
 
 Write-Host "`n================================================================================" -ForegroundColor Cyan
-Write-Host "ALL 16 ENGINES VERIFIED SUCCESSFULLY VIA POWERSHELL." -ForegroundColor Cyan
+Write-Host "DETERMINISTIC ENGINES SUITE VERIFIED SUCCESSFULLY VIA POWERSHELL." -ForegroundColor Cyan
 Write-Host "================================================================================"

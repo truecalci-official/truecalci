@@ -5,7 +5,7 @@
 
 export class ParityEngine {
   static TAX_CONFIG_2024 = {
-    socialSecurityWageCap: 168600,
+    socialSecurityWageCap: 176100,
     socialSecurityTaxRate: 0.062,
     socialSecuritySelfEmployedRate: 0.124,
     medicareTaxRate: 0.0145,
@@ -13,27 +13,27 @@ export class ParityEngine {
     additionalMedicareThresholdSingle: 200000,
     additionalMedicareThresholdMFJ: 250000,
     additionalMedicareTaxRate: 0.009,
-    standardDeductionSingle: 14600,
-    standardDeductionMFJ: 29200,
+    standardDeductionSingle: 15000,
+    standardDeductionMFJ: 30000,
     qbiDeductionRate: 0.20,
-    qbiPhaseOutSingle: { start: 191950, end: 241950 },
-    qbiPhaseOutMFJ: { start: 383900, end: 483900 },
+    qbiPhaseOutSingle: { start: 197300, end: 247300 },
+    qbiPhaseOutMFJ: { start: 394600, end: 494600 },
     federalBracketsSingle: [
-      { max: 11600, rate: 0.10 },
-      { max: 47150, rate: 0.12 },
-      { max: 100525, rate: 0.22 },
-      { max: 191950, rate: 0.24 },
-      { max: 243725, rate: 0.32 },
-      { max: 609350, rate: 0.35 },
+      { max: 11925, rate: 0.10 },
+      { max: 48475, rate: 0.12 },
+      { max: 103350, rate: 0.22 },
+      { max: 197300, rate: 0.24 },
+      { max: 250525, rate: 0.32 },
+      { max: 626350, rate: 0.35 },
       { max: Infinity, rate: 0.37 }
     ],
     federalBracketsMFJ: [
-      { max: 23200, rate: 0.10 },
-      { max: 94300, rate: 0.12 },
-      { max: 201050, rate: 0.22 },
-      { max: 383900, rate: 0.24 },
-      { max: 487450, rate: 0.32 },
-      { max: 731200, rate: 0.35 },
+      { max: 23850, rate: 0.10 },
+      { max: 96950, rate: 0.12 },
+      { max: 206700, rate: 0.22 },
+      { max: 394600, rate: 0.24 },
+      { max: 501050, rate: 0.32 },
+      { max: 751600, rate: 0.35 },
       { max: Infinity, rate: 0.37 }
     ]
   };

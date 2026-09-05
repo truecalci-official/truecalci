@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 TrueCalci Python SDK Demonstration & Verification
-Runs comprehensive calculations across all 16 deterministic engines using the user's active Pro API key.
+Runs comprehensive calculations across all 24 deterministic engines using the user's active API key.
 """
 
 import sys
@@ -24,8 +24,8 @@ def run_demonstration():
 
     # Use 127.0.0.1 to avoid Windows IPv6 resolution latency
     target_url = "http://127.0.0.1:4000" if len(sys.argv) < 2 else sys.argv[1]
-    api_key = "tc_live_pro_a8f9c2e1b7_d04a"
-    print(f"\nConnecting to: {target_url} with Pro Key: {api_key[:16]}...")
+    api_key = os.environ.get("TRUECALCI_API_KEY", "YOUR_TRUECALCI_API_KEY")
+    print(f"\nConnecting to: {target_url} with Key: {api_key[:16]}...")
 
     client = TrueCalciClient(api_key=api_key, base_url=target_url)
 

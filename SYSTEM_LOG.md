@@ -199,6 +199,23 @@ This log is the single source of truth for all architectural decisions, commit h
 
 ---
 
+### Milestone 10: Claude Teardown Remediation & Platform Hardening (2026-09-05)
+* **Trigger**: Comprehensive technical audit from Claude artifact `d9024a02-feda-4e8a-93fd-78f3da2a6ec6`.
+* **Remediations Executed**:
+  1. **SEC-1 Plaintext Admin PIN Excision**: Completely purged hardcoded fallback `admin2026` and error prompts from `js/views/view-admin-portal.js` and `MANUAL_TASKS_CHECKLIST.md`. Rerouted to tokenized `/admin.html` Executive Admin Control Center.
+  2. **MON-1 & MON-5 Hardcoded API Key Purge**: Eliminated static `tc_live_pro_a8f9c2e1b7_d04a` across Python SDK client (`sdk/truecalci_client.py`), examples (`examples/python_sdk_demo.py`, `curl_examples.sh`, `curl_examples.ps1`), `claude_desktop_config.json`, and views (`view-subscriptions.js`, `view-developer-portal.js`). Configured dynamic generation and environment variable interpolation (`TRUECALCI_API_KEY`).
+  3. **CALC-1 US Tax 2025/2026 Inflation Adjustments**: Updated statutory parameters in `contractor-matrix.js` and `parity-engine.js`:
+     - Standard Deduction: Single $15,000 (up from $14,600), MFJ $30,000 (up from $29,200).
+     - Social Security Wage Base: $176,100 (up from $168,600).
+     - Section 199A QBI Phaseout: Single $197,300–$247,300; MFJ $394,600–$494,600.
+     - Tax Brackets: Updated to official IRS 2025 inflation adjustments.
+  4. **SEC-3 HTTP Security Headers**: Emitted `Content-Security-Policy`, `Strict-Transport-Security` (`max-age=31536000`), `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, and `Permissions-Policy` across `_headers`, `server.mjs`, and `_worker.js`.
+  5. **CALC-3 Schema Aliasing**: Supported `loanTermYears` alongside `tenureYears` interchangeably in `calculateMortgagePITI` and `home_loan_emi` across REST, worker, and MCP endpoints.
+  6. **Legal & Marketing Copy Harmonization**: Standardized engine count to 24 deterministic engines across `index.html`, `pricing.html`, `docs.html`, `workstation.html`, `README.md`. Replaced legacy retail bullion clause in `terms.html` §4 with enterprise statutory tax and precious metal verification terms.
+  7. **Edge Worker Synchronization**: Updated `scripts/sync_public_deploy.mjs` to synchronize `_worker.js` and successfully deployed release `1b41ebb6-488a-4524-a15c-af1b90610bb6` to Cloudflare edge.
+
+---
+
 ## 4. Standard Format for Future Log Entries
 
 Whenever a commit or release is made, append an entry using the following structure:

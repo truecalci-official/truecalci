@@ -158,6 +158,7 @@ const TOOL_DEFINITIONS = [
         downPaymentPercent: { type: "number", default: 20, description: "Down payment percentage (e.g. 20 for 20%)" },
         interestRate: { type: "number", description: "Annual interest rate in % (e.g. 6.8)" },
         tenureYears: { type: "integer", default: 30, description: "Loan duration in years (e.g. 15, 20, 30)" },
+        loanTermYears: { type: "integer", default: 30, description: "Loan duration in years (standard US alias for tenureYears)" },
         propertyTaxRatePercent: { type: "number", default: 1.2, description: "Annual property tax rate %" },
         annualHomeInsurance: { type: "number", default: 1400, description: "Annual hazard insurance premium" },
         annualPmiPercent: { type: "number", default: 0.75, description: "Annual PMI % if down payment < 20%" }
@@ -538,7 +539,7 @@ function executeCalculation(toolName, params) {
         homePrice: Number(params.homePrice),
         downPaymentPercent: Number(params.downPaymentPercent || 20),
         interestRate: Number(params.interestRate),
-        tenureYears: Number(params.tenureYears || 30),
+        tenureYears: Number(params.tenureYears || params.loanTermYears || params.termYears || params.years || 30),
         propertyTaxRatePercent: Number(params.propertyTaxRatePercent || 1.2),
         annualHomeInsurance: Number(params.annualHomeInsurance || 1400),
         annualPmiPercent: Number(params.annualPmiPercent || 0.75)
@@ -611,7 +612,7 @@ function executeCalculation(toolName, params) {
       return IndianFinanceEngine.calculateHomeLoan({
         principal: Number(params.principal),
         annualInterestRate: Number(params.annualInterestRate || params.interestRatePercent || params.rate || 8.5),
-        tenureYears: Number(params.tenureYears || params.years || 20)
+        tenureYears: Number(params.tenureYears || params.loanTermYears || params.termYears || params.years || 20)
       });
 
     case 'ppf_calculator':
@@ -925,10 +926,16 @@ const server = http.createServer(async (req, res) => {
   let parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   let pathname = decodeURIComponent(parsedUrl.pathname);
 
-  // Common CORS headers for AI Agent and Web clients
+  // Common CORS and Security headers for AI Agent and Web clients
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-API-Key');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  res.setHeader('Permissions-Policy', 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()');
+  res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com;");
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -1860,7 +1867,13 @@ const server = http.createServer(async (req, res) => {
       'Access-Control-Allow-Origin': '*',
       'Cache-Control': 'no-cache',
       'Content-Signal': 'ai-train=yes, ai-input=yes, search=yes',
-      'Link': '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </llms-full.txt>; rel="llms-full-txt", </.well-known/agent.json>; rel="agent-card", </.well-known/mcp.json>; rel="describedby"'
+      'Link': '</.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </llms-full.txt>; rel="llms-full-txt", </.well-known/agent.json>; rel="agent-card", </.well-known/mcp.json>; rel="describedby"',
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      'Permissions-Policy': 'accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()',
+      'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com;"
     };
 
     res.writeHead(200, headers);

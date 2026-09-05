@@ -20,7 +20,8 @@ const filesToSync = [
   'engineering-formulas.html',
   'terms.html',
   'privacy.html',
-  'admin.html'
+  'admin.html',
+  '_worker.js'
 ];
 
 for (const file of filesToSync) {

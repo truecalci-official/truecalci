@@ -117,6 +117,7 @@ const MCP_TOOL_DEFINITIONS = [
         downPaymentPercent: { type: "number", default: 20, description: "Down payment percentage (e.g. 20 for 20%)" },
         interestRate: { type: "number", description: "Annual interest rate in % (e.g. 6.8)" },
         tenureYears: { type: "integer", default: 30, description: "Loan duration in years (e.g. 15, 20, 30)" },
+        loanTermYears: { type: "integer", default: 30, description: "Loan duration in years (standard US alias for tenureYears)" },
         propertyTaxRatePercent: { type: "number", default: 1.2, description: "Annual property tax rate %" },
         annualHomeInsurance: { type: "number", default: 1400, description: "Annual hazard insurance premium" },
         annualPmiPercent: { type: "number", default: 0.75, description: "Annual PMI % if down payment < 20%" }
@@ -631,7 +632,7 @@ function executeTool(toolName, params) {
       homePrice: Number(params.homePrice || 450000),
       downPaymentPercent: Number(params.downPaymentPercent || 20),
       interestRate: Number(params.interestRate || 6.75),
-      tenureYears: Number(params.tenureYears || 30),
+      tenureYears: Number(params.tenureYears || params.loanTermYears || params.termYears || params.years || 30),
       propertyTaxRatePercent: Number(params.propertyTaxRatePercent || 1.2),
       annualHomeInsurance: Number(params.annualHomeInsurance || 1400),
       annualPmiPercent: Number(params.annualPmiPercent || 0.75)
@@ -680,11 +681,11 @@ function executeTool(toolName, params) {
     });
   }
 
-  if (t === "home_loan_emi" || t === "emi") {
+    if (t === "home_loan_emi" || t === "emi") {
     return IndianFinanceEngine.calculateHomeLoan({
       principal: Number(params.principal),
       annualInterestRate: Number(params.annualInterestRate || params.interestRatePercent || params.rate || 8.5),
-      tenureYears: Number(params.tenureYears || params.years || 20)
+      tenureYears: Number(params.tenureYears || params.loanTermYears || params.termYears || params.years || 20)
     });
   }
 
@@ -1565,6 +1566,12 @@ export default {
         newHeaders.set("Cache-Control", "no-cache, no-store, must-revalidate");
         newHeaders.set("Pragma", "no-cache");
         newHeaders.set("Expires", "0");
+        newHeaders.set("X-Content-Type-Options", "nosniff");
+        newHeaders.set("X-Frame-Options", "DENY");
+        newHeaders.set("Referrer-Policy", "strict-origin-when-cross-origin");
+        newHeaders.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+        newHeaders.set("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+        newHeaders.set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com;");
         return new Response(response.body, {
           status: response.status,
           statusText: response.statusText,

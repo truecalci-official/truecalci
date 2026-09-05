@@ -89,6 +89,7 @@
                   "downPayment": { "type": "number", "example": 45000 },
                   "interestRate": { "type": "number", "example": 6.75 },
                   "loanTermYears": { "type": "number", "example": 30 },
+                  "tenureYears": { "type": "number", "example": 30 },
                   "propertyTaxAnnual": { "type": "number", "example": 4800 },
                   "homeInsuranceAnnual": { "type": "number", "example": 1400 },
                   "pmiAnnualRate": { "type": "number", "example": 0.85 }
