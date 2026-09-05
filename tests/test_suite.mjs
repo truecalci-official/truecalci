@@ -326,13 +326,13 @@ assert(cpRes.yearlySchedule.length === 15, "Compound simulator produces 15-year 
 
 // 7.7 Global UI, Region Switcher & TrueCalci Branding Verification
 assert(indexHtml.includes("TrueCalci"), "index.html incorporates TrueCalci brand");
-assert(indexHtml.includes("region-switcher"), "index.html includes global region switcher");
+assert(indexHtml.includes("tc-currency-dropdown-wrapper") || indexHtml.includes("region-switcher"), "index.html includes global currency/region switcher");
 assert(indexHtml.includes('data-tool="mortgage"'), "index.html includes US Mortgage tool");
 assert(indexHtml.includes('data-tool="vat"'), "index.html includes European VAT tool");
 assert(indexHtml.includes('data-tool="tip"'), "index.html includes Tip Splitter tool");
 assert(indexHtml.includes('data-tool="compound"'), "index.html includes Compound Wealth tool");
-assert(sitemapXml.includes("#mortgage"), "sitemap.xml indexes #mortgage");
-assert(sitemapXml.includes("#vat"), "sitemap.xml indexes #vat");
+assert(sitemapXml.includes("workstation.html"), "sitemap.xml indexes canonical workstation.html");
+assert(sitemapXml.includes("pricing.html"), "sitemap.xml indexes canonical pricing.html");
 
 // -----------------------------------------------------------------------------
 // 8. TrueCalci Open AI Agent API & Model Context Protocol (MCP) Verification

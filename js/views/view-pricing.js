@@ -13,9 +13,10 @@ export class ViewPricing {
     this.billingCycle = "monthly"; // "monthly" | "annual"
     this.sliderCalls = 25000;
     
-    // Check current tier
-    const user = JSON.parse(localStorage.getItem("tc_dev_user") || 'null');
-    this.activeTier = user?.tierId || localStorage.getItem("tc_active_tier") || "free";
+    // Check current tier: require valid authenticated session to mark paid tier as active
+    const isAuthed = localStorage.getItem("tc_dev_auth") === "true";
+    const user = isAuthed ? JSON.parse(localStorage.getItem("tc_dev_user") || 'null') : null;
+    this.activeTier = (isAuthed && user) ? (user.tierId || localStorage.getItem("tc_active_tier") || "free") : "free";
   }
 
   render() {
@@ -49,8 +50,8 @@ export class ViewPricing {
       ? "30,000 calls / year upfront" 
       : "2,500 calls / month";
     const proCallsText = isAnnual 
-      ? "180,000 calls / year upfront" 
-      : "15,000 calls / month";
+      ? "120,000 calls / year upfront" 
+      : "10,000 calls / month";
     
     // Metered calculation ($1.00 / 1,000 extra calls; ₹80 / 1,000 in India)
     const extraCalls = Math.max(0, this.sliderCalls - 10000);
@@ -301,68 +302,68 @@ export class ViewPricing {
               <thead>
                 <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.74rem; text-transform: uppercase;">
                   <th style="padding: 10px 8px;">Capabilities</th>
-                  <th style="padding: 10px 8px;">Anonymous</th>
-                  <th style="padding: 10px 8px; color: var(--accent-primary);">Developer Starter</th>
-                  <th style="padding: 10px 8px;">Pro Agency</th>
-                  <th style="padding: 10px 8px; color: #10b981;">Enterprise Pay-As-You-Go</th>
+                  <th style="padding: 10px 8px; color: var(--text-muted);">Anonymous</th>
+                  <th style="padding: 10px 8px; color: var(--text-primary); font-weight: 700;">Developer Starter</th>
+                  <th style="padding: 10px 8px; color: var(--text-primary); font-weight: 700;">Pro Agency</th>
+                  <th style="padding: 10px 8px; color: var(--text-primary); font-weight: 700;">Enterprise Pay-As-You-Go</th>
                 </tr>
               </thead>
               <tbody>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Included Requests</td>
                   <td style="padding: 12px 8px; color: var(--text-secondary);">100 / mo</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: var(--accent-primary);">${starterCallsText}</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">${starterCallsText}</td>
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">${proCallsText}</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">10,000 + Elastic</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">10,000 + Elastic</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Rate Limit</td>
                   <td style="padding: 12px 8px; color: var(--text-secondary);">20 req/min</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">300 req/min</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">1,000 req/min</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">Custom Burst Limit</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Custom Burst Limit</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Dedicated Production Key</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">-</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ 1 Personal Key</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Multi-Seat Team Keys</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Unlimited Keys</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">1 Personal Key</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Multi-Seat Team Keys</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Unlimited Keys</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Overages Allowed</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Blocked (429)</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">${isIndia ? '₹80 / 1k' : '$1.00 / 1k'}</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">${isIndia ? '₹80 / 1k' : '$1.00 / 1k'}</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Streamable HTTP MCP</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Included</td>
+                  <td style="padding: 12px 8px; color: #10b981; font-weight: 600;">✓ Included</td>
+                  <td style="padding: 12px 8px; color: #10b981; font-weight: 600;">✓ Included</td>
+                  <td style="padding: 12px 8px; color: #10b981; font-weight: 600;">✓ Included</td>
+                  <td style="padding: 12px 8px; color: #10b981; font-weight: 600;">✓ Included</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Execution Latency</td>
                   <td style="padding: 12px 8px; color: var(--text-secondary);">&lt; 10ms</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">&lt; 5ms Prioritized</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">&lt; 2ms Dedicated</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">Sub-1ms Ultra Low</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Sub-1ms Ultra Low</td>
                 </tr>
                 <tr style="border-bottom: 1px solid var(--border-color);">
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Edge Uptime SLA</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">Best Effort</td>
                   <td style="padding: 12px 8px; color: var(--text-secondary);">99.9%</td>
                   <td style="padding: 12px 8px; color: var(--text-primary);">99.99%</td>
-                  <td style="padding: 12px 8px; font-weight: 600; color: #10b981;">99.99% Guaranteed</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">99.99% Guaranteed</td>
                 </tr>
                 <tr>
                   <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Tax Invoice (PDF)</td>
                   <td style="padding: 12px 8px; color: var(--text-muted);">-</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Automated GST/VAT</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Automated GST/VAT</td>
-                  <td style="padding: 12px 8px; color: #10b981;">✓ Automated Monthly GST/VAT</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Automated GST/VAT</td>
+                  <td style="padding: 12px 8px; color: var(--text-primary);">Automated GST/VAT</td>
+                  <td style="padding: 12px 8px; font-weight: 600; color: var(--text-primary);">Automated Monthly GST/VAT</td>
                 </tr>
               </tbody>
             </table>
@@ -376,9 +377,15 @@ export class ViewPricing {
           </h3>
           <div style="display: flex; flex-direction: column; gap: 16px;">
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
-              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">How does the Streamable HTTP MCP endpoint work?</h4>
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">How does the Streamable HTTP MCP endpoint work with AI agents?</h4>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                TrueCalci provides an open JSON-RPC 2.0 endpoint at <code>https://truecalci.com/api/v1/mcp</code>. AI agents in Claude Desktop, Cursor, and custom Python agents connect over standard HTTPS POST without requiring a local Node process or stdio adapter.
+                TrueCalci provides an open JSON-RPC 2.0 endpoint at <code>https://truecalci.com/api/v1/mcp</code>. AI agents in Claude Desktop, Cursor, LangChain, and custom Python agents connect over standard HTTPS POST without requiring a local Node process or stdio adapter.
+              </p>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">How does TrueCalci eliminate LLM mathematical hallucinations?</h4>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                Large language models are probabilistic token predictors that frequently produce arithmetic errors on complex multi-tier tax brackets, mortgage amortizations, and compound schedules. TrueCalci offloads the computation to deterministic IEEE 754 engines running at Cloudflare's global edge, returning verified results with 100% mathematical certainty.
               </p>
             </div>
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
@@ -388,9 +395,21 @@ export class ViewPricing {
               </p>
             </div>
             <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
-              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">What happens if my agent exceeds the 100 free requests?</h4>
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">What is included in the 10,000 monthly request quota for Pro Agency?</h4>
               <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
-                Anonymous requests return HTTP 429 with a <code>Retry-After</code> header and a link to upgrade. Upgrading to Developer Starter instantly unlocks 2,500 requests/mo (or 30,000 upfront annually) with a personal API key.
+                Pro Agency includes 10,000 edge calculation requests per calendar month (or 120,000 requests upfront with annual billing), 1,000 req/min burst speed, multi-seat API keys, priority edge routing, and automated compliance tax invoices.
+              </p>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">How does team access and multi-seat API key management work?</h4>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                Pro and Enterprise tiers allow you to generate distinct personal and shared team API keys. You can provision separate keys for staging, production, autonomous agent pipelines, and individual team members without sharing credentials.
+              </p>
+            </div>
+            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 14px;">
+              <h4 style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin: 0 0 6px;">How do overages work on the Enterprise Pay-As-You-Go plan?</h4>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.5;">
+                On Enterprise Pay-As-You-Go, you are never hard-capped or rate-blocked. You receive 10,000 included base requests, and any excess requests are billed at a predictable flat rate of $1.00 per 1,000 requests (or ₹80 per 1,000 in India) with transparent real-time usage meters.
               </p>
             </div>
             <div>
@@ -438,11 +457,11 @@ export class ViewPricing {
         const isIndia = this.currency === "inr";
         const symbol = isIndia ? "₹" : "$";
         const isAnnual = this.billingCycle === "annual";
-        const meteredBase = isAnnual ? (isIndia ? 1199 : 15) : (isIndia ? 1499 : 19);
+        const meteredBase = isAnnual ? (isIndia ? 959 : 12) : (isIndia ? 1199 : 15);
         const extraCalls = Math.max(0, this.sliderCalls - 10000);
         const overageCost = isIndia 
-          ? (extraCalls / 1000) * 15 
-          : (extraCalls / 1000) * 0.20;
+          ? (extraCalls / 1000) * 80 
+          : (extraCalls / 1000) * 1.00;
         const total = meteredBase + overageCost;
 
         const estEl = this.containerEl.querySelector("#pricing-est-total");

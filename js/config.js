@@ -11,8 +11,7 @@ export const SITE_CONFIG = {
   productionDomain: "https://truecalci.com",
   
   // Google Analytics 4 (GA4) Measurement ID (format: G-XXXXXXXXXX)
-  // Get this free from https://analytics.google.com using your personal Gmail
-  gaMeasurementId: "",
+  gaMeasurementId: "G-0CYZYEW5T4",
   
   // Google Search Console (GSC) Verification Token
   gscVerificationToken: "",

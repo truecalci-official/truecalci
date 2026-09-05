@@ -406,7 +406,7 @@ export class ViewSubscriptions {
               <tr>
                 <td>
                   <strong>Pro Agency & Scale Subscription</strong><br>
-                  <span style="font-size: 12px; color: #64748b;">Sub-millisecond deterministic edge compute, 15,000 requests/mo, 1,000 RPM burst concurrency, Model Context Protocol (MCP) streamable endpoints.</span>
+                  <span style="font-size: 12px; color: #64748b;">Sub-millisecond deterministic edge compute, 10,000 requests/mo, 1,000 RPM burst concurrency, Model Context Protocol (MCP) streamable endpoints.</span>
                 </td>
                 <td>1 Month</td>
                 <td>₹442.43</td>

@@ -29,17 +29,28 @@
      ==================================================================== */
   var CUR = {
     USD: { long: 'USD ($) — Global', short: 'USD $', symbol: '$', region: 'Global ($)', rate: 1 },
+    EUR: { long: 'EUR (€) — Europe', short: 'EUR €', symbol: '€', region: 'Europe (€)', rate: 0.92 },
+    GBP: { long: 'GBP (£) — UK',     short: 'GBP £', symbol: '£', region: 'UK (£)',     rate: 0.79 },
     INR: { long: 'INR (₹) — India',  short: 'INR ₹', symbol: '₹', region: 'India (₹)',  rate: 83.2 }
   };
 
   function normalizeCurrency(val) {
     if (!val) return 'USD';
     var u = String(val).toUpperCase().trim();
-    return (u === 'INDIA' || u === 'INR') ? 'INR' : 'USD';
+    if (u === 'EUR') return 'EUR';
+    if (u === 'GBP') return 'GBP';
+    if (u === 'INDIA' || u === 'INR') return 'INR';
+    return 'USD';
   }
 
   var cur = normalizeCurrency(html.dataset.currency || (function() {
-    try { return localStorage.getItem('calc_region'); } catch(e) { return 'USD'; }
+    try { 
+      var saved = localStorage.getItem('tc_currency') || 
+                  localStorage.getItem('calc_currency') || 
+                  localStorage.getItem('tc_region') || 
+                  localStorage.getItem('calc_region');
+      return saved ? normalizeCurrency(saved) : 'USD';
+    } catch(e) { return 'USD'; }
   })());
 
   function getCur() {
@@ -49,8 +60,9 @@
   function fmt(n) {
     var c = getCur();
     if (typeof n !== 'number' || isNaN(n)) n = 0;
-    var v = Math.round(n * (cur === 'INR' ? c.rate : 1));
-    return c.symbol + v.toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US');
+    var v = Math.round(n);
+    var loc = cur === 'INR' ? 'en-IN' : (cur === 'EUR' ? 'de-DE' : (cur === 'GBP' ? 'en-GB' : 'en-US'));
+    return c.symbol + v.toLocaleString(loc);
   }
 
   function applyCurrency() {
@@ -74,7 +86,7 @@
     });
 
     var taxLabel = $('#tax-label');
-    if (taxLabel) taxLabel.textContent = cur === 'INR' ? 'GST — 18% (SAC 998314)' : 'Sales tax — TX (8.25%)';
+    if (taxLabel) taxLabel.textContent = cur === 'INR' ? 'GST — 18% (SAC 998314)' : (cur === 'GBP' ? 'VAT — 20%' : (cur === 'EUR' ? 'VAT — Standard' : 'Sales tax — TX (8.25%)'));
 
     try {
       recalcCurrent();
@@ -86,9 +98,25 @@
   var curBtn = $('#currency-toggle');
   if (curBtn) curBtn.addEventListener('click', function () {
     cur = cur === 'USD' ? 'INR' : 'USD';
-    try { localStorage.setItem('calc_region', cur === 'INR' ? 'india' : 'global'); } catch (e) {}
+    try { 
+      localStorage.setItem('calc_region', cur === 'INR' ? 'india' : 'global');
+      localStorage.setItem('calc_currency', cur);
+      localStorage.setItem('tc_currency', cur);
+      localStorage.setItem('tc_region', cur === 'INR' ? 'india' : 'global');
+    } catch (e) {}
     applyCurrency();
     toast('Currency switched to ' + getCur().short);
+  });
+
+  window.addEventListener('tc_currency_changed', function (e) {
+    if (e.detail && e.detail.currency) {
+      var nextCur = normalizeCurrency(e.detail.currency);
+      if (cur !== nextCur) {
+        cur = nextCur;
+        applyCurrency();
+        toast('Currency set to ' + getCur().short);
+      }
+    }
   });
 
   /* ====================================================================
@@ -116,6 +144,53 @@
     activeTitle = tool.dataset.title;
     activeSlug  = tool.dataset.slug;
 
+    // Auto-switch currency to statutory default currency per engine jurisdiction
+    var ENGINE_DEFAULT_CURRENCY = {
+      // 1. Indian Statutory & Wealth Suite -> INR (₹)
+      'ITX-05': 'INR',
+      'GST-06': 'INR',
+      'SIP-09': 'INR',
+      'FXD-10': 'INR',
+      'GLD-11': 'INR',
+      'PPF-13': 'INR',
+      'SSY-14': 'INR',
+      'HLN-07': 'INR',
+
+      // 2. European VAT -> EUR (€)
+      'VAT-02': 'EUR',
+
+      // 3. US & Global Engines -> USD ($)
+      'CTR-18': 'USD',
+      'SCP-19': 'USD',
+      'SLO-20': 'USD',
+      'BHF-22': 'USD',
+      'AIT-20': 'USD',
+      'SRD-21': 'USD',
+      'B2B-22': 'USD',
+      'FEI-23': 'USD',
+      'CEF-24': 'USD',
+      'MTG-01': 'USD',
+      'TIP-03': 'USD',
+      'CMP-04': 'USD',
+      'FXR-21': 'USD',
+      'SCI-15': 'USD',
+      'PRG-17': 'USD'
+    };
+
+    var defaultCur = ENGINE_DEFAULT_CURRENCY[activeCode] || 'USD';
+    if (cur !== defaultCur) {
+      cur = defaultCur;
+      if (window.tcSetCurrency) {
+        window.tcSetCurrency(defaultCur);
+      } else {
+        applyCurrency();
+      }
+    }
+
+    if (window.location.hash !== '#' + activeSlug && window.location.hash !== '#' + activeCode) {
+      try { history.replaceState(null, '', '#' + activeSlug); } catch (e) {}
+    }
+
     var codeEl = $('#engine-code'), titleEl = $('#engine-title');
     var slugEl = $('#engine-slug'), drawerCode = $('#drawer-code');
     if (codeEl) codeEl.textContent = activeCode;
@@ -123,14 +198,18 @@
     if (slugEl) slugEl.textContent = activeSlug;
     if (drawerCode) drawerCode.textContent = activeCode;
 
-    // Stage visibility
+    // Stage visibility with strict single-stage isolation for display and printing
     var stageSelector = STAGES[activeCode] || '#stage-generic';
     $$('#stage-contractor, #stage-ai-tokens, #stage-startup, #stage-b2b, #stage-feie, #stage-egress, #stage-generic').forEach(function (st) {
-      st.hidden = true;
+      var isTarget = ('#' + st.id === stageSelector);
+      st.hidden = !isTarget;
+      st.style.display = isTarget ? 'block' : 'none';
+      if (isTarget) {
+        st.classList.add('tc-active-stage');
+      } else {
+        st.classList.remove('tc-active-stage');
+      }
     });
-
-    var targetStage = $(stageSelector);
-    if (targetStage) targetStage.hidden = false;
 
     if (stageSelector === '#stage-generic') {
       try {
@@ -142,7 +221,67 @@
 
     try { updateDrawerContent(); } catch (e) { console.warn(e); }
     try { recalcCurrent(); } catch (e) { console.warn(e); }
+    try { updateShowcaseMCPSchema(activeSlug, activeCode, activeTitle); } catch (e) { console.warn(e); }
   }
+
+  /* --- Developer Architecture & MCP Showcase Banner Controller --- */
+  function updateShowcaseMCPSchema(slug, code, title) {
+    var slugEl = $('#showcase-active-slug');
+    var codeEl = $('#showcase-mcp-code');
+    if (slugEl) slugEl.textContent = slug || 'contractor.parity';
+    if (!codeEl) return;
+
+    var schemaSample = {
+      jsonrpc: "2.0",
+      method: "tools/call",
+      params: {
+        name: slug || "contractor.parity",
+        arguments: {
+          engineCode: code || "CTR-18",
+          engineTitle: title || "Contractor Parity",
+          precision: "IEEE-754-deterministic",
+          latencyTarget: "sub-1ms"
+        }
+      },
+      id: "agent-req-001"
+    };
+
+    var curlSnippet = '# Streamable HTTP Model Context Protocol (MCP) Request:\n' +
+      'curl -X POST https://truecalci.com/api/v1/mcp \\\n' +
+      '  -H "Content-Type: application/json" \\\n' +
+      '  -H "Authorization: Bearer <YOUR_API_KEY>" \\\n' +
+      '  -d \'' + JSON.stringify(schemaSample, null, 2) + '\'';
+
+    codeEl.textContent = curlSnippet;
+  }
+
+  var showcaseEl = $('#ws-developer-showcase');
+  var showcaseBtn = $('#btn-showcase-mcp-schema');
+  var showcasePanel = $('#showcase-mcp-panel');
+  var showcaseDismiss = $('#btn-dismiss-showcase');
+
+  if (sessionStorage.getItem('tc_hide_showcase') === 'true' && showcaseEl) {
+    showcaseEl.style.display = 'none';
+  }
+
+  if (showcaseDismiss) {
+    showcaseDismiss.addEventListener('click', function () {
+      if (showcaseEl) showcaseEl.style.display = 'none';
+      sessionStorage.setItem('tc_hide_showcase', 'true');
+    });
+  }
+
+  if (showcaseBtn) {
+    showcaseBtn.addEventListener('click', function () {
+      if (!showcasePanel) return;
+      var isHidden = showcasePanel.style.display === 'none' || !showcasePanel.style.display;
+      showcasePanel.style.display = isHidden ? 'block' : 'none';
+      var label = showcaseBtn.querySelector('span');
+      if (label) label.textContent = isHidden ? 'Hide MCP Tool Schema' : 'Inspect Live MCP Tool';
+    });
+  }
+
+  try { updateShowcaseMCPSchema(activeSlug, activeCode, activeTitle); } catch (e) {}
 
   $$('.ws-rail__head').forEach(function (head) {
     head.addEventListener('click', function () {
@@ -276,18 +415,23 @@
       ]
     },
     'ITX-05': {
-      title: 'Indian Income Tax — Section 115BAC (ITA 2025)',
-      formula: 'Taxable_Income = max(Gross − Standard_Deduction(₹75,000), 0)\nSlabs: 0-3L (Nil), 3-7L (5%), 7-10L (10%), 10-12L (15%), 12-15L (20%), >15L (30%)\nRebate_87A = Taxable ≤ 12,00,000 ? Full Rebate : 0\nHealth_Education_Cess = Tax × 4%',
+      title: 'Indian Income Tax — Dual Regime Comparator & ITR Optimizer (Budget 2025-26 & 2026-27)',
+      formula: 'New Regime (§115BAC): Taxable = Gross − StdDed(₹75,000 Salaried)\nNew Slabs: 0-4L (0%), 4-8L (5%), 8-12L (10%), 12-16L (15%), 16-20L (20%), 20-24L (25%), >24L (30%)\n§87A Full Rebate: Zero tax for Taxable ≤ ₹12,00,000 (Max rebate ₹60,000)\nOld Regime: Taxable = Gross − StdDed(₹50k) − 80C(₹1.5L) − 80D(₹1L) − 24b(₹2L) − NPS(₹50k) − Other\nOld Slabs: 0-2.5L (0%), 2.5-5L (5%), 5-10L (20%), >10L (30%)\nCess = (Tax + Surcharge) × 4%\nBreakeven Threshold D*: Minimum deductions in Old Regime required to match New Regime tax.\nFiling Reconciliation: Reconcile Form 16 Part A/B against AIS/TIS and Form 26AS to avoid §143(1) notices.',
       statutes: [
         { name: 'Income Tax Department Official Tax Slab Schedule', ref: 'Income-tax Act § 115BAC', url: 'https://www.incometax.gov.in/iec/fposervices/#/tax-slab' },
-        { name: 'Union Budget Finance Bill 2025-26 & 2026-27', ref: 'Ministry of Finance Official', url: 'https://indiabudget.gov.in/' }
+        { name: 'Union Budget Finance Bill 2025-26 & 2026-27', ref: 'Ministry of Finance Official', url: 'https://indiabudget.gov.in/' },
+        { name: 'Chapter VI-A Statutory Deductions & Exemptions', ref: 'Income-tax Act § 80C, 80D, 80CCD, 24(b)', url: 'https://www.incometax.gov.in/' },
+        { name: 'Form 10-IEA Opt-Out Declaration for Non-Salaried', ref: 'CBDT Notification 43/2023', url: 'https://incometaxindia.gov.in/' },
+        { name: 'TRACES Form 16 & TDS Reconciliation Guidelines', ref: 'Income Tax Rules Rule 31', url: 'https://www.tdscpc.gov.in/' }
       ]
     },
     'GST-06': {
-      title: 'Goods and Services Tax (GST) Split',
-      formula: 'Total_GST = Base_Amount × Rate%\nIntrastate: CGST = Total_GST ÷ 2, SGST = Total_GST ÷ 2\nInterstate: IGST = Total_GST\nGross_Invoice = Base_Amount + Total_GST',
+      title: 'Goods and Services Tax (GST) Enterprise Statutory Engine',
+      formula: 'Exclusive Mode: GST = Base × Rate%, Gross = Base + GST + Cess\nInclusive Mode: Base = Gross ÷ (1 + (Rate% + Cess%)), GST = Base × Rate%\nIntrastate: CGST = GST ÷ 2, SGST = GST ÷ 2\nInterstate / Export: IGST = GST\nReverse Charge (RCM): Tax payable direct to Govt under Sec 9(3)/9(4)\nITC: Eligible credits set off against output tax liabilities under Sec 16',
       statutes: [
-        { name: 'Central Goods and Services Tax Act, 2017', ref: 'CGST Act § 9 & IGST Act § 5', url: 'https://cbic-gst.gov.in/' }
+        { name: 'Central Goods and Services Tax Act, 2017', ref: 'CGST Act § 9, § 16, § 17(5)', url: 'https://cbic-gst.gov.in/' },
+        { name: 'Integrated Goods and Services Tax Act, 2017', ref: 'IGST Act § 5', url: 'https://cbic-gst.gov.in/' },
+        { name: 'GST (Compensation to States) Act, 2017', ref: 'Cess Schedule 2017', url: 'https://cbic-gst.gov.in/' }
       ]
     },
     'SIP-09': {
@@ -413,6 +557,7 @@
   var QBI       = 0.20;
 
   function num(id) { var el = $(id); return el ? parseFloat(el.value) || 0 : 0; }
+  function strVal(id) { var el = $(id); return el ? el.value : ''; }
   function setText(sel, val) { var el = $(sel); if (el) el.textContent = val; }
 
   // 1. Contractor Parity & S-Corp (CTR-18)
@@ -494,7 +639,7 @@
       if (amt) amt.textContent = fmt(routes[i]);
     });
 
-    setText('#rail-base', Math.round(revenue * CUR[cur].rate).toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US'));
+    setText('#rail-base', Math.round(revenue).toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US'));
     $$('#rail-list .rail-card__cost').forEach(function (el) {
       var spread = parseFloat(el.dataset.rail);
       el.textContent = fmt(revenue * spread);
@@ -927,61 +1072,209 @@
 
     // Statutory & Tax Suite
     'ITX-05': {
-      title: 'Indian Income Tax — Section 115BAC (ITA 2025)',
-      sub: 'Statutory New Tax Regime Slabs (Zero Net Tax Up to ₹12.75 Lakhs for Salaried)',
+      title: 'Indian Income Tax — Dual Regime Comparator & ITR Optimizer (Budget 2025-26 & 2026-27)',
+      sub: 'Statutory New Tax Regime (Section 115BAC) vs Old Regime with Form 16 / AIS Reconciliation & Deduction Breakeven Solver',
       fields: [
-        { id: 'itx-income', label: 'Gross total income (₹)', type: 'number', val: 1250000, step: 25000, suffix: '₹' },
-        { id: 'itx-std', label: 'Standard deduction (₹)', type: 'number', val: 75000, step: 5000, suffix: '₹' }
+        { id: 'itx-income', label: 'Gross total income / Salary CTC (₹)', type: 'number', val: 1800000, step: 50000, suffix: '₹' },
+        { id: 'itx-salaried', label: 'Employment classification', type: 'select', val: '1', options: [
+          { value: '1', label: 'Salaried Individual (Standard Deduction Eligible)' },
+          { value: '0', label: 'Self-Employed / Professional / Consultant' }
+        ]},
+        { id: 'itx-80c', label: 'Section 80C Deductions (EPF, PPF, ELSS, Life Ins) [Old Regime]', type: 'number', val: 150000, step: 10000, max: 150000, suffix: 'Max ₹1.5L' },
+        { id: 'itx-80d', label: 'Section 80D Health Insurance [Old Regime]', type: 'number', val: 25000, step: 5000, max: 100000, suffix: 'Max ₹1L' },
+        { id: 'itx-24b', label: 'Section 24(b) Home Loan Interest [Old Regime]', type: 'number', val: 0, step: 10000, max: 200000, suffix: 'Max ₹2L' },
+        { id: 'itx-nps', label: 'Section 80CCD(1B) Additional NPS [Old Regime]', type: 'number', val: 0, step: 5000, max: 50000, suffix: 'Max ₹50k' },
+        { id: 'itx-other-ded', label: 'Other Exemptions (HRA §10(13A), LTA, §80E, §80G) [Old Regime]', type: 'number', val: 0, step: 10000, suffix: '₹' },
+        { id: 'itx-other-inc', label: 'Savings & FD Interest / Other Income (Form 26AS / AIS)', type: 'number', val: 0, step: 5000, suffix: '₹' }
       ],
       calc: function () {
-        var income = num('#itx-income'), std = num('#itx-std');
-        var net = Math.max(income - std, 0);
-        var tax = 0;
-        if (net > 1500000) { tax += (net - 1500000) * 0.30; net = 1500000; }
-        if (net > 1200000) { tax += (net - 1200000) * 0.20; net = 1200000; }
-        if (net > 1000000) { tax += (net - 1000000) * 0.15; net = 1000000; }
-        if (net > 700000)  { tax += (net - 700000)  * 0.10; net = 700000; }
-        if (net > 300000)  { tax += (net - 300000)  * 0.05; }
-        // Section 87A rebate under FY25-26 Budget: up to 12L taxable income => full rebate!
-        if (income - std <= 1200000) {
-          tax = 0;
+        var salary = num('#itx-income');
+        var otherInc = num('#itx-other-inc');
+        var grossTotal = salary + otherInc;
+        var isSalaried = strVal('#itx-salaried') !== '0';
+
+        var d80C = Math.min(Math.max(num('#itx-80c'), 0), 150000);
+        var d80D = Math.min(Math.max(num('#itx-80d'), 0), 100000);
+        var d24b = Math.min(Math.max(num('#itx-24b'), 0), 200000);
+        var dNps = Math.min(Math.max(num('#itx-nps'), 0), 50000);
+        var dOther = Math.max(num('#itx-other-ded'), 0);
+
+        // --- NEW REGIME (Section 115BAC Budget 2025-26 & 2026-27 Slabs) ---
+        var stdNew = isSalaried ? 75000 : 0;
+        var taxableNew = Math.max(grossTotal - stdNew, 0);
+        var taxNew = 0;
+        var newSlabs = [
+          { min: 0, max: 400000, rate: 0.00 },
+          { min: 400000, max: 800000, rate: 0.05 },
+          { min: 800000, max: 1200000, rate: 0.10 },
+          { min: 1200000, max: 1600000, rate: 0.15 },
+          { min: 1600000, max: 2000000, rate: 0.20 },
+          { min: 2000000, max: 2400000, rate: 0.25 },
+          { min: 2400000, max: Infinity, rate: 0.30 }
+        ];
+        for (var i = 0; i < newSlabs.length; i++) {
+          var s = newSlabs[i];
+          if (taxableNew > s.min) {
+            var chunk = Math.min(taxableNew, s.max) - s.min;
+            taxNew += chunk * s.rate;
+          }
         }
-        var cess = tax * 0.04;
-        var totalTax = tax + cess;
+        // 87A rebate for New Regime: up to 12L taxable => rebate up to 60,000
+        var rebateNew = 0;
+        if (taxableNew <= 1200000) {
+          rebateNew = Math.min(taxNew, 60000);
+          taxNew = Math.max(0, taxNew - rebateNew);
+        }
+        // Surcharges for New Regime (capped at 25%)
+        var surchargeNew = 0;
+        if (taxableNew > 20000000) surchargeNew = taxNew * 0.25;
+        else if (taxableNew > 10000000) surchargeNew = taxNew * 0.15;
+        else if (taxableNew > 5000000) surchargeNew = taxNew * 0.10;
+        var cessNew = (taxNew + surchargeNew) * 0.04;
+        var totalTaxNew = Math.round(taxNew + surchargeNew + cessNew);
+
+        // --- OLD REGIME ---
+        var stdOld = isSalaried ? 50000 : 0;
+        var totalOldDed = stdOld + d80C + d80D + d24b + dNps + dOther;
+        var taxableOld = Math.max(grossTotal - totalOldDed, 0);
+        var taxOld = 0;
+        var oldSlabs = [
+          { min: 0, max: 250000, rate: 0.00 },
+          { min: 250000, max: 500000, rate: 0.05 },
+          { min: 500000, max: 1000000, rate: 0.20 },
+          { min: 1000000, max: Infinity, rate: 0.30 }
+        ];
+        for (var j = 0; j < oldSlabs.length; j++) {
+          var os = oldSlabs[j];
+          if (taxableOld > os.min) {
+            var oChunk = Math.min(taxableOld, os.max) - os.min;
+            taxOld += oChunk * os.rate;
+          }
+        }
+        var rebateOld = 0;
+        if (taxableOld <= 500000) {
+          rebateOld = Math.min(taxOld, 12500);
+          taxOld = Math.max(0, taxOld - rebateOld);
+        }
+        var surchargeOld = 0;
+        if (taxableOld > 50000000) surchargeOld = taxOld * 0.37;
+        else if (taxableOld > 20000000) surchargeOld = taxOld * 0.25;
+        else if (taxableOld > 10000000) surchargeOld = taxOld * 0.15;
+        else if (taxableOld > 5000000) surchargeOld = taxOld * 0.10;
+        var cessOld = (taxOld + surchargeOld) * 0.04;
+        var totalTaxOld = Math.round(taxOld + surchargeOld + cessOld);
+
+        // --- DEDUCTION BREAKEVEN CALCULATION ---
+        var dStar = 0;
+        if (totalTaxNew === 0) {
+          dStar = Math.max(grossTotal - 500000, 0);
+        } else {
+          var rTax = totalTaxNew / 1.04;
+          var tOldReq = 0;
+          if (rTax <= 12500) {
+            tOldReq = 250000 + (rTax / 0.05);
+          } else if (rTax <= 112500) {
+            tOldReq = 500000 + ((rTax - 12500) / 0.20);
+          } else {
+            tOldReq = 1000000 + ((rTax - 112500) / 0.30);
+          }
+          dStar = Math.max(grossTotal - tOldReq, 0);
+        }
+
+        var isNewBetter = totalTaxNew <= totalTaxOld;
+        var taxSavings = Math.abs(totalTaxNew - totalTaxOld);
+        var optimalTax = Math.min(totalTaxNew, totalTaxOld);
+        var inHandAnnual = Math.max(grossTotal - optimalTax, 0);
+        var inHandMonthly = inHandAnnual / 12;
+
+        var recItr = isSalaried ? (grossTotal > 5000000 ? 'ITR-2 (>₹50L)' : 'ITR-1 (Sahaj)') : 'ITR-4 (Sugam §44ADA) / ITR-3';
+        var form10Iea = isSalaried ? 'Not Required (Salaried)' : (isNewBetter ? 'Not Required for New Regime' : 'Form 10-IEA Mandatory');
+
         return {
-          primaryLabel: 'Total Income Tax Payable (115BAC)',
-          primaryVal: '₹' + Math.round(totalTax).toLocaleString('en-IN'),
-          subText: totalTax === 0 ? 'Zero Net Tax (Section 87A Full Rebate Applied)' : ('Effective Tax Rate: ' + (income > 0 ? (totalTax / income * 100).toFixed(2) : 0) + '%'),
+          primaryLabel: isNewBetter ? 'Optimal: New Tax Regime (Section 115BAC)' : 'Optimal: Old Tax Regime (With Deductions)',
+          primaryVal: '₹' + Math.round(optimalTax).toLocaleString('en-IN'),
+          subText: (taxSavings > 0 ? ('Statutory Tax Savings: ₹' + Math.round(taxSavings).toLocaleString('en-IN') + ' vs ' + (isNewBetter ? 'Old Regime' : 'New Regime')) : 'Both Regimes Result in Identical Tax') + (optimalTax === 0 ? ' · Section 87A Full Zero-Tax Rebate Active' : ''),
           metrics: [
-            { label: 'Taxable Income', val: '₹' + Math.max(income - std, 0).toLocaleString('en-IN') },
-            { label: 'Health & Edu Cess (4%)', val: '₹' + Math.round(cess).toLocaleString('en-IN') },
-            { label: 'Net In-Hand Annual', val: '₹' + Math.round(income - totalTax).toLocaleString('en-IN') },
-            { label: 'Monthly Take-Home', val: '₹' + Math.round((income - totalTax) / 12).toLocaleString('en-IN') }
+            { label: 'New Regime (115BAC)', val: '₹' + Math.round(totalTaxNew).toLocaleString('en-IN') },
+            { label: 'Old Regime (with deductions)', val: '₹' + Math.round(totalTaxOld).toLocaleString('en-IN') },
+            { label: 'Deductions Breakeven', val: '₹' + Math.round(dStar).toLocaleString('en-IN') + ' needed for Old' },
+            { label: 'Recommended ITR Form', val: recItr },
+            { label: 'Net Annual In-Hand', val: '₹' + Math.round(inHandAnnual).toLocaleString('en-IN') },
+            { label: 'Monthly Take-Home', val: '₹' + Math.round(inHandMonthly).toLocaleString('en-IN') },
+            { label: 'Effective Tax Rate', val: grossTotal > 0 ? ((optimalTax / grossTotal) * 100).toFixed(2) + '%' : '0.00%' },
+            { label: 'Form 10-IEA Status', val: form10Iea }
           ]
         };
       }
     },
     'GST-06': {
-      title: 'GST Calculator — CGST / SGST / IGST',
-      sub: 'Subsumed Interstate & Intrastate Deterministic Split',
+      title: 'Goods and Services Tax (GST) Enterprise Engine',
+      sub: 'Exclusive / Inclusive Invoicing, Intrastate vs Interstate, Compensation Cess, RCM & ITC Breakdown',
       fields: [
-        { id: 'gst-amt', label: 'Transaction base amount', type: 'number', val: 100000, step: 5000, cur: true },
-        { id: 'gst-rate', label: 'GST Slab (%)', type: 'number', val: 18, step: 1, suffix: '%' }
+        { id: 'gst-amt', label: 'Transaction invoice amount (₹)', type: 'number', val: 100000, step: 5000, suffix: '₹' },
+        { id: 'gst-type', label: 'Invoicing computation mode', type: 'select', val: 'exclusive', options: [
+          { value: 'exclusive', label: 'Exclusive Mode (Add GST & Cess to Pre-Tax Base)' },
+          { value: 'inclusive', label: 'Inclusive Mode (Extract GST & Cess from Gross MRP)' }
+        ]},
+        { id: 'gst-jurisdiction', label: 'Jurisdiction & supply type', type: 'select', val: 'intrastate', options: [
+          { value: 'intrastate', label: 'Intrastate Supply (CGST 50% + SGST 50%)' },
+          { value: 'interstate', label: 'Interstate / Export / SEZ (IGST 100%)' }
+        ]},
+        { id: 'gst-rate', label: 'Statutory GST Slab', type: 'select', val: '18', options: [
+          { value: '18', label: '18% — Standard Tier-2 (IT, SaaS, Telecom, Professional Services)' },
+          { value: '12', label: '12% — Standard Tier-1 (Processed Food, Apparel, Hardware)' },
+          { value: '5', label: '5% — Concessional (Essential Food, Pharma, Life-saving Drugs)' },
+          { value: '0', label: '0% — Statutory Exempt (Grains, Milk, Education, Healthcare)' },
+          { value: '28', label: '28% — Luxury / Demerit (Automobiles, Aerated Drinks, Tobacco)' }
+        ]},
+        { id: 'gst-cess', label: 'Statutory Compensation Cess (%)', type: 'number', val: 0, step: 1, suffix: '%' },
+        { id: 'gst-rcm', label: 'Reverse Charge Mechanism (RCM)', type: 'select', val: 'no', options: [
+          { value: 'no', label: 'Forward Charge (Supplier collects & deposits GST)' },
+          { value: 'yes', label: 'RCM Sec 9(3)/9(4) (Recipient pays GST directly to Govt)' }
+        ]},
+        { id: 'gst-itc', label: 'Input Tax Credit (ITC) eligibility', type: 'select', val: 'eligible', options: [
+          { value: 'eligible', label: 'Eligible ITC Sec 16 (100% Tax Credit Reclaimable)' },
+          { value: 'blocked', label: 'Blocked Credit Sec 17(5) (Ineligible — Tax is Direct Cost)' }
+        ]}
       ],
       calc: function () {
-        var base = num('#gst-amt'), rate = num('#gst-rate') / 100;
-        var tax = base * rate;
-        var cgst = tax / 2;
-        var sgst = tax / 2;
+        var amt = num('#gst-amt');
+        var type = strVal('#gst-type') || 'exclusive';
+        var jur = strVal('#gst-jurisdiction') || 'intrastate';
+        var rate = num('#gst-rate') !== 0 ? num('#gst-rate') : (strVal('#gst-rate') === '0' ? 0 : 18);
+        var cessRate = num('#gst-cess');
+        var isRcm = strVal('#gst-rcm') === 'yes';
+        var itcEligible = strVal('#gst-itc') !== 'blocked';
+
+        var baseAmount = 0, gstAmount = 0, cessAmount = 0, totalAmount = 0;
+        if (type === 'inclusive') {
+          totalAmount = amt;
+          var combinedFactor = 1 + (rate + cessRate) / 100;
+          baseAmount = combinedFactor > 0 ? (totalAmount / combinedFactor) : totalAmount;
+          gstAmount = baseAmount * (rate / 100);
+          cessAmount = baseAmount * (cessRate / 100);
+        } else {
+          baseAmount = amt;
+          gstAmount = baseAmount * (rate / 100);
+          cessAmount = baseAmount * (cessRate / 100);
+          totalAmount = baseAmount + gstAmount + cessAmount;
+        }
+
+        var isInterstate = jur === 'interstate';
+        var cgst = isInterstate ? 0 : (gstAmount / 2);
+        var sgst = isInterstate ? 0 : (gstAmount / 2);
+        var igst = isInterstate ? gstAmount : 0;
+        var totalTax = gstAmount + cessAmount;
+
         return {
-          primaryLabel: 'Total GST Amount',
-          primaryVal: fmt(tax),
-          subText: 'Gross Invoice Total: ' + fmt(base + tax),
+          primaryLabel: type === 'inclusive' ? 'Pre-Tax Net Base Extracted' : 'Gross Invoice Total (MRP)',
+          primaryVal: '₹' + Math.round(type === 'inclusive' ? baseAmount : totalAmount).toLocaleString('en-IN'),
+          subText: 'Base: ₹' + Math.round(baseAmount).toLocaleString('en-IN') + ' · Total Tax (GST + Cess): ₹' + Math.round(totalTax).toLocaleString('en-IN') + (isRcm ? ' [RCM: Direct to Govt]' : ''),
           metrics: [
-            { label: 'CGST (Central 50%)', val: fmt(cgst) },
-            { label: 'SGST (State 50%)', val: fmt(sgst) },
-            { label: 'IGST (Interstate)', val: fmt(tax) },
-            { label: 'Invoice Gross', val: fmt(base + tax) }
+            { label: isInterstate ? 'IGST (100% Interstate)' : 'CGST (50% Central)', val: '₹' + Math.round(isInterstate ? igst : cgst).toLocaleString('en-IN') },
+            { label: isInterstate ? 'CGST / SGST' : 'SGST / UTGST (50% State)', val: isInterstate ? '₹0 (N/A)' : ('₹' + Math.round(sgst).toLocaleString('en-IN')) },
+            { label: 'Compensation Cess (' + cessRate + '%)', val: '₹' + Math.round(cessAmount).toLocaleString('en-IN') },
+            { label: 'ITC Status', val: itcEligible ? ('100% Credit (₹' + Math.round(totalTax).toLocaleString('en-IN') + ')') : 'Blocked Credit Sec 17(5)' }
           ]
         };
       }
@@ -1280,15 +1573,26 @@
       cfg.fields.forEach(function (f) {
         h += '<div class="field">' +
                '<label for="' + f.id + '">' + f.label + '</label>' +
-               '<div class="input-group">' +
-                 (f.cur ? '<span class="input-group__pill cur-symbol">' + getCur().symbol + '</span>' : '') +
-                 '<input class="input num" id="' + f.id + '" type="' + f.type + '" value="' + f.val + '"' +
-                   (f.step ? ' step="' + f.step + '"' : '') +
-                   (f.min !== undefined ? ' min="' + f.min + '"' : '') +
-                   (f.max !== undefined ? ' max="' + f.max + '"' : '') +
-                   ' data-calc-gen>' +
-                 (f.suffix ? '<span class="input-suffix">' + f.suffix + '</span>' : '') +
-               '</div>' +
+               '<div class="input-group">';
+        if (f.type === 'select') {
+          h += '<select class="input" id="' + f.id + '" data-calc-gen style="width:100%;min-height:38px;padding:0 10px;background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);border-radius:6px;font-size:12px;">';
+          (f.options || []).forEach(function (opt) {
+            var optVal = typeof opt === 'object' ? opt.value : opt;
+            var optLbl = typeof opt === 'object' ? opt.label : opt;
+            var sel = String(optVal) === String(f.val) ? ' selected' : '';
+            h += '<option value="' + optVal + '"' + sel + '>' + optLbl + '</option>';
+          });
+          h += '</select>';
+        } else {
+          h += (f.cur ? '<span class="input-group__pill cur-symbol">' + getCur().symbol + '</span>' : '') +
+               '<input class="input num" id="' + f.id + '" type="' + f.type + '" value="' + f.val + '"' +
+                 (f.step ? ' step="' + f.step + '"' : '') +
+                 (f.min !== undefined ? ' min="' + f.min + '"' : '') +
+                 (f.max !== undefined ? ' max="' + f.max + '"' : '') +
+                 ' data-calc-gen>' +
+               (f.suffix ? '<span class="input-suffix">' + f.suffix + '</span>' : '');
+        }
+        h +=   '</div>' +
              '</div>';
       });
       fieldsContainer.innerHTML = h;
@@ -1399,17 +1703,38 @@
      ==================================================================== */
   function derivationText() {
     var d = DERIVATIONS[activeCode];
-    var formulaStr = d ? d.formula : 'f(x) IEEE 754';
+    var formulaStr = d ? d.formula : 'f(x) IEEE 754 deterministic floating-point arithmetic';
+    var statStr = (d && d.statutes) ? d.statutes.map(function (s) { return '  • ' + s.name + ' (' + s.ref + ')'; }).join('\n') : '  • IEEE 754-2019 Standard for Floating-Point Arithmetic';
+
+    var inputsSnapshot = [];
+    $$('[data-calc], [data-calc-ai], [data-calc-st], [data-calc-b2b], [data-calc-feie], [data-calc-egress], [data-calc-gen]').forEach(function (inp) {
+      if (inp.offsetParent !== null) {
+        var lbl = inp.closest('.field') ? $('label', inp.closest('.field')) : null;
+        var labelText = lbl ? lbl.textContent.trim() : inp.id;
+        inputsSnapshot.push('  • ' + labelText + ': ' + inp.value);
+      }
+    });
+
     return [
-      'TrueCalci — ' + activeSlug + ' (' + activeCode + ') @2.6.1',
-      'Engine: ' + activeTitle,
+      '=========================================================================',
+      'TrueCalci Statutory & Mathematical Derivation AST',
+      'Engine: ' + activeTitle + ' [' + activeCode + ']',
+      'Specification: ' + activeSlug + ' @2.6.1',
       'Timestamp: ' + new Date().toISOString(),
-      'Precision: 64-bit IEEE 754 Floating Point',
+      'Precision Standard: 64-bit IEEE 754 Floating-Point Determinism',
+      'Privacy Guarantee: Zero-Storage Guarantee (Computed in Client RAM)',
+      '=========================================================================',
       '',
-      '--- Mathematical Derivation ---',
+      '--- Active Mathematical Input State ---',
+      inputsSnapshot.length > 0 ? inputsSnapshot.join('\n') : '  Standard deterministic baseline parameters',
+      '',
+      '--- Formal Mathematical Equations ---',
       formulaStr,
       '',
-      'Statutory Verification: Validated under official publications.'
+      '--- Statutory Authorities & Gazette References ---',
+      statStr,
+      '',
+      '========================================================================='
     ].join('\n');
   }
 
@@ -1456,17 +1781,50 @@
         destType: $('#egress-dest') ? $('#egress-dest').value : 'internet',
         directConnectCommitGbps: num('#egress-commit')
       };
+    } else if (activeCode === 'CTR-18') {
+      payload = {
+        w2Salary: num('#in-w2'),
+        contractorHourlyRate: num('#out-floor') || 85,
+        revenue: num('#in-revenue'),
+        expenses: num('#in-expenses')
+      };
+    } else if (activeCode === 'ITX-05') {
+      payload = {
+        ctc: num('#itx-income'),
+        isSalaried: strVal('#itx-salaried') !== '0',
+        deductions80C: num('#itx-80c'),
+        deductions80D: num('#itx-80d'),
+        homeLoanInterest24b: num('#itx-24b'),
+        nps80CCD1B: num('#itx-nps')
+      };
+    } else if (activeCode === 'GST-06') {
+      payload = {
+        amount: num('#gst-amt'),
+        type: strVal('#gst-type') || 'exclusive',
+        jurisdiction: strVal('#gst-jurisdiction') || 'intrastate',
+        gstRatePercent: num('#gst-rate') || 18,
+        cessPercent: num('#gst-cess') || 0,
+        isRCM: strVal('#gst-rcm') === 'yes',
+        itcEligible: strVal('#gst-itc') !== 'blocked'
+      };
     } else {
       payload = {
         engine: activeSlug,
         code: activeCode
       };
+      $$('[data-calc-gen]').forEach(function (inp) {
+        if (inp.offsetParent !== null) {
+          var cleanKey = inp.id.replace(/^[a-z0-9]+-/, '');
+          payload[cleanKey] = inp.type === 'number' ? (parseFloat(inp.value) || 0) : inp.value;
+        }
+      });
     }
 
     return [
       'curl -X POST https://truecalci.com/api/v1/compute/' + activeSlug + ' \\',
       '  -H "Content-Type: application/json" \\',
-      '  -d \'' + JSON.stringify(payload) + '\''
+      '  -H "Authorization: Bearer <YOUR_API_KEY>" \\',
+      '  -d \'' + JSON.stringify(payload, null, 2) + '\''
     ].join('\n');
   }
 
@@ -1478,20 +1836,63 @@
 
   function bind(sel, fn) { var el = $(sel); if (el) el.addEventListener('click', function (e) { e.preventDefault(); fn(); }); }
 
-  bind('#copy-derivation', function () { copy(derivationText(), 'Mathematical derivation copied to clipboard'); });
+  function preparePrint() {
+    var stageSelector = STAGES[activeCode] || '#stage-generic';
+    $$('#stage-contractor, #stage-ai-tokens, #stage-startup, #stage-b2b, #stage-feie, #stage-egress, #stage-generic').forEach(function (st) {
+      var isTarget = ('#' + st.id === stageSelector);
+      st.hidden = !isTarget;
+      st.style.setProperty('display', isTarget ? 'block' : 'none', 'important');
+      if (isTarget) {
+        st.classList.add('tc-active-stage');
+      } else {
+        st.classList.remove('tc-active-stage');
+      }
+    });
+  }
+
+  function cleanupPrint() {
+    var stageSelector = STAGES[activeCode] || '#stage-generic';
+    $$('#stage-contractor, #stage-ai-tokens, #stage-startup, #stage-b2b, #stage-feie, #stage-egress, #stage-generic').forEach(function (st) {
+      var isTarget = ('#' + st.id === stageSelector);
+      st.style.removeProperty('display');
+      st.hidden = !isTarget;
+      if (isTarget) {
+        st.classList.add('tc-active-stage');
+      } else {
+        st.classList.remove('tc-active-stage');
+      }
+    });
+  }
+
+  window.addEventListener('beforeprint', preparePrint);
+  window.addEventListener('afterprint', cleanupPrint);
+
+  bind('#copy-derivation', function () { copy(derivationText(), 'Mathematical derivation AST copied to clipboard'); });
   bind('#copy-api',        function () { copy(apiCall(), 'CURL API command copied to clipboard'); });
-  bind('#export-pdf',      function () { toast('Opening print dialog…'); setTimeout(function () { window.print(); }, 350); });
+  bind('#export-pdf',      function () {
+    if (toastEl) toastEl.hidden = true;
+    preparePrint();
+    setTimeout(function () { window.print(); }, 150);
+  });
   bind('#save-scenario',   function () {
     try {
       var saved = JSON.parse(localStorage.getItem('tc.scenarios') || '[]');
+      var inputs = {};
+      $$('[data-calc], [data-calc-ai], [data-calc-st], [data-calc-b2b], [data-calc-feie], [data-calc-egress], [data-calc-gen]').forEach(function (inp) {
+        if (inp.offsetParent !== null) {
+          inputs[inp.id] = inp.value;
+        }
+      });
       saved.push({
         code: activeCode,
         slug: activeSlug,
+        title: activeTitle,
+        inputs: inputs,
         savedAt: new Date().toISOString()
       });
       localStorage.setItem('tc.scenarios', JSON.stringify(saved));
-      toast('Scenario saved to local browser storage (' + saved.length + ' total)');
-    } catch (err) { toast('Scenario saved for this session'); }
+      toast('Scenario saved locally in client RAM (Zero-Storage Guarantee: 0 bytes sent to server)');
+    } catch (err) { toast('Scenario saved for this browser session'); }
   });
 
   /* ====================================================================
@@ -1499,6 +1900,7 @@
      ==================================================================== */
   var sheet   = $('#signin-sheet');
   var trigger = $('#signin-trigger');
+  var navSigninBtn = $('#nav-signin-btn');
   var chip    = $('#account-trigger');
   var popover = $('#account-popover');
 
@@ -1506,6 +1908,20 @@
     signin: { title: 'Sign in to TrueCalci', sub: 'Your keys, saved scenarios and regional defaults, in one place.', cta: 'Continue with email' },
     create: { title: 'Create your account', sub: 'Free tier included — 500 calls a month, no card required.', cta: 'Create account' }
   };
+
+  function updateWorkstationAuthUI() {
+    var isAuthed = localStorage.getItem('tc_dev_auth') === 'true';
+    if (isAuthed) {
+      if (navSigninBtn) navSigninBtn.style.display = 'none';
+      if (trigger) trigger.hidden = true;
+      if (chip) chip.hidden = false;
+    } else {
+      if (navSigninBtn) navSigninBtn.style.display = '';
+      if (trigger) trigger.hidden = true;
+      if (chip) chip.hidden = true;
+    }
+  }
+  updateWorkstationAuthUI();
 
   function openSheet(e) {
     if (e) e.preventDefault();
@@ -1516,9 +1932,19 @@
   }
   function closeSheet() { if (sheet) sheet.hidden = true; }
 
+  if (navSigninBtn) navSigninBtn.addEventListener('click', openSheet);
   if (trigger) trigger.addEventListener('click', openSheet);
   bind('#sheet-close', closeSheet);
   if (sheet) sheet.addEventListener('click', function (e) { if (e.target === sheet) closeSheet(); });
+
+  // Auto-open sheet if loaded or navigated to #signin or #auth
+  function checkAuthHash() {
+    if (window.location.hash === '#signin' || window.location.hash === '#auth') {
+      openSheet();
+    }
+  }
+  checkAuthHash();
+  window.addEventListener('hashchange', checkAuthHash);
 
   var seg = $('#sheet-seg');
   if (seg) seg.addEventListener('click', function (e) {
@@ -1534,8 +1960,9 @@
   function signIn(e) {
     if (e) e.preventDefault();
     closeSheet();
-    if (trigger) trigger.hidden = true;
-    if (chip) chip.hidden = false;
+    localStorage.setItem('tc_dev_auth', 'true');
+    localStorage.setItem('tc_dev_user', JSON.stringify({ email: 'developer@truecalci.com', name: 'Developer', tierId: 'starter' }));
+    updateWorkstationAuthUI();
     toast('Signed in as developer@truecalci.com');
   }
   bind('#sheet-cta', signIn);
@@ -1554,8 +1981,10 @@
   });
   bind('#signout', function () {
     if (popover) popover.hidden = true;
-    if (chip) chip.hidden = true;
-    if (trigger) trigger.hidden = false;
+    localStorage.removeItem('tc_dev_auth');
+    localStorage.removeItem('tc_dev_user');
+    localStorage.removeItem('tc_active_tier');
+    updateWorkstationAuthUI();
     toast('Signed out successfully');
   });
 

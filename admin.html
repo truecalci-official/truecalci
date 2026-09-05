@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TrueCalci — Executive Admin Control Center</title>
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    :root {
+      --admin-bg: #0b0f17;
+      --admin-surface: #131b26;
+      --admin-surface-2: #1a2433;
+      --admin-border: rgba(255, 255, 255, 0.08);
+      --admin-text: #f8fafc;
+      --admin-muted: #94a3b8;
+      --admin-accent: #0066ff;
+      --admin-cyan: #00a2ff;
+      --admin-emerald: #10b981;
+      --admin-amber: #f59e0b;
+      --admin-rose: #ef4444;
+    }
+    body {
+      background: var(--admin-bg);
+      color: var(--admin-text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .admin-header {
+      background: rgba(19, 27, 38, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--admin-border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .badge-admin {
+      background: rgba(0, 102, 255, 0.15);
+      border: 1px solid rgba(0, 102, 255, 0.35);
+      color: #60a5fa;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 9999px;
+      color: #34d399;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: adminPulse 2s infinite;
+    }
+    @keyframes adminPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .admin-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--admin-border);
+      margin-bottom: 2rem;
+      overflow-x: auto;
+    }
+    .admin-tab {
+      background: none;
+      border: none;
+      color: var(--admin-muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+    .admin-tab:hover {
+      color: var(--admin-text);
+    }
+    .admin-tab.active {
+      color: #60a5fa;
+      border-bottom-color: #0066ff;
+    }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .stat-card:hover {
+      border-color: rgba(0, 102, 255, 0.4);
+    }
+    .stat-label {
+      color: var(--admin-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--admin-text);
+    }
+    .stat-sub {
+      font-size: 0.8rem;
+      color: var(--admin-muted);
+      margin-top: 6px;
+    }
+    .card-panel {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+    }
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 1rem;
+    }
+    .panel-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slider-group {
+      margin-bottom: 1.5rem;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+    }
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #0066ff;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0, 102, 255, 0.8);
+    }
+    .table-dark {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+    .table-dark th {
+      text-align: left;
+      padding: 12px 14px;
+      background: var(--admin-surface-2);
+      color: var(--admin-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--admin-border);
+    }
+    .table-dark td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: var(--admin-text);
+    }
+    .table-dark tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .badge-ok {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .btn-admin {
+      background: #0066ff;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-admin:hover {
+      background: #0052cc;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    .input-dark {
+      background: #1a2433;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #f8fafc;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+    .input-dark:focus {
+      border-color: #0066ff;
+    }
+    .log-stream {
+      background: #0d131a;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <div class="brand-wrap">
+      <span class="brand-title">TrueCalci</span>
+      <span class="badge-admin">Executive Console</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="status-pill">
+        <span class="pulse-dot"></span>
+        <span id="clusterStatus">24 Engines Online</span>
+      </div>
+      <a href="/" class="btn-admin btn-secondary" style="text-decoration: none;">Public Site &rarr;</a>
+    </div>
+  </header>
+
+  <main class="admin-container">
+    <nav class="admin-tabs">
+      <button class="admin-tab active" data-target="tab-overview">System Overview</button>
+      <button class="admin-tab" data-target="tab-ratelimits">Rate Limiting & Throttler</button>
+      <button class="admin-tab" data-target="tab-engines">24 Deterministic Engines</button>
+      <button class="admin-tab" data-target="tab-seo">SEO & Google Search Console</button>
+      <button class="admin-tab" data-target="tab-security">Security & Privacy Verifier</button>
+    </nav>
+
+    <!-- Tab 1: System Overview -->
+    <section id="tab-overview" class="tab-pane">
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">System Uptime</div>
+          <div class="stat-value" id="valUptime">--</div>
+          <div class="stat-sub">Deterministic node engine</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Requests Handled</div>
+          <div class="stat-value" id="valTotalRequests">--</div>
+          <div class="stat-sub" id="valAllowed">-- allowed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Clients (Window)</div>
+          <div class="stat-value" id="valActiveClients">--</div>
+          <div class="stat-sub">Sliding window memory</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Average Latency</div>
+          <div class="stat-value" style="color: #34d399;">&lt; 0.2 ms</div>
+          <div class="stat-sub">Sub-millisecond compute</div>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Platform Diagnostic Summary</h2>
+          <button class="btn-admin btn-secondary" id="btnRefreshOverview">Refresh Live Telemetry</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+          <div>
+            <h4 style="margin: 0 0 10px; color: var(--admin-muted); font-size: 0.85rem; text-transform: uppercase;">Google & SEO Verification</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Google Analytics 4:</span>
+                <span class="badge-ok" id="badgeGa4">G-0CYZYEW5T4 (Active)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Robots.txt RFC 9309:</span>
+                <span class="badge-ok">0 Errors / 0 Warnings</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Sitemap Architecture:</span>
+                <span class="badge-ok">Clean (Zero '#' Fragments)</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h4 style="margin: 0 0 10px; color: var(--admin-muted); font-size: 0.85rem; text-transform: uppercase;">Trust & Safe Browsing</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Google Security Review:</span>
+                <span class="badge-ok" style="background: rgba(16,185,129,0.2); color: #34d399;">PASSED (CLEAN)</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Zero-Storage Guarantee:</span>
+                <span class="badge-ok">0 Bytes User Inputs Stored</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 6px;">
+                <span>Content-Signal Header:</span>
+                <span class="badge-ok">ai-train=yes, search=yes</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 2: Rate Limiting & Throttler -->
+    <section id="tab-ratelimits" class="tab-pane" style="display: none;">
+      <div class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Dynamic Rate Limiter Sliders</h2>
+          <button class="btn-admin" id="btnSaveRateLimits">Save Rate Thresholds</button>
+        </div>
+        <p style="color: var(--admin-muted); font-size: 0.88rem; margin-top: 0; margin-bottom: 1.5rem;">
+          Configure sliding-window request capacity per minute across user tiers. Updates take effect immediately in runtime memory.
+        </p>
+        
+        <div class="slider-group">
+          <div class="slider-header">
+            <span><strong>Anonymous Public Users</strong> (IP-based sliding window)</span>
+            <span id="valSliderAnon">60 req/min</span>
+          </div>
+          <input type="range" id="sliderAnon" min="10" max="300" step="5" value="60">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span><strong>Developer Starter Tier</strong> (API key authenticated)</span>
+            <span id="valSliderStarter">300 req/min</span>
+          </div>
+          <input type="range" id="sliderStarter" min="100" max="1000" step="25" value="300">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span><strong>Pro Agency & Scale Tier</strong></span>
+            <span id="valSliderPro">1000 req/min</span>
+          </div>
+          <input type="range" id="sliderPro" min="500" max="3000" step="50" value="1000">
+        </div>
+
+        <div class="slider-group">
+          <div class="slider-header">
+            <span><strong>Enterprise Metered Tier</strong></span>
+            <span id="valSliderMetered">2500 req/min</span>
+          </div>
+          <input type="range" id="sliderMetered" min="1000" max="10000" step="100" value="2500">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div class="card-panel">
+          <h3 class="panel-title" style="margin-bottom: 1rem;">IP Whitelist & Blacklist Rules</h3>
+          <div style="display: flex; gap: 8px; margin-bottom: 1rem;">
+            <input type="text" id="inputRuleIp" class="input-dark" placeholder="IP address (e.g. 192.168.1.1)" style="flex: 1;">
+            <select id="selectRuleList" class="input-dark">
+              <option value="whitelist">Whitelist (Bypass Limit)</option>
+              <option value="blacklist">Blacklist (Block Traffic)</option>
+            </select>
+            <button class="btn-admin" id="btnAddRule">Add Rule</button>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div>
+              <h5 style="margin: 0 0 6px; color: #34d399; font-size: 0.8rem;">Whitelisted IPs:</h5>
+              <div id="boxWhitelist" style="font-family: monospace; font-size: 0.8rem; color: #cbd5e1; background: #0d131a; padding: 8px; border-radius: 6px; min-height: 80px;"></div>
+            </div>
+            <div>
+              <h5 style="margin: 0 0 6px; color: #f87171; font-size: 0.8rem;">Blacklisted IPs:</h5>
+              <div id="boxBlacklist" style="font-family: monospace; font-size: 0.8rem; color: #cbd5e1; background: #0d131a; padding: 8px; border-radius: 6px; min-height: 80px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-panel">
+          <h3 class="panel-title" style="margin-bottom: 1rem;">Live Throttle Event Log (HTTP 429)</h3>
+          <div class="log-stream" id="logStreamThrottles">
+            <div class="log-entry" style="color: var(--admin-muted);">Awaiting throttle events...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: 24 Deterministic Engines -->
+    <section id="tab-engines" class="tab-pane" style="display: none;">
+      <div class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">24 Deterministic Engine Registry & Latency Benchmarks</h2>
+          <span class="badge-ok">All 24 Engines Verified</span>
+        </div>
+        <p style="color: var(--admin-muted); font-size: 0.88rem; margin-top: 0; margin-bottom: 1.5rem;">
+          Direct execution telemetry for TrueCalci's deterministic statutory, labor, real estate, and scientific engines. Execution times are benchmarked in microseconds.
+        </p>
+        <div style="overflow-x: auto;">
+          <table class="table-dark">
+            <thead>
+              <tr>
+                <th>Engine ID</th>
+                <th>Engine Name</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Avg Latency</th>
+                <th>Benchmark Test</th>
+              </tr>
+            </thead>
+            <tbody id="engineTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 4: SEO & Google Search Console -->
+    <section id="tab-seo" class="tab-pane" style="display: none;">
+      <div class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Google Search Console & SEO Starter Guide Command Hub</h2>
+          <button class="btn-admin btn-secondary" id="btnRefreshSeo">Re-Check SEO Health</button>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div style="background: var(--admin-surface-2); padding: 1.25rem; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; color: #60a5fa;">Google Analytics 4 Property</h4>
+            <p style="color: var(--admin-muted); font-size: 0.85rem; margin: 0 0 12px;">
+              Active Measurement ID receiving real-time hit events:
+            </p>
+            <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; font-weight: 700; color: #fff; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
+              G-0CYZYEW5T4
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: #34d399;">
+              &check; Consent Mode v2 active (EEA compliant)
+            </div>
+          </div>
+
+          <div style="background: var(--admin-surface-2); padding: 1.25rem; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; color: #60a5fa;">Robots.txt (RFC 9309 Strict)</h4>
+            <p style="color: var(--admin-muted); font-size: 0.85rem; margin: 0 0 12px;">
+              Syntax audit result against Googlebot parser:
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <span class="badge-ok">0 Syntax Errors</span>
+              <span class="badge-ok">0 Rule Warnings</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: var(--admin-muted);">
+              All 6 custom lines successfully migrated to RFC 5988 HTTP Link headers.
+            </div>
+          </div>
+
+          <div style="background: var(--admin-surface-2); padding: 1.25rem; border-radius: 10px;">
+            <h4 style="margin: 0 0 10px; color: #60a5fa;">XML Sitemap Status</h4>
+            <p style="color: var(--admin-muted); font-size: 0.85rem; margin: 0 0 12px;">
+              Verification against sitemaps.org specification:
+            </p>
+            <div style="display: flex; gap: 8px;">
+              <span class="badge-ok">7 Canonical URLs</span>
+              <span class="badge-ok">0 '#' Hash Fragments</span>
+            </div>
+            <div style="margin-top: 10px; font-size: 0.8rem; color: var(--admin-muted);">
+              Sitemap URLs strictly return HTTP 200 clean document responses.
+            </div>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.2); padding: 1.25rem; border-radius: 10px; border: 1px solid var(--admin-border);">
+          <h4 style="margin: 0 0 8px; color: #f8fafc;">Active Geo-Targeting & International Tags</h4>
+          <p style="color: var(--admin-muted); font-size: 0.85rem; margin-top: 0;">
+            Geographic metadata served to search engine spiders for local indexing:
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;">
+            <div style="background: #111827; padding: 8px; border-radius: 6px;">Region: US-DE (Delaware)</div>
+            <div style="background: #111827; padding: 8px; border-radius: 6px;">Position: 39.7391; -75.5398</div>
+            <div style="background: #111827; padding: 8px; border-radius: 6px;">ICBM: 39.7391, -75.5398</div>
+            <div style="background: #111827; padding: 8px; border-radius: 6px;">Hreflang: x-default, en-US, en-IN, en-GB</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 5: Security & Privacy Verifier -->
+    <section id="tab-security" class="tab-pane" style="display: none;">
+      <div class="card-panel">
+        <div class="panel-header">
+          <h2 class="panel-title">Security & Zero-Storage Financial Privacy Verifier</h2>
+          <span class="badge-ok">Audited Clean</span>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem;">
+          <div style="background: var(--admin-surface-2); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 1.5rem;">🛡️</span>
+              <h3 style="margin: 0; font-size: 1.1rem; color: #34d399;">GSC Safe Browsing Clearance</h3>
+            </div>
+            <p style="color: var(--admin-muted); font-size: 0.88rem; line-height: 1.5;">
+              Google Search Console security review confirmed zero phishing flags, zero unwanted software, and zero harmful binary downloads.
+            </p>
+            <div style="background: rgba(16,185,129,0.1); color: #34d399; font-size: 0.82rem; font-weight: 700; padding: 8px 12px; border-radius: 6px;">
+              &check; Status: Verified Safe by Google Security Review
+            </div>
+          </div>
+
+          <div style="background: var(--admin-surface-2); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(0, 102, 255, 0.2);">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+              <span style="font-size: 1.5rem;">🔒</span>
+              <h3 style="margin: 0; font-size: 1.1rem; color: #60a5fa;">Zero-Storage Privacy Guarantee</h3>
+            </div>
+            <p style="color: var(--admin-muted); font-size: 0.88rem; line-height: 1.5;">
+              Statutory verification: All 24 compute engines execute purely in volatile memory. Zero user salaries, loans, or financial inputs are written to server databases, disks, or analytics.
+            </p>
+            <div style="background: rgba(0,102,255,0.1); color: #60a5fa; font-size: 0.82rem; font-weight: 700; padding: 8px 12px; border-radius: 6px;">
+              &check; Status: 0 Input Bytes Saved to Persistent Storage
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

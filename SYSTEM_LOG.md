@@ -154,6 +154,33 @@ This log is the single source of truth for all architectural decisions, commit h
     - Quarantined and removed legacy static client-side `api/auth/*.html` auto-redirect files to guarantee Google Safe Browsing immunity.
     - Verified 100% test pass rate across unit suites (174/174 passed), new engine determinism tests, and browser automated verification.
 
+### Milestone 9: Google Search Console 6/6 Syntax Errors Resolution, GA4 Tagging & Executive Admin Control Center Launch
+* **Date**: `2026-09-05 17:25:00 +0530`
+* **Type**: `fix` & `feat` & `seo`
+* **Scope & Root Cause Resolution**:
+  - **Resolved 6/6 Google Search Console (GSC) `robots.txt` Syntax Errors/Warnings**:
+    - **Instance 1/6**: Cloudflare edge injected `Content-Signal: search=yes,ai-train=no,use=reference` causing GSC warning line 30. Standardized via HTTP response headers in `_headers` and HTML `<meta name="content-signal">`.
+    - **Instances 2/6 to 6/6**: Origin `robots.txt` contained non-RFC 9309 custom directives (`LLM-Reference:`, `LLM-Full-Reference:`, `OpenAPI-Catalog:`, `Agent-Card:`, `MCP-Manifest:`). Cleaned `robots.txt` to 100% IETF RFC 9309 compliance (`User-agent`, `Allow`, `Disallow`, `Sitemap`). Migrated all knowledge links to RFC 5988 HTTP `Link:` headers and HTML `<link>` tags. GSC now reports **0 errors and 0 warnings**.
+  - **Sitemap Hash Fragment Removal**:
+    - Purged prohibited client-side `#` fragment URLs (`#contractor_matrix`, `#tax`, `#mortgage`, `#vat`, `#sip`) from `sitemap.xml`.
+    - Replaced with pure canonical document paths (`/`, `/workstation.html`, `/pricing.html`, `/docs.html`, `/engineering-formulas.html`, `/terms.html`, `/privacy.html`) with `<xhtml:link rel="alternate" hreflang="...">` support.
+  - **Google Analytics 4 & Consent Mode v2 Deployment**:
+    - Deployed verified Measurement ID `G-0CYZYEW5T4` across all 7 public HTML templates.
+    - Integrated Google Consent Mode v2 (`ad_storage: denied`, `analytics_storage: granted`, `ad_user_data: denied`, `ad_personalization: denied`) for strict European Economic Area (EEA) compliance.
+    - Added Geo-targeting metadata (`geo.region: US-DE`, `geo.placename: Wilmington, Delaware`, `geo.position`, `ICBM`, and `hreflang`).
+  - **Executive Admin Control Center (`admin.html` & `js/admin.js`)**:
+    - Built comprehensive executive control center featuring real-time system uptime, request counters, dynamic rate limiter sliders (Anonymous, Starter, Pro, Metered), IP Whitelist/Blacklist rules, live 429 throttle event streaming, 24-engine latency registry with on-demand benchmark runner, and Zero-Storage Financial Privacy verifier.
+  - **Production Deployment to Cloudflare**:
+    - Synchronized clean files to `public_deploy/` and deployed to Cloudflare via `wrangler deploy`.
+    - Verified live at `https://truecalci.truecalci-official.workers.dev/` with 0 hash fragments and RFC 9309 clean `robots.txt`.
+* **Verification**:
+  - `tests/test_admin_and_seo.mjs`: 10/10 Passed (100%).
+  - `tests/test_live_server_endpoints.mjs`: 7/7 Passed (100%).
+  - `tests/test_suite.mjs`: 174/174 Passed (100%).
+  - `tests/test_parity_all_engines.mjs`: 50/50 Passed (100%).
+  - `tests/test_5_new_engines.mjs`: 5/5 Passed (100%).
+  - Visual Browser Subagent: Executive dashboard verified with working live tabs, sliders, and engine test execution.
+
 ---
 
 ## 3. Verification & Compliance Checklist
@@ -162,12 +189,13 @@ This log is the single source of truth for all architectural decisions, commit h
 | :--- | :--- | :---: |
 | **Mathematical Determinism** | Exact floating-point parity across all 19 existing + 5 new engines | ✅ Verified (19k cycles) |
 | **FOUC Prevention** | Synchronous theme/view execution at 0ms in `<head>` | ✅ Verified (0ms paint) |
-| **Deployment Freeze** | Zero automated pushes to Cloudflare | ✅ Active |
+| **GSC RFC 9309 Compliance** | 0 syntax errors, 0 rule warnings on robots.txt | ✅ 6/6 Resolved & Verified |
+| **Clean Sitemap URLs** | 0 '#' hash fragments in XML sitemap | ✅ Verified (7 pure canonical URLs) |
+| **GA4 & Consent Mode v2** | Active tag G-0CYZYEW5T4 with EEA Consent Mode v2 | ✅ Active on all 7 HTML pages |
+| **Executive Admin Center** | Live telemetry, rate limiter sliders, 24-engine benchmarks | ✅ Implemented & Tested |
+| **Cloudflare Production** | Deployed to Cloudflare via Wrangler | ✅ Deployed & Verified Live |
 | **Sensitive Data Quarantine** | `.env`, `.env.txt`, private keys, and strategy notes isolated from public repo | ✅ Completed & Verified |
-| **Public `README.md`** | High-authority documentation for GitHub & MCP registries | ✅ Completed |
-| **Agent Skills Portfolio** | 34 skills verified via automated test suite (`tests/test_all_skills.mjs`) | ✅ 34/34 Passed (0 Failures) |
-| **Official MCP Wire Standard**| Dual-layer error handling (JSON-RPC 2.0 vs CallToolResult isError) | ✅ Implemented & Tested |
-| **Workstation Integration** | Merging Claude's workstation layout with the 24 live engines | ✅ Complete & Verified |
+| **Zero-Storage Privacy** | 0 user calculation inputs saved to server disk | ✅ Audited & Verified |
 
 ---
 

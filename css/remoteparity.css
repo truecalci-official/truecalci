@@ -5,29 +5,29 @@
    ========================================================================== */
 
 :root {
-  /* Warm Paper Canvas */
-  --bg-canvas: #f9f6f0;
-  --bg-subtle: #f4efe6;
-  --bg-warm-tint: #ede7dc;
+  /* Modern Crisp Slate / Off-White Canvas */
+  --bg-canvas: #f8fafc;
+  --bg-subtle: #f1f5f9;
+  --bg-warm-tint: #e2e8f0;
 
   /* Apple iOS Glassmorphism Tokens */
-  --glass-card: rgba(255, 255, 255, 0.82);
-  --glass-card-hover: rgba(255, 255, 255, 0.94);
-  --glass-border: rgba(255, 255, 255, 0.8);
-  --glass-border-subtle: rgba(214, 207, 196, 0.5);
-  --glass-input: rgba(255, 255, 255, 0.9);
+  --glass-card: rgba(255, 255, 255, 0.92);
+  --glass-card-hover: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-border-subtle: rgba(226, 232, 240, 0.8);
+  --glass-input: rgba(255, 255, 255, 0.95);
   
   /* Apple Blur & Saturation */
   --backdrop-blur: blur(24px) saturate(180%);
-  --shadow-ios-card: 0 12px 36px -4px rgba(44, 38, 30, 0.06), 0 2px 8px -2px rgba(44, 38, 30, 0.04);
-  --shadow-ios-pill: 0 4px 14px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-ios-float: 0 20px 48px -8px rgba(44, 38, 30, 0.1);
+  --shadow-ios-card: 0 12px 36px -4px rgba(15, 23, 42, 0.06), 0 2px 8px -2px rgba(15, 23, 42, 0.04);
+  --shadow-ios-pill: 0 4px 14px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+  --shadow-ios-float: 0 20px 48px -8px rgba(15, 23, 42, 0.08);
 
-  /* Typography: Deep Warm Charcoal & Ink (High Contrast, Glare-Free) */
-  --text-heading: #1c1917;
-  --text-body: #44403c;
-  --text-muted: #78716c;
-  --text-light: #a8a29e;
+  /* Typography: Deep Slate & Ink (High Contrast, Crisp) */
+  --text-heading: #0f172a;
+  --text-body: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
 
   /* Real-World Organic Accents (Dodo Payments & Apple iOS) */
   --accent-apple-blue: #0071e3;
@@ -82,10 +82,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(249, 246, 240, 0.82);
+  background: rgba(248, 250, 252, 0.85);
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
-  border-bottom: 1px solid rgba(214, 207, 196, 0.45);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
 }
 
 .rp-header-inner {
@@ -138,8 +138,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(214, 207, 196, 0.6);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   color: var(--text-body);
   font-size: 0.75rem;
   font-weight: 700;
@@ -162,8 +162,8 @@
   gap: 0.35rem;
   margin: 1.75rem 0 2rem 0;
   padding: 0.35rem;
-  background: rgba(237, 231, 220, 0.6);
-  border: 1px solid rgba(214, 207, 196, 0.5);
+  background: rgba(241, 245, 249, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-md);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -283,8 +283,8 @@
   letter-spacing: 0.05em;
   padding: 0.35rem 0.85rem;
   border-radius: var(--radius-pill);
-  background: rgba(237, 231, 220, 0.7);
-  border: 1px solid rgba(214, 207, 196, 0.7);
+  background: rgba(241, 245, 249, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   color: var(--text-heading);
   margin-bottom: 0.85rem;
 }
@@ -324,7 +324,7 @@
   gap: 1.5rem;
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(214, 207, 196, 0.45);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .rp-hero-stat-item {
@@ -426,9 +426,9 @@
   font-weight: 700;
   padding: 0.3rem 0.75rem;
   border-radius: var(--radius-pill);
-  background: rgba(237, 231, 220, 0.6);
+  background: rgba(241, 245, 249, 0.8);
   color: var(--text-body);
-  border: 1px solid rgba(214, 207, 196, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 /* Form Controls & High-Comfort Inputs */
@@ -474,7 +474,7 @@
   width: 100%;
   height: 50px;
   background: var(--glass-input);
-  border: 1px solid rgba(214, 207, 196, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-sm);
   color: var(--text-heading);
   font-family: var(--font-mono);
@@ -500,7 +500,7 @@
   width: 100%;
   height: 50px;
   background: var(--glass-input);
-  border: 1px solid rgba(214, 207, 196, 0.8);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-sm);
   color: var(--text-heading);
   font-family: var(--font-display);
@@ -523,7 +523,7 @@
 .rp-slider {
   width: 100%;
   height: 7px;
-  background: rgba(214, 207, 196, 0.7);
+  background: rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-pill);
   outline: none;
   -webkit-appearance: none;
@@ -550,8 +550,8 @@
 
 /* Apple Frosted Highlight Box */
 .rp-highlight-box {
-  background: rgba(249, 246, 240, 0.8);
-  border: 1px solid rgba(214, 207, 196, 0.6);
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-md);
   padding: 1.4rem;
   text-align: center;
@@ -596,7 +596,7 @@
   flex-direction: column;
   gap: 0.75rem;
   padding-top: 0.85rem;
-  border-top: 1px solid rgba(214, 207, 196, 0.45);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .rp-row {
@@ -623,7 +623,7 @@
 
 .rp-row.total-row {
   padding-top: 0.65rem;
-  border-top: 1px dashed rgba(214, 207, 196, 0.8);
+  border-top: 1px dashed rgba(226, 232, 240, 0.9);
   font-weight: 800;
   color: var(--text-heading);
 }
@@ -654,7 +654,7 @@
 
 .rp-preset-btn {
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(214, 207, 196, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   color: var(--text-body);
   font-family: var(--font-display);
   font-size: 0.82rem;
@@ -675,7 +675,7 @@
 /* Export / Action Buttons */
 .rp-btn-action {
   background: #ffffff;
-  border: 1px solid rgba(214, 207, 196, 0.7);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   color: var(--text-heading);
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -701,7 +701,7 @@
 .rp-table-wrap {
   width: 100%;
   overflow-x: auto;
-  border: 1px solid rgba(214, 207, 196, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-md);
   background: #ffffff;
 }
@@ -715,8 +715,8 @@
 
 .rp-table th {
   padding: 0.9rem 1.1rem;
-  background: rgba(249, 246, 240, 0.9);
-  border-bottom: 1px solid rgba(214, 207, 196, 0.6);
+  background: rgba(248, 250, 252, 0.95);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
   color: var(--text-muted);
   font-size: 0.75rem;
   font-weight: 700;
@@ -726,7 +726,7 @@
 
 .rp-table td {
   padding: 1rem 1.1rem;
-  border-bottom: 1px solid rgba(214, 207, 196, 0.35);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
   color: var(--text-body);
 }
 
@@ -745,7 +745,7 @@
 
 /* Educational Accordion Drawer */
 .rp-accordion {
-  border: 1px solid rgba(214, 207, 196, 0.6);
+  border: 1px solid rgba(226, 232, 240, 0.8);
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: var(--glass-card);
@@ -755,7 +755,7 @@
 }
 
 .rp-accordion-item {
-  border-bottom: 1px solid rgba(214, 207, 196, 0.4);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
 }
 
 .rp-accordion-item:last-child {
@@ -793,8 +793,8 @@
 /* Footer & Signature */
 .rp-footer {
   margin-top: auto;
-  border-top: 1px solid rgba(214, 207, 196, 0.45);
-  background: rgba(244, 239, 230, 0.7);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(248, 250, 252, 0.9);
   padding: 2.5rem 1.5rem;
   text-align: center;
 }

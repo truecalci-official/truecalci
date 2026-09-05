@@ -58,7 +58,7 @@ function createCurrencyEnvironment(storageVal) {
   function fmt(n) {
     const c = getCur();
     if (typeof n !== 'number' || isNaN(n)) n = 0;
-    const v = Math.round(n * (cur === 'INR' ? c.rate : 1));
+    const v = Math.round(n);
     return c.symbol + v.toLocaleString(cur === 'INR' ? 'en-IN' : 'en-US');
   }
   return { CUR, cur, getCur, fmt };

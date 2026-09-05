@@ -79,6 +79,36 @@ class CalculatorApp {
     const initialView = document.body.dataset.initialView || "";
     const cleanHash = window.location.hash.replace("#", "").split("?")[0].trim();
 
+    // Map legacy tool hashes to Workstation Studio engines so obsolete layout never renders
+    const legacyToWorkstation = {
+      mortgage: "mtg-01",
+      scorp: "ctr-18",
+      contractor_matrix: "ctr-18",
+      retirement: "ctr-18",
+      fx: "ctr-18",
+      billable: "ctr-18",
+      vat: "vat-02",
+      tip: "tip-03",
+      compound: "cmp-04",
+      calci_991: "cas-991",
+      basic: "cas-991",
+      programmer: "cas-991",
+      tax: "tax-in",
+      gst: "gst-in",
+      sip: "sip-in",
+      home_loan: "mtg-01",
+      fd: "cmp-04",
+      gold: "gld-in",
+      ppf: "cmp-04",
+      ssy: "cmp-04",
+      land: "lnd-in"
+    };
+
+    if (legacyToWorkstation[cleanHash]) {
+      window.location.replace(`/workstation.html#${legacyToWorkstation[cleanHash]}`);
+      return;
+    }
+
     if (hostname.startsWith("admin.") || cleanHash === "admin" || initialView === "admin") {
       this.currentTool = "admin";
     } else if (hostname.startsWith("developer.") || hostname.startsWith("api.") || cleanHash === "developer" || cleanHash === "api" || initialView === "developer") {
@@ -87,8 +117,10 @@ class CalculatorApp {
       this.currentTool = "subscriptions";
     } else if (cleanHash === "profile") {
       this.currentTool = "profile";
+    } else if (cleanHash === "pricing") {
+      this.currentTool = "pricing";
     } else {
-      this.currentTool = this.validTools.includes(cleanHash) ? cleanHash : "home";
+      this.currentTool = "home";
     }
 
     this.currentAdminView = null;
@@ -240,26 +272,36 @@ class CalculatorApp {
   }
 
   initTheme() {
-    const savedTheme = localStorage.getItem("calc_theme") || "dark";
+    const savedTheme = localStorage.getItem("tc_theme") || localStorage.getItem("calc_theme") || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light");
     this.setTheme(savedTheme, false);
 
-    const themeIconBtn = document.getElementById("theme-toggle-icon-btn");
-    themeIconBtn?.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme") || "dark";
-      const next = current === "dark" ? "light" : "dark";
-      this.setTheme(next, true);
+    // Sync state when universal theme manager toggles theme
+    window.addEventListener("tc_theme_changed", (e) => {
+      const newTheme = e.detail && e.detail.theme;
+      if (newTheme) {
+        this.setTheme(newTheme, false);
+      }
     });
 
     document.querySelectorAll(".palette-pill-btn").forEach(btn => {
       btn.addEventListener("click", () => {
-        this.setTheme(btn.dataset.theme, true);
+        if (window.tcApplyTheme) {
+          window.tcApplyTheme(btn.dataset.theme);
+        } else {
+          this.setTheme(btn.dataset.theme, true);
+        }
       });
     });
   }
 
   setTheme(theme, track = true) {
     document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("calc_theme", theme);
+    document.documentElement.classList.toggle('dark-theme', theme === 'dark');
+    document.documentElement.classList.toggle('light-theme', theme === 'light');
+    try {
+      localStorage.setItem("calc_theme", theme);
+      localStorage.setItem("tc_theme", theme);
+    } catch (e) {}
 
     document.querySelectorAll(".palette-pill-btn").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.theme === theme);
@@ -267,7 +309,7 @@ class CalculatorApp {
 
     this.updateThemeIcon(theme);
 
-    if (track) {
+    if (track && window.analytics) {
       analytics.trackThemeChange(theme);
     }
   }
@@ -470,7 +512,34 @@ class CalculatorApp {
 
     // Browser Back / Forward Hash Change Listener
     window.addEventListener("hashchange", () => {
-      const hashTool = window.location.hash.replace("#", "").trim() || "home";
+      const hashTool = window.location.hash.replace("#", "").split("?")[0].trim() || "home";
+      const legacyToWorkstation = {
+        mortgage: "mtg-01",
+        scorp: "ctr-18",
+        contractor_matrix: "ctr-18",
+        retirement: "ctr-18",
+        fx: "ctr-18",
+        billable: "ctr-18",
+        vat: "vat-02",
+        tip: "tip-03",
+        compound: "cmp-04",
+        calci_991: "cas-991",
+        basic: "cas-991",
+        programmer: "cas-991",
+        tax: "tax-in",
+        gst: "gst-in",
+        sip: "sip-in",
+        home_loan: "mtg-01",
+        fd: "cmp-04",
+        gold: "gld-in",
+        ppf: "cmp-04",
+        ssy: "cmp-04",
+        land: "lnd-in"
+      };
+      if (legacyToWorkstation[hashTool]) {
+        window.location.replace(`/workstation.html#${legacyToWorkstation[hashTool]}`);
+        return;
+      }
       if (this.validTools.includes(hashTool) && hashTool !== this.currentTool) {
         this.loadTool(hashTool, false);
       }
@@ -780,24 +849,56 @@ class CalculatorApp {
   }
 
   initAuth() {
-    window.openAuthModal = () => this.openAuthModal();
+    window.openAuthModal = (tab) => this.openAuthModal(tab);
 
     this.updateAuthHeaderButton();
 
-    const authBtn = document.getElementById("header-auth-trigger-btn");
-    authBtn?.addEventListener("click", () => {
+    const handleAuthClick = (e) => {
+      if (e) e.preventDefault();
       const isAuthed = localStorage.getItem("tc_dev_auth") === "true";
       if (isAuthed) {
         this.openAccountMenu();
       } else {
         this.openAuthModal();
       }
-    });
+    };
+
+    const navSigninBtn = document.getElementById("nav-signin-btn");
+    navSigninBtn?.addEventListener("click", handleAuthClick);
+
+    const authBtn = document.getElementById("header-auth-trigger-btn");
+    authBtn?.addEventListener("click", handleAuthClick);
+
+    const headerSigninBtn = document.getElementById("header-signin-btn");
+    headerSigninBtn?.addEventListener("click", handleAuthClick);
+
+    // Auto-open auth modal if loaded with #auth or #signin
+    const handleAuthHash = () => {
+      if (window.location.hash === "#auth" || window.location.hash === "#signin") {
+        const isAuthed = localStorage.getItem("tc_dev_auth") === "true";
+        if (!isAuthed) {
+          this.openAuthModal();
+        }
+      }
+    };
+    handleAuthHash();
+    window.addEventListener("hashchange", handleAuthHash);
   }
 
   updateAuthHeaderButton() {
     const isAuthed = localStorage.getItem("tc_dev_auth") === "true";
     const user = JSON.parse(localStorage.getItem("tc_dev_user") || 'null');
+    
+    // Update nav-signin-btn
+    const navSigninBtn = document.getElementById("nav-signin-btn");
+    if (navSigninBtn) {
+      if (isAuthed && user) {
+        navSigninBtn.textContent = user.name || "Developer";
+      } else {
+        navSigninBtn.textContent = "Sign In";
+      }
+    }
+
     const authBtn = document.getElementById("header-auth-trigger-btn");
     const authText = document.getElementById("header-auth-btn-text");
 
@@ -1017,6 +1118,7 @@ class CalculatorApp {
     popup.querySelector("#account-logout")?.addEventListener("click", () => {
       localStorage.removeItem("tc_dev_auth");
       localStorage.removeItem("tc_dev_user");
+      localStorage.removeItem("tc_active_tier");
       this.updateAuthHeaderButton();
       closePopup();
       this.loadTool("home", true);

@@ -45,13 +45,12 @@ export class ViewEnterpriseHome {
 
           <!-- Dual Primary CTAs -->
           <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; margin-bottom: 48px;">
-            <button id="hero-btn-start-free" type="button" style="padding: 12px 24px; font-size: 0.92rem; font-weight: 600; border-radius: 8px; background: #18181b; color: #ffffff; border: 1px solid #18181b; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-md); transition: transform 0.15s ease;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <button id="hero-btn-start-free" type="button" style="padding: 12px 26px; font-size: 0.94rem; font-weight: 700; border-radius: 8px; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%); color: #ffffff; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 16px rgba(0, 102, 255, 0.4); transition: all 0.15s ease;">
               Start Building Free
             </button>
-            <button id="hero-btn-launch-workstation" type="button" style="padding: 12px 24px; font-size: 0.92rem; font-weight: 600; border-radius: 8px; background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm); transition: transform 0.15s ease;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
-              Launch Workstation Studio (13 Calculators) →
+            <button id="hero-btn-launch-workstation" type="button" style="padding: 12px 26px; font-size: 0.94rem; font-weight: 700; border-radius: 8px; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%) !important; color: #ffffff !important; border: none !important; cursor: pointer; display: inline-flex; align-items: center; gap: 9px; box-shadow: 0 4px 16px rgba(0, 102, 255, 0.4) !important; transition: all 0.15s ease;">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+              <span>Launch Workstation Studio (24 Engines) →</span>
             </button>
           </div>
 
@@ -65,25 +64,25 @@ export class ViewEnterpriseHome {
               <span style="font-size: 0.76rem; color: var(--text-muted);">Model Context Protocol (MCP) streamable HTTP ready</span>
             </div>
 
-            <!-- Tool Selector Tabs (Sleek Inline SVGs) -->
+            <!-- Tool Selector Tabs (Sleek Inline SVGs with high contrast) -->
             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-              <button class="hero-tool-tab active" data-tool="contractor_parity" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--accent-primary); color: #ffffff; cursor: pointer;">
+              <button class="hero-tool-tab active" data-tool="contractor_parity" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 700; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
                 Contractor Parity
               </button>
-              <button class="hero-tool-tab" data-tool="tax_in" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+              <button class="hero-tool-tab" data-tool="tax_in" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Tax Year 2026-27 (ITA 2025)
               </button>
-              <button class="hero-tool-tab" data-tool="vat_sales_tax" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+              <button class="hero-tool-tab" data-tool="vat_sales_tax" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                 VAT & Sales Tax
               </button>
-              <button class="hero-tool-tab" data-tool="mortgage_piti" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+              <button class="hero-tool-tab" data-tool="mortgage_piti" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                 US Mortgage PITI
               </button>
-              <button class="hero-tool-tab" data-tool="compound_wealth" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-subtle); color: var(--text-secondary); cursor: pointer;">
+              <button class="hero-tool-tab" data-tool="compound_wealth" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.82rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.15s ease;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                 Compound Wealth
               </button>
@@ -208,11 +207,12 @@ export class ViewEnterpriseHome {
                 <span style="font-size: 0.78rem; color: var(--text-muted);">Compatible with Model Context Protocol specification</span>
               </div>
               <!-- Code Tabs -->
-              <div style="display: flex; gap: 6px; background: var(--bg-subtle); padding: 4px; border-radius: 6px; border: 1px solid var(--border-color);">
-                <button class="hero-code-tab active" data-tab="mcp_claude" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: var(--bg-surface); color: var(--accent-primary); cursor: pointer;">Claude Desktop</button>
-                <button class="hero-code-tab" data-tab="mcp_cursor" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Cursor</button>
-                <button class="hero-code-tab" data-tab="python" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Python</button>
-                <button class="hero-code-tab" data-tab="curl" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">cURL</button>
+              <div style="display: flex; gap: 4px; background: rgba(0, 102, 255, 0.05); padding: 4px; border-radius: 8px; border: 1px solid var(--border-color);">
+                <button class="hero-code-tab active" data-tab="mcp_claude" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 700; border-radius: 6px; border: none; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%); color: #ffffff; cursor: pointer; box-shadow: 0 2px 6px rgba(0, 102, 255, 0.25);">Claude Desktop</button>
+                <button class="hero-code-tab" data-tab="mcp_cursor" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Cursor</button>
+                <button class="hero-code-tab" data-tab="mcp_windsurf" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Windsurf</button>
+                <button class="hero-code-tab" data-tab="python" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">Python</button>
+                <button class="hero-code-tab" data-tab="curl" style="padding: 6px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer;">cURL</button>
               </div>
             </div>
 
@@ -301,34 +301,52 @@ export class ViewEnterpriseHome {
     if (!box) return;
 
     if (this.activeCodeTab === "mcp_claude") {
-      box.textContent = JSON.stringify({
-        "mcpServers": {
-          "truecalci": {
-            "url": "https://truecalci.com/api/v1/mcp"
-          }
-        }
-      }, null, 2);
+      box.textContent = `// claude_desktop_config.json (Anthropic Claude Desktop)
+{
+  "mcpServers": {
+    "truecalci": {
+      "command": "npx",
+      "args": ["-y", "truecalci-mcp@latest"]
+    }
+  }
+}
+// Or remote SSE/HTTP endpoint:
+// { "mcpServers": { "truecalci": { "url": "https://truecalci.com/api/v1/mcp" } } }`;
     } else if (this.activeCodeTab === "mcp_cursor") {
-      box.textContent = JSON.stringify({
-        "mcpServers": {
-          "truecalci": {
-            "url": "https://truecalci.com/api/v1/mcp",
-            "transport": "streamable-http"
-          }
-        }
-      }, null, 2);
+      box.textContent = `// .cursor/mcp.json (Cursor IDE Settings > Features > MCP)
+{
+  "mcpServers": {
+    "truecalci": {
+      "command": "npx",
+      "args": ["-y", "truecalci-mcp@latest"]
+    }
+  }
+}
+// Or Cursor Streamable HTTP SSE:
+// Name: truecalci | Type: sse | URL: https://truecalci.com/api/v1/mcp`;
+    } else if (this.activeCodeTab === "mcp_windsurf") {
+      box.textContent = `// ~/.codeium/windsurf/mcp_config.json (Windsurf IDE)
+{
+  "mcpServers": {
+    "truecalci": {
+      "command": "npx",
+      "args": ["-y", "truecalci-mcp@latest"]
+    }
+  }
+}`;
     } else if (this.activeCodeTab === "python") {
       box.textContent = `import requests
 
 # TrueCalci High-Precision Edge Compute
 res = requests.post(
-    "https://truecalci.com/api/v1/contractor-parity",
+    "https://truecalci.com/api/v1/compute/contractor_parity",
     json={"w2Salary": 130000, "contractorHourlyRate": 85},
-    headers={"Authorization": "Bearer tc_live_sandbox_token"}
+    headers={"Authorization": "Bearer tc_live_sandbox_token", "Content-Type": "application/json"}
 )
-print(res.json())`;
+print("Status:", res.status_code)
+print("Calculation Result:", res.json())`;
     } else if (this.activeCodeTab === "curl") {
-      box.textContent = `curl -X POST https://truecalci.com/api/v1/contractor-parity \\
+      box.textContent = `curl -X POST https://truecalci.com/api/v1/compute/contractor_parity \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer tc_live_sandbox_token" \\
   -d '{"w2Salary": 130000, "contractorHourlyRate": 85}'`;
@@ -341,12 +359,12 @@ print(res.json())`;
       tab.addEventListener("click", () => {
         document.querySelectorAll(".hero-tool-tab").forEach(t => {
           t.classList.remove("active");
-          t.style.background = "var(--bg-subtle)";
-          t.style.color = "var(--text-secondary)";
+          t.style.background = "";
+          t.style.color = "";
+          t.style.boxShadow = "";
+          t.style.border = "";
         });
         tab.classList.add("active");
-        tab.style.background = "var(--accent-primary)";
-        tab.style.color = "#ffffff";
         this.activeSandboxTool = tab.dataset.tool;
         this.renderSandboxInputs();
         
@@ -364,13 +382,33 @@ print(res.json())`;
           t.classList.remove("active");
           t.style.background = "transparent";
           t.style.color = "var(--text-secondary)";
+          t.style.boxShadow = "none";
         });
         tab.classList.add("active");
-        tab.style.background = "var(--bg-surface)";
-        tab.style.color = "var(--accent-primary)";
+        tab.style.background = "linear-gradient(135deg, #0066ff 0%, #00a2ff 100%)";
+        tab.style.color = "#ffffff";
+        tab.style.boxShadow = "0 2px 6px rgba(0, 102, 255, 0.25)";
         this.activeCodeTab = tab.dataset.tab;
         this.renderCodeSnippet();
       });
+    });
+
+    // Copy Code Snippet Button
+    document.getElementById("hero-copy-code-btn")?.addEventListener("click", () => {
+      const text = document.getElementById("hero-code-display-box")?.textContent;
+      if (text) {
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById("hero-copy-code-btn");
+        if (btn) {
+          btn.textContent = "Copied! ✓";
+          setTimeout(() => { btn.textContent = "Copy Snippet"; }, 1500);
+        }
+      }
+    });
+
+    // Launch Workstation Button - Directly navigate to Workstation Studio
+    document.getElementById("hero-btn-launch-workstation")?.addEventListener("click", () => {
+      window.location.href = "/workstation.html";
     });
 
     // Run Sandbox Calculation
@@ -473,11 +511,7 @@ print(res.json())`;
       }
     });
 
-    // Launch Workstation Button
-    document.getElementById("hero-btn-launch-workstation")?.addEventListener("click", () => {
-      if (this.onNavigate) this.onNavigate("mortgage");
-      else window.location.hash = "#mortgage";
-    });
+
 
     // Start Free Button -> Open Authentication Dialog
     document.getElementById("hero-btn-start-free")?.addEventListener("click", () => {

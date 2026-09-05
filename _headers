@@ -1,7 +1,7 @@
 /*
   Content-Signal: ai-train=yes, ai-input=yes, search=yes
   TDM-Reservation: 0
-  Link: </.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </.well-known/mcp.json>; rel="describedby"
+  Link: </.well-known/api-catalog>; rel="api-catalog", </openapi.json>; rel="service-desc", </llms.txt>; rel="service-doc", </llms-full.txt>; rel="llms-full-txt", </.well-known/agent.json>; rel="agent-card", </.well-known/mcp.json>; rel="describedby"
 
 /api/*
   X-Robots-Tag: noindex, nofollow, noarchive
@@ -19,6 +19,12 @@
   Content-Type: application/json; charset=utf-8
 
 /.well-known/agent-card.json
+  Content-Type: application/json; charset=utf-8
+
+/.well-known/agent.json
+  Content-Type: application/json; charset=utf-8
+
+/.well-known/mcp.json
   Content-Type: application/json; charset=utf-8
 
 /.well-known/http-message-signatures-directory

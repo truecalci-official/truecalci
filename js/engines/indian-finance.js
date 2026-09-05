@@ -45,8 +45,17 @@ export class IndianFinanceEngine {
   // =========================================================================
   // 1. Income Tax Calculator (Union Budget 2025-26 & 2026-27 Slabs)
   // =========================================================================
-  static calculateIncomeTax({ grossIncome, isSalaried = true, deductions80C = 0, deductions80D = 0, hraExemption = 0, otherDeductions = 0 }) {
-    // New Tax Regime (Budget 2025-26)
+  static calculateIncomeTax({
+    grossIncome,
+    isSalaried = true,
+    deductions80C = 0,
+    deductions80D = 0,
+    homeLoanInterest24b = 0,
+    nps80CCD1B = 0,
+    hraExemption = 0,
+    otherDeductions = 0
+  }) {
+    // New Tax Regime (Budget 2025-26 & 2026-27 Slabs)
     const stdDeductionNew = isSalaried ? 75000 : 0;
     const taxableNew = Math.max(0, grossIncome - stdDeductionNew);
     
@@ -90,8 +99,11 @@ export class IndianFinanceEngine {
 
     // Old Tax Regime
     const stdDeductionOld = isSalaried ? 50000 : 0;
-    const capped80C = Math.min(deductions80C, 150000);
-    const totalOldDeductions = stdDeductionOld + capped80C + deductions80D + hraExemption + otherDeductions;
+    const capped80C = Math.min(Math.max(0, deductions80C), 150000);
+    const capped80D = Math.min(Math.max(0, deductions80D), 100000);
+    const capped24b = Math.min(Math.max(0, homeLoanInterest24b), 200000);
+    const cappedNPS = Math.min(Math.max(0, nps80CCD1B), 50000);
+    const totalOldDeductions = stdDeductionOld + capped80C + capped80D + capped24b + cappedNPS + Math.max(0, hraExemption) + Math.max(0, otherDeductions);
     const taxableOld = Math.max(0, grossIncome - totalOldDeductions);
 
     let taxOld = 0;
@@ -440,36 +452,78 @@ export class IndianFinanceEngine {
   }
 
   // =========================================================================
-  // 8. GST Calculator (India 5%, 12%, 18%, 28%)
+  // 8. In-Depth Statutory GST Calculator (CGST / SGST / IGST / Cess / RCM / ITC)
   // =========================================================================
-  static calculateGST({ amount, gstRatePercent, type = "exclusive" }) {
+  static calculateGST({
+    amount,
+    gstRatePercent = 18,
+    type = "exclusive",
+    jurisdiction = "intrastate",
+    cessPercent = 0,
+    isRCM = false,
+    itcEligible = true
+  }) {
+    const amt = Math.max(0, parseFloat(amount) || 0);
+    const rate = Math.max(0, parseFloat(gstRatePercent) || 0);
+    const cessRate = Math.max(0, parseFloat(cessPercent) || 0);
+
     let baseAmount = 0;
     let gstAmount = 0;
+    let cessAmount = 0;
     let totalAmount = 0;
 
-    if (type === "exclusive") {
-      // Add GST
-      baseAmount = amount;
-      gstAmount = amount * (gstRatePercent / 100);
-      totalAmount = baseAmount + gstAmount;
+    if (type === "inclusive") {
+      // Extract from Gross MRP
+      totalAmount = amt;
+      const combinedFactor = 1 + (rate + cessRate) / 100;
+      baseAmount = combinedFactor > 0 ? (totalAmount / combinedFactor) : totalAmount;
+      gstAmount = baseAmount * (rate / 100);
+      cessAmount = baseAmount * (cessRate / 100);
     } else {
-      // Remove GST (Inclusive)
-      totalAmount = amount;
-      baseAmount = totalAmount / (1 + (gstRatePercent / 100));
-      gstAmount = totalAmount - baseAmount;
+      // Standard Exclusive: Add GST to Base
+      baseAmount = amt;
+      gstAmount = baseAmount * (rate / 100);
+      cessAmount = baseAmount * (cessRate / 100);
+      totalAmount = baseAmount + gstAmount + cessAmount;
     }
 
-    const cgst = gstAmount / 2;
-    const sgst = gstAmount / 2;
+    const isInterstate = String(jurisdiction).toLowerCase() === "interstate";
+    const cgst = isInterstate ? 0 : (gstAmount / 2);
+    const sgst = isInterstate ? 0 : (gstAmount / 2);
+    const igst = isInterstate ? gstAmount : 0;
+
+    const totalTax = gstAmount + cessAmount;
+    const eligibleITC = itcEligible ? totalTax : 0;
+    const netTaxCost = itcEligible ? 0 : totalTax;
+    const invoicePayableToSupplier = isRCM ? baseAmount : totalAmount;
+    const taxPayableDirectToGovt = isRCM ? totalTax : 0;
+
+    let slabClassification = "Standard Tier-2 (18% IT / SaaS / Professional Services)";
+    if (rate === 0) slabClassification = "Statutory Exempt (0% Essential Commodities)";
+    else if (rate <= 5) slabClassification = "Concessional (5% Essential Food & Pharma)";
+    else if (rate <= 12) slabClassification = "Standard Tier-1 (12% Apparel & Processed Goods)";
+    else if (rate >= 28) slabClassification = "Demerit / Luxury (28% Automobiles & Tobacco)";
 
     return {
       type,
-      gstRatePercent,
+      jurisdiction: isInterstate ? "interstate" : "intrastate",
+      gstRatePercent: rate,
+      cessPercent: cessRate,
+      isRCM: Boolean(isRCM),
+      itcEligible: Boolean(itcEligible),
       baseAmount: Math.round(baseAmount * 100) / 100,
       gstAmount: Math.round(gstAmount * 100) / 100,
-      totalAmount: Math.round(totalAmount * 100) / 100,
+      cessAmount: Math.round(cessAmount * 100) / 100,
       cgst: Math.round(cgst * 100) / 100,
-      sgst: Math.round(sgst * 100) / 100
+      sgst: Math.round(sgst * 100) / 100,
+      igst: Math.round(igst * 100) / 100,
+      totalAmount: Math.round(totalAmount * 100) / 100,
+      totalTax: Math.round(totalTax * 100) / 100,
+      eligibleITC: Math.round(eligibleITC * 100) / 100,
+      netTaxCost: Math.round(netTaxCost * 100) / 100,
+      invoicePayableToSupplier: Math.round(invoicePayableToSupplier * 100) / 100,
+      taxPayableDirectToGovt: Math.round(taxPayableDirectToGovt * 100) / 100,
+      slabClassification
     };
   }
 
@@ -494,5 +548,32 @@ export class IndianFinanceEngine {
     if (!sqftFactors[fromUnit] || !sqftFactors[toUnit]) return 0;
     const valueInSqFt = value * sqftFactors[fromUnit];
     return valueInSqFt / sqftFactors[toUnit];
+  }
+
+  // =========================================================================
+  // 10. Gold & Jewellery Valuation & Statutory 3% GST
+  // =========================================================================
+  static calculateGold({ grams, ratePerGram, makingChargesPercent = 12, gstRatePercent = 3 }) {
+    const wt = Math.max(0, parseFloat(grams) || 0);
+    const rate = Math.max(0, parseFloat(ratePerGram) || 0);
+    const makingPct = Math.max(0, parseFloat(makingChargesPercent) || 0) / 100;
+    const gstRate = Math.max(0, parseFloat(gstRatePercent) || 3) / 100;
+
+    const metalValue = wt * rate;
+    const makingCharges = metalValue * makingPct;
+    const taxableBase = metalValue + makingCharges;
+    const gstAmount = taxableBase * gstRate;
+    const invoiceTotal = taxableBase + gstAmount;
+
+    return {
+      grams: wt,
+      ratePerGram: rate,
+      makingChargesPercent: makingPct * 100,
+      metalValue: Math.round(metalValue),
+      makingCharges: Math.round(makingCharges),
+      taxableBase: Math.round(taxableBase),
+      gstAmount: Math.round(gstAmount),
+      invoiceTotal: Math.round(invoiceTotal)
+    };
   }
 }

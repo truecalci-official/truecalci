@@ -160,13 +160,34 @@ const MCP_TOOLS = [
     }
   },
   {
+    name: "truecalci_gst_calculator",
+    description: "Calculate Indian Goods and Services Tax (CGST, SGST, IGST, Compensation Cess, RCM liability, and eligible ITC) under CGST Act 2017.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        amount: { type: "number", description: "Base or Gross transaction invoice amount in INR (₹)" },
+        gstRatePercent: { type: "number", default: 18, description: "GST rate percentage (0, 5, 12, 18, 28, or custom)" },
+        type: { type: "string", enum: ["exclusive", "inclusive"], default: "exclusive", description: "Invoicing mode: 'exclusive' (add GST) or 'inclusive' (extract from MRP)" },
+        jurisdiction: { type: "string", enum: ["intrastate", "interstate"], default: "intrastate", description: "Transaction type: 'intrastate' (CGST+SGST) or 'interstate' (IGST)" },
+        cessPercent: { type: "number", default: 0, description: "Optional Compensation Cess percentage" },
+        isRCM: { type: "boolean", default: false, description: "Reverse Charge Mechanism applicable under Section 9(3)/9(4)" },
+        itcEligible: { type: "boolean", default: true, description: "Input Tax Credit eligibility under Section 16/17(5)" }
+      },
+      required: ["amount"]
+    }
+  },
+  {
     name: "truecalci_indian_income_tax",
-    description: "Compute Indian Income Tax under Budget 2025-26 New Tax Regime vs Old Tax Regime.",
+    description: "Compute Indian Income Tax under Budget 2025-26 New Tax Regime vs Old Tax Regime with itemized deductions.",
     inputSchema: {
       type: "object",
       properties: {
         ctc: { type: "number", description: "Gross Salary / CTC in INR (₹)" },
-        isSalaried: { type: "boolean", default: true }
+        isSalaried: { type: "boolean", default: true },
+        deductions80C: { type: "number", default: 0, description: "Section 80C deductions (PPF, EPF, ELSS, up to ₹1.5L)" },
+        deductions80D: { type: "number", default: 0, description: "Section 80D health insurance (up to ₹1L)" },
+        homeLoanInterest24b: { type: "number", default: 0, description: "Section 24(b) home loan interest (up to ₹2L)" },
+        nps80CCD1B: { type: "number", default: 0, description: "Section 80CCD(1B) additional NPS (up to ₹50k)" }
       },
       required: ["ctc"]
     }
@@ -391,6 +412,56 @@ const MCP_TOOLS = [
         cacheHitRatio: { type: "number", default: 0.85, description: "Projected CDN edge cache hit ratio (0.0 to 1.0 or 0 to 100%)" }
       }
     }
+  },
+  {
+    name: "truecalci_ppf_calculator",
+    description: "Calculate Indian Public Provident Fund (PPF) statutory 7.1% compounding, annual deposits, and 15-year EEE maturity corpus.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        yearlyDeposit: { type: "number", default: 150000, description: "Annual deposit in INR (max ₹1.5L)" },
+        tenureYears: { type: "integer", default: 15, description: "Tenure in years (minimum 15)" }
+      }
+    }
+  },
+  {
+    name: "truecalci_ssy_calculator",
+    description: "Calculate Sukanya Samriddhi Yojana (SSY) sovereign 8.2% compounding, 15-year contribution window, and 21-year maturity value.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        yearlyDeposit: { type: "number", default: 150000, description: "Annual deposit in INR (max ₹1.5L)" },
+        annualInterestRate: { type: "number", default: 8.2, description: "Statutory annual interest rate %" }
+      }
+    }
+  },
+  {
+    name: "truecalci_fd_calculator",
+    description: "Calculate bank Fixed Deposit (FD) quarterly compounding maturity amount, APY, and interest accrued.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        principal: { type: "number", default: 500000, description: "Deposit principal amount" },
+        interestRate: { type: "number", default: 7.25, description: "Annual interest rate %" },
+        tenureYears: { type: "number", default: 5, description: "Tenure in years" },
+        payoutType: { type: "string", enum: ["cumulative", "payout"], default: "cumulative" }
+      },
+      required: ["principal", "interestRate"]
+    }
+  },
+  {
+    name: "truecalci_gold_jewellery",
+    description: "Calculate 22K/24K gold valuation, making charges, and statutory 3% GST invoice total under BIS Hallmarking standards.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        grams: { type: "number", default: 25, description: "Net gold weight in grams" },
+        ratePerGram: { type: "number", default: 7200, description: "Gold rate per gram in currency (e.g. ₹7,200/g)" },
+        makingChargesPercent: { type: "number", default: 12, description: "Making charges %" },
+        gstRatePercent: { type: "number", default: 3, description: "Statutory GST % (standard 3%)" }
+      },
+      required: ["grams", "ratePerGram"]
+    }
   }
 ];
 
@@ -495,11 +566,32 @@ function handleToolCall(name, args) {
         tenureYears: Number(args.tenureYears || args.timeHorizonYears || 10),
         compoundingFrequency: Number(args.compoundingFrequency || 12)
       });
+    case 'gst_calculator':
+    case 'gst_split':
+    case 'gst':
+    case 'truecalci_gst_calculator':
+      return IndianFinanceEngine.calculateGST({
+        amount: Number(args.amount || args.baseAmount || 100000),
+        gstRatePercent: Number(args.gstRatePercent !== undefined ? args.gstRatePercent : (args.rate || 18)),
+        type: args.type || (args.inclusive ? 'inclusive' : 'exclusive'),
+        jurisdiction: args.jurisdiction || (args.interstate ? 'interstate' : 'intrastate'),
+        cessPercent: Number(args.cessPercent || args.cess || 0),
+        isRCM: Boolean(args.isRCM),
+        itcEligible: args.itcEligible !== false
+      });
     case 'indian_income_tax':
+    case 'tax_in':
     case 'tax':
+    case 'truecalci_indian_income_tax':
       return IndianFinanceEngine.calculateIncomeTax({
         grossIncome: Number(args.ctc || args.income || args.grossIncome),
-        isSalaried: args.isSalaried !== false
+        isSalaried: args.isSalaried !== false,
+        deductions80C: Number(args.deductions80C || 0),
+        deductions80D: Number(args.deductions80D || 0),
+        homeLoanInterest24b: Number(args.homeLoanInterest24b || 0),
+        nps80CCD1B: Number(args.nps80CCD1B || 0),
+        hraExemption: Number(args.hraExemption || 0),
+        otherDeductions: Number(args.otherDeductions || 0)
       });
     case 'sip_investment':
     case 'sip':
@@ -515,6 +607,38 @@ function handleToolCall(name, args) {
         principal: Number(args.principal),
         annualInterestRate: Number(args.annualInterestRate || args.interestRatePercent || 8.5),
         tenureYears: Number(args.tenureYears || 20)
+      });
+    case 'ppf_calculator':
+    case 'ppf':
+    case 'truecalci_ppf_calculator':
+      return IndianFinanceEngine.calculatePPF({
+        yearlyDeposit: Number(args.yearlyDeposit || args.amount || 150000),
+        tenureYears: Number(args.tenureYears || 15)
+      });
+    case 'ssy_calculator':
+    case 'ssy':
+    case 'truecalci_ssy_calculator':
+      return IndianFinanceEngine.calculateSSY({
+        yearlyDeposit: Number(args.yearlyDeposit || args.amount || 150000),
+        annualInterestRate: Number(args.annualInterestRate || 8.2)
+      });
+    case 'fd_calculator':
+    case 'fd':
+    case 'truecalci_fd_calculator':
+      return IndianFinanceEngine.calculateFD({
+        principal: Number(args.principal || args.amount || 500000),
+        interestRate: Number(args.interestRate || args.rate || 7.25),
+        tenureYears: Number(args.tenureYears || args.years || 5),
+        payoutType: args.payoutType || 'cumulative'
+      });
+    case 'gold_jewellery':
+    case 'gold':
+    case 'truecalci_gold_jewellery':
+      return IndianFinanceEngine.calculateGold({
+        grams: Number(args.grams || args.weight || 25),
+        ratePerGram: Number(args.ratePerGram || args.rate || 7200),
+        makingChargesPercent: Number(args.makingChargesPercent || args.makingCharges || 12),
+        gstRatePercent: Number(args.gstRatePercent || 3)
       });
     case 'casio_solve_quadratic':
     case 'casio_991_solve':

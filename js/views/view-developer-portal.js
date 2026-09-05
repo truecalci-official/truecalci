@@ -150,7 +150,7 @@ export class ViewDeveloperPortal {
 
           <div style="display: flex; flex-wrap: wrap; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary); gap: 10px;">
             ${this.isLoggedIn ? `
-              <span>● <strong>Enterprise Tier Active:</strong> 15,000 monthly deterministic requests, 1,000 RPM burst concurrency via Cloudflare edge.</span>
+              <span>● <strong>Enterprise Tier Active:</strong> 10,000 monthly deterministic requests, 1,000 RPM burst concurrency via Cloudflare edge.</span>
               <span><a href="#subscriptions" style="color: var(--accent-primary); font-weight: 600; text-decoration: underline;">Manage Subscriptions & Invoices →</a></span>
             ` : `
               <span>● <strong>No signup required:</strong> AI agents and developers test keyless with zero friction up to 100 calls/month.</span>
@@ -196,7 +196,7 @@ export class ViewDeveloperPortal {
               <span style="font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; background: rgba(16, 185, 129, 0.12); color: #10b981; font-weight: 600;">Sub-1ms SLA</span>
             </div>
             <h3 style="margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 700; color: var(--text-primary);">Need Higher Concurrency or Dedicated API Keys?</h3>
-            <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">Developer Starter ($5/mo for 2,500 calls) and Pro Agency ($15/mo for 15,000 calls) with UPI & Stripe support.</p>
+            <p style="margin: 0; font-size: 0.82rem; color: var(--text-secondary);">Developer Starter ($5/mo for 2,500 calls) and Pro Agency ($15/mo for 10,000 calls) with UPI & Stripe support.</p>
           </div>
           <a href="#pricing" style="padding: 10px 18px; font-size: 0.84rem; font-weight: 600; border-radius: 6px; background: var(--accent-primary); color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: opacity 0.2s;">
             <span>Explore Pricing Plans</span>

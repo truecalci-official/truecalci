@@ -2,11 +2,46 @@
 <html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
+  <!-- Google Consent Mode v2 (EEA Compliance) -->
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'granted',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0CYZYEW5T4"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-0CYZYEW5T4', {
+      'anonymize_ip': true,
+      'cookie_flags': 'SameSite=None;Secure'
+    });
+  </script>
+
+  <!-- Geographic & Regional Targeting -->
+  <meta name="geo.region" content="US-DE">
+  <meta name="geo.placename" content="Wilmington, Delaware, United States">
+  <meta name="geo.position" content="39.7391;-75.5398">
+  <meta name="ICBM" content="39.7391, -75.5398">
+  <link rel="alternate" hreflang="x-default" href="https://truecalci.com/pricing.html">
+  <link rel="alternate" hreflang="en-US" href="https://truecalci.com/pricing.html">
+  <link rel="alternate" hreflang="en-GB" href="https://truecalci.com/pricing.html">
+  <link rel="alternate" hreflang="en-IN" href="https://truecalci.in/pricing.html">
+  <link rel="llms-txt" href="/llms.txt">
+  <link rel="llms-full-txt" href="/llms-full.txt">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pricing & Plans — TrueCalci Deterministic Compute Engine</title>
-  <meta name="description" content="Transparent pricing for TrueCalci deterministic statutory and financial compute. 100 free requests, $5/mo Developer Starter (2,500 calls), and $15/mo Pro Agency (15,000 calls). Zero data storage, sub-1ms latency.">
+  <meta name="description" content="Transparent pricing for TrueCalci deterministic statutory and financial compute. 100 free requests, $5/mo Developer Starter (2,500 calls), and $15/mo Pro Agency (10,000 calls). Zero data storage, sub-1ms latency.">
   
-  <link rel="canonical" href="https://truecalci.com/pricing">
+  <link rel="canonical" href="https://truecalci.com/pricing.html">
   <link rel="alternate" type="text/plain" href="https://truecalci.com/llms.txt" title="LLM Context">
   <link rel="service-desc" type="application/json" href="https://truecalci.com/openapi.json">
   <link rel="model-context-protocol" type="application/json" href="https://truecalci.com/.well-known/mcp.json">
@@ -65,7 +100,7 @@
         "name": "Pro Agency & Scale",
         "price": "15",
         "priceCurrency": "USD",
-        "description": "15,000 requests per month with 50 req/sec concurrency, team seats, and priority support."
+        "description": "10,000 requests per month with 50 req/sec concurrency, team seats, and priority support."
       }
     ]
   }
@@ -75,31 +110,201 @@
 
   <!-- Enterprise Global Header -->
   <header class="app-header">
-    <div class="header-container">
-      <div style="display:flex; align-items:center; gap: 1.25rem;">
-        <a href="/" class="brand-area" aria-label="TrueCalci Home" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
-          <img src="/assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
-          <span class="brand-title" style="font-size: 1.18rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em;">TrueCalci</span>
-        </a>
+    <div class="header-container" style="max-width: 1440px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 1rem; gap: 1rem;">
+      
+      <!-- 1. Left Brand Area -->
+      <a href="/" class="brand-area" aria-label="TrueCalci Enterprise Home" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+        <img src="/assets/brand-logo.svg" alt="TrueCalci Monogram" class="brand-icon" style="width: 34px; height: 34px; border-radius: 8px;">
+        <span class="brand-title" style="font-size: 1.18rem; font-weight: 800; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.02em;">TrueCalci</span>
+      </a>
 
-        <nav class="enterprise-nav-menu" aria-label="Enterprise Navigation" style="display: flex; align-items: center; gap: 4px;">
-          <a href="/#home" class="nav-menu-link">Platform</a>
-          <a href="/#contractor_matrix" class="nav-menu-link">Studio</a>
-          <a href="/#developer" class="nav-menu-link">Docs & MCP</a>
-          <a href="/pricing" class="nav-menu-link active" style="color: var(--accent-primary); font-weight: 600;">Pricing</a>
-        </nav>
+      <!-- 2. Center Omnibar Search -->
+      <div class="header-search-container" style="flex: 1; max-width: 340px;">
+        <div class="header-search-box">
+          <span class="header-search-icon" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          <input type="text" class="header-search-input" placeholder="Search tools... ('/')" aria-label="Search calculators, formulas, or tools" autocomplete="off">
+          <div class="header-search-dropdown"></div>
+        </div>
       </div>
 
-      <!-- Right Header Actions -->
-      <div class="header-actions" style="display: flex; align-items: center; gap: 10px;">
+      <!-- 3. Navigation Menu: Product | Solutions | Resources | Pricing -->
+      <nav class="enterprise-nav-menu" aria-label="Enterprise Navigation" style="display: flex; align-items: center; gap: 4px;">
+        
+        <!-- Product Dropdown (Developer Architecture & Platform) -->
+        <div class="nav-dropdown-wrapper">
+          <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+            <span>Product</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-shelf">
+            <a href="/workstation.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M8 10h.01"/><path d="M12 10h.01"/><path d="M16 10h.01"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Workstation Studio <span class="nav-shelf-tag">24 Engines</span></div>
+                <div class="nav-shelf-desc">Deterministic calculation suites with live derivation drawer & AST</div>
+              </div>
+            </a>
+            <a href="/docs.html#rest-api" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Stateless Edge REST API <span class="nav-shelf-tag">&lt;10ms Edge</span></div>
+                <div class="nav-shelf-desc">Sub-millisecond statutory verification endpoints at 310+ edge PoPs</div>
+              </div>
+            </a>
+            <a href="/pricing.html#mcp" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Model Context Protocol (MCP) <span class="nav-shelf-tag">FastMCP SSE</span></div>
+                <div class="nav-shelf-desc">Native tools for Claude Desktop, Cursor IDE & autonomous agents</div>
+              </div>
+            </a>
+            <a href="/engineering-formulas.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Casio 991 Scientific CAS <span class="nav-shelf-tag">IEEE 754</span></div>
+                <div class="nav-shelf-desc">VPAM symbolic computation, matrix calculus & beam physics</div>
+              </div>
+            </a>
+            <div class="nav-shelf-footer">
+              ⚡ Sub-millisecond compute across 310+ Cloudflare edge PoPs
+            </div>
+          </div>
+        </div>
+
+        <!-- Solutions Dropdown (Audience & Workflows) -->
+        <div class="nav-dropdown-wrapper">
+          <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+            <span>Solutions</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-shelf">
+            <a href="/workstation.html#ait-20" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">AI Labs & FinOps Teams <span class="nav-shelf-tag">FinOps</span></div>
+                <div class="nav-shelf-desc">LLM cache tokens, GPU cloud egress & runway burn dilution</div>
+              </div>
+            </a>
+            <a href="/workstation.html#ctr-18" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Global Contractors & Freelancers <span class="nav-shelf-tag">Tax Alpha</span></div>
+                <div class="nav-shelf-desc">1099 vs W-2 parity matrix, S-Corp salary & Solo 401(k)</div>
+              </div>
+            </a>
+            <a href="/workstation.html#b2b-22" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Cross-Border Enterprises <span class="nav-shelf-tag">OECD MNE</span></div>
+                <div class="nav-shelf-desc">B2B withholding PE tax risk, reverse charge VAT & transfer pricing</div>
+              </div>
+            </a>
+            <a href="/workstation.html#mtg-01" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Mortgage & Real Estate Lenders <span class="nav-shelf-tag">CFPB</span></div>
+                <div class="nav-shelf-desc">PITI amortization schedules, automated PMI cancellation & escrow</div>
+              </div>
+            </a>
+            <div class="nav-shelf-footer">
+              🛡️ Zero-data retention guarantee — SOC2 & GDPR compliant
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources Dropdown (Docs housed here!) -->
+        <div class="nav-dropdown-wrapper">
+          <button class="nav-dropdown-trigger" type="button" aria-haspopup="true">
+            <span>Resources</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="nav-dropdown-shelf">
+            <a href="/docs.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Official Documentation</div>
+                <div class="nav-shelf-desc">Statutory standards, MCP specs & guides</div>
+              </div>
+            </a>
+            <a href="/engineering-formulas.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Engineering Formulas</div>
+                <div class="nav-shelf-desc">Mathematical derivations & equations</div>
+              </div>
+            </a>
+            <a href="/terms.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Tax Slabs & Compliance</div>
+                <div class="nav-shelf-desc">IRS, CBDT, OECD statutory schedules</div>
+              </div>
+            </a>
+            <a href="/privacy.html" class="nav-shelf-item">
+              <span class="nav-shelf-icon" style="color: #0066ff;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </span>
+              <div>
+                <div class="nav-shelf-title">Trust Center & Privacy</div>
+                <div class="nav-shelf-desc">Zero storage data protection guarantee</div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="/pricing.html" class="nav-menu-link active" style="color: #0066ff; font-weight: 700;">Pricing</a>
+      </nav>
+
+      <!-- 4. Right Header Actions (Fixed Sequence & Zero-Shift Width) -->
+      <div class="header-actions" style="display: flex; align-items: center; gap: 8px;">
+        <!-- 4-Currency Sleek Dropdown -->
+        <div class="tc-currency-dropdown-wrapper">
+          <button class="tc-currency-trigger-btn tc-currency-btn" id="global-currency-btn" aria-label="Select Currency" aria-haspopup="true">
+            <span class="tc-currency-label" id="global-currency-label">USD ($)</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1L5 5L9 1"/></svg>
+          </button>
+          <div class="tc-currency-menu" id="global-currency-menu">
+            <button class="tc-currency-option tc-currency-opt" data-currency="USD">USD ($) — Global</button>
+            <button class="tc-currency-option tc-currency-opt" data-currency="EUR">EUR (€) — Europe</button>
+            <button class="tc-currency-option tc-currency-opt" data-currency="GBP">GBP (£) — UK</button>
+            <button class="tc-currency-option tc-currency-opt" data-currency="INR">INR (₹) — India</button>
+          </div>
+        </div>
+
         <!-- Day / Night Theme Toggle -->
         <button class="theme-icon-toggle-btn" id="theme-toggle-icon-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
           <svg class="theme-icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
           <svg class="theme-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
 
-        <a href="/#auth" class="btn btn-primary btn-sm" id="nav-get-started-btn" style="padding: 7px 14px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border-radius: 6px;">
-          Developer Sign In
+
+
+        <a href="/workstation.html#signin" class="header-cta-btn" id="header-signin-btn" style="padding: 6px 14px; font-size: 0.8rem; font-weight: 600; border-radius: 6px; background: #0f172a; color: #ffffff; border: 1px solid #0f172a; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+          Sign In
         </a>
       </div>
     </div>
@@ -128,8 +333,8 @@
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Currency:</span>
           <div style="display: flex; background: var(--bg-subtle); border-radius: 6px; padding: 2px;">
-            <button type="button" id="curr-btn-usd" class="pricing-curr-btn active" data-currency="usd" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: var(--accent-primary); color: #ffffff;">USD ($)</button>
-            <button type="button" id="curr-btn-inr" class="pricing-curr-btn" data-currency="inr" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">INR (₹)</button>
+            <button type="button" id="curr-btn-usd" class="pricing-curr-btn active" data-currency="usd" style="padding: 5px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%); color: #ffffff;">USD ($)</button>
+            <button type="button" id="curr-btn-inr" class="pricing-curr-btn" data-currency="inr" style="padding: 5px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">INR (₹)</button>
           </div>
         </div>
 
@@ -139,8 +344,8 @@
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 0.82rem; color: var(--text-muted); font-weight: 500;">Billing:</span>
           <div style="display: flex; background: var(--bg-subtle); border-radius: 6px; padding: 2px;">
-            <button type="button" id="cycle-btn-monthly" class="pricing-cycle-btn active" data-cycle="monthly" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: var(--accent-primary); color: #ffffff;">Monthly</button>
-            <button type="button" id="cycle-btn-annual" class="pricing-cycle-btn" data-cycle="annual" style="padding: 5px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 4px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">
+            <button type="button" id="cycle-btn-monthly" class="pricing-cycle-btn active" data-cycle="monthly" style="padding: 5px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; background: linear-gradient(135deg, #0066ff 0%, #00a2ff 100%); color: #ffffff;">Monthly</button>
+            <button type="button" id="cycle-btn-annual" class="pricing-cycle-btn" data-cycle="annual" style="padding: 5px 14px; font-size: 0.78rem; font-weight: 600; border-radius: 6px; border: none; cursor: pointer; background: transparent; color: var(--text-secondary);">
               Annual <span style="font-size: 0.68rem; padding: 1px 6px; border-radius: 4px; background: #10b981; color: #fff; margin-left: 3px;">Save up to 28%</span>
             </button>
           </div>
@@ -244,7 +449,7 @@
           <ul style="list-style: none; padding: 0; margin: 0 0 28px; font-size: 0.85rem; line-height: 2.1; color: var(--text-secondary);">
             <li style="display:flex; align-items:center; gap:8px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              <strong id="pro-calls-text">15,000 requests</strong> / month
+              <strong id="pro-calls-text">10,000 requests</strong> / month
             </li>
             <li style="display:flex; align-items:center; gap:8px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -312,39 +517,39 @@
             <tr style="border-bottom: 2px solid var(--border-color);">
               <th style="padding: 12px; color: var(--text-primary);">Capability</th>
               <th style="padding: 12px; color: var(--text-secondary);">Free Sandbox</th>
-              <th style="padding: 12px; color: var(--text-secondary);">Developer Starter</th>
-              <th style="padding: 12px; color: var(--accent-primary);">Pro Agency</th>
-              <th style="padding: 12px; color: var(--text-secondary);">Enterprise</th>
+              <th style="padding: 12px; color: var(--text-primary); font-weight: 700;">Developer Starter</th>
+              <th style="padding: 12px; color: var(--text-primary); font-weight: 700;">Pro Agency</th>
+              <th style="padding: 12px; color: var(--text-primary); font-weight: 700;">Enterprise</th>
             </tr>
           </thead>
           <tbody>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Monthly Request Quota</td>
-              <td style="padding: 12px;">100</td>
-              <td style="padding: 12px;">2,500</td>
-              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">15,000</td>
-              <td style="padding: 12px;">Custom / Unlimited</td>
+              <td style="padding: 12px; color: var(--text-secondary);">100</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">2,500</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">10,000</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Custom / Unlimited</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Execution Latency (p50)</td>
-              <td style="padding: 12px;">&lt;1.0ms</td>
-              <td style="padding: 12px;">&lt;0.8ms</td>
-              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">&lt;0.4ms</td>
-              <td style="padding: 12px;">Dedicated Edge Isolation</td>
+              <td style="padding: 12px; color: var(--text-secondary);">&lt;1.0ms</td>
+              <td style="padding: 12px; color: var(--text-primary);">&lt;0.8ms</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">&lt;0.4ms</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Dedicated Edge Isolation</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Model Context Protocol (MCP)</td>
-              <td style="padding: 12px;">WebMCP</td>
-              <td style="padding: 12px;">Streamable HTTP</td>
-              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">Streamable HTTP + SSE</td>
-              <td style="padding: 12px;">Custom Protocol Handlers</td>
+              <td style="padding: 12px; color: var(--text-secondary);">WebMCP</td>
+              <td style="padding: 12px; color: var(--text-primary);">Streamable HTTP</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Streamable HTTP + SSE</td>
+              <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Custom Protocol Handlers</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Statutory Verification Guarantees</td>
-              <td style="padding: 12px;">✓ Standard</td>
-              <td style="padding: 12px;">✓ Standard</td>
-              <td style="padding: 12px; font-weight: 600; color: var(--accent-primary);">✓ Verified Rule Engine</td>
-              <td style="padding: 12px;">Custom Legal Sign-off</td>
+              <td style="padding: 12px; color: #10b981; font-weight: 600;">✓ Standard</td>
+              <td style="padding: 12px; color: #10b981; font-weight: 600;">✓ Standard</td>
+              <td style="padding: 12px; color: #10b981; font-weight: 600;">✓ Verified Rule Engine</td>
+              <td style="padding: 12px; color: #10b981; font-weight: 600;">✓ Custom Legal Sign-off</td>
             </tr>
             <tr style="border-bottom: 1px solid var(--border-color);">
               <td style="padding: 12px; font-weight: 600; color: var(--text-primary);">Zero Data Retention Guarantee</td>
@@ -384,16 +589,32 @@
       <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0 0 24px; text-align: center;">Frequently Asked Questions</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
         <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How are monthly calls counted?</div>
-          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Every successful HTTP POST to a `/api/v1/*` endpoint or MCP `tools/call` execution decrements your monthly quota by 1. Preflight OPTIONS and schema inspection queries do not consume quota.</div>
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How does TrueCalci eliminate LLM mathematical hallucinations?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Large language models are probabilistic token predictors that frequently produce arithmetic errors on complex multi-tier tax brackets, mortgage amortizations, and compound schedules. TrueCalci offloads the computation to deterministic IEEE 754 engines running at Cloudflare's global edge, returning verified results with 100% mathematical certainty.</div>
         </div>
         <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
-          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Do you store any of my computational inputs?</div>
-          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">No. TrueCalci guarantees zero persistent storage for computational payloads. All statutory algorithms run inside transient Cloudflare V8 memory isolates and are wiped immediately.</div>
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How does the Streamable HTTP MCP endpoint work with AI agents?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">TrueCalci provides an open JSON-RPC 2.0 endpoint at <code>https://truecalci.com/api/v1/mcp</code>. AI agents in Claude Desktop, Cursor, LangChain, and custom Python agents connect over standard HTTPS POST without requiring a local Node process or stdio adapter.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">What is included in the 10,000 monthly request quota for Pro Agency?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Pro Agency includes 10,000 edge calculation requests per calendar month (or 120,000 requests upfront with annual billing), 1,000 req/min burst speed, multi-seat API keys, priority edge routing, and automated compliance tax invoices.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How does team access and multi-seat API key management work?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">Pro and Enterprise tiers allow you to generate distinct personal and shared team API keys. You can provision separate keys for staging, production, autonomous agent pipelines, and individual team members without sharing credentials.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">How do overages work on the Enterprise Pay-As-You-Go plan?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">On Enterprise Pay-As-You-Go, you are never hard-capped or rate-blocked. You receive 10,000 included base requests, and any excess requests are billed at a predictable flat rate of $1.00 per 1,000 requests (or ₹80 per 1,000 in India) with transparent real-time usage meters.</div>
+        </div>
+        <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
+          <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Do you store any computational inputs?</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">No. TrueCalci guarantees zero persistent storage for computational payloads. All statutory algorithms run inside transient Cloudflare V8 memory isolates and are wiped immediately upon response delivery.</div>
         </div>
         <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
           <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Which payment methods do you accept?</div>
-          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">We accept global Visa, Mastercard, American Express, Apple Pay, and Google Pay. For Indian developers, we natively support UPI AutoPay and RuPay via Dodo Payments (Merchant of Record).</div>
+          <div style="font-size: 0.84rem; color: var(--text-secondary); line-height: 1.5;">We accept global Visa, Mastercard, American Express, Apple Pay, and Google Pay. For Indian developers, we natively support UPI AutoPay and RuPay via Dodo Payments (Merchant of Record). Invoices include automated GST and VAT tax compliance.</div>
         </div>
         <div class="glass-card" style="padding: 20px; border-radius: 10px; background: var(--bg-surface); border: 1px solid var(--border-color);">
           <div style="font-size: 0.92rem; font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">Can I cancel or upgrade at any time?</div>
@@ -497,19 +718,24 @@
         const isIndia = currentCurrency === "inr";
         const isAnnual = currentCycle === "annual";
         const symbol = isIndia ? "₹" : "$";
+        const activeGrad = "linear-gradient(135deg, #0066ff 0%, #00a2ff 100%)";
 
         // Update active buttons
         if (currBtnUsd && currBtnInr) {
-          currBtnUsd.style.background = !isIndia ? "var(--accent-primary)" : "transparent";
+          currBtnUsd.classList.toggle("active", !isIndia);
+          currBtnInr.classList.toggle("active", isIndia);
+          currBtnUsd.style.background = !isIndia ? activeGrad : "transparent";
           currBtnUsd.style.color = !isIndia ? "#ffffff" : "var(--text-secondary)";
-          currBtnInr.style.background = isIndia ? "var(--accent-primary)" : "transparent";
+          currBtnInr.style.background = isIndia ? activeGrad : "transparent";
           currBtnInr.style.color = isIndia ? "#ffffff" : "var(--text-secondary)";
         }
 
         if (cycleBtnMonthly && cycleBtnAnnual) {
-          cycleBtnMonthly.style.background = !isAnnual ? "var(--accent-primary)" : "transparent";
+          cycleBtnMonthly.classList.toggle("active", !isAnnual);
+          cycleBtnAnnual.classList.toggle("active", isAnnual);
+          cycleBtnMonthly.style.background = !isAnnual ? activeGrad : "transparent";
           cycleBtnMonthly.style.color = !isAnnual ? "#ffffff" : "var(--text-secondary)";
-          cycleBtnAnnual.style.background = isAnnual ? "var(--accent-primary)" : "transparent";
+          cycleBtnAnnual.style.background = isAnnual ? activeGrad : "transparent";
           cycleBtnAnnual.style.color = isAnnual ? "#ffffff" : "var(--text-secondary)";
         }
 
@@ -546,8 +772,8 @@
         }
         if (proCalls) {
           proCalls.textContent = isAnnual
-            ? "180,000 calls / year upfront"
-            : "15,000 calls / month";
+            ? "120,000 calls / year upfront"
+            : "10,000 calls / month";
         }
       }
 
@@ -604,9 +830,18 @@
         applyTheme(nextTheme);
       });
 
+      window.addEventListener("tc_currency_changed", (e) => {
+        if (e.detail && e.detail.currency) {
+          currentCurrency = e.detail.currency.toLowerCase() === "inr" ? "inr" : "usd";
+          updatePricing();
+        }
+      });
+
       updatePricing();
     })();
   </script>
-
+  <script src="/js/theme.js"></script>
+  <script src="/js/currency-select.js"></script>
+  <script src="/js/global-header-search.js"></script>
 </body>
 </html>

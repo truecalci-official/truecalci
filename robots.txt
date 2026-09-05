@@ -1,19 +1,32 @@
 # Robots.txt for TrueCalci Global Computational Suite
 # Production Host: https://truecalci.com
+# Conforms strictly to IETF RFC 9309 (Robots Exclusion Protocol)
 
 User-agent: *
 Disallow: /api/
+Disallow: /admin.html
+Disallow: /api/admin/
 Allow: /
+Allow: /sitemap.xml
 Allow: /llms.txt
 Allow: /llms-full.txt
 Allow: /openapi.json
 Allow: /.well-known/
-Allow: /sitemap.xml
+Allow: /workstation.html
+Allow: /pricing.html
+Allow: /docs.html
+Allow: /engineering-formulas.html
 Allow: /terms.html
 Allow: /privacy.html
-Allow: /engineering-formulas.html
 
-# Explicitly Whitelisted AI & LLM Search Engine Crawlers
+# Whitelisted Major Search Engine Crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Whitelisted AI & LLM Search Engine Crawlers
 User-agent: GPTBot
 Allow: /
 
@@ -29,7 +42,7 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-User-agent: Google-Extended
+User-agent: Applebot
 Allow: /
 
 User-agent: Applebot-Extended
@@ -41,11 +54,6 @@ Allow: /
 User-agent: Cohere-ai
 Allow: /
 
-# Canonical Sitemaps and LLM Knowledge References
+# Canonical Sitemaps (Only valid non-record RFC 9309 extension)
 Sitemap: https://truecalci.com/sitemap.xml
 Sitemap: https://truecalci.in/sitemap.xml
-LLM-Reference: https://truecalci.com/llms.txt
-LLM-Full-Reference: https://truecalci.com/llms-full.txt
-OpenAPI-Catalog: https://truecalci.com/openapi.json
-Agent-Card: https://truecalci.com/.well-known/agent.json
-MCP-Manifest: https://truecalci.com/.well-known/mcp.json
